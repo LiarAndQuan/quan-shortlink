@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import online.aquan.shortlink.admin.common.convention.result.Result;
 import online.aquan.shortlink.admin.common.convention.result.Results;
 import online.aquan.shortlink.admin.dto.req.UserRegisterReqDto;
+import online.aquan.shortlink.admin.dto.req.UserUpdateReqDto;
 import online.aquan.shortlink.admin.dto.resp.UserActualRespDto;
 import online.aquan.shortlink.admin.dto.resp.UserRespDto;
 import online.aquan.shortlink.admin.service.UserService;
@@ -50,6 +51,19 @@ public class UserController {
         return Results.success();
     }
 
-  
+    /**
+     * 修改用户信息
+     */
+    @PutMapping("/api/short-link/admin/v1/user")
+    public Result<Void> update(@RequestBody UserUpdateReqDto requestParam) {
+        //todo 检查用户是否是登录状态
+        userService.update(requestParam);
+        return Results.success();
+    }
+
+    /**
+     * 
+     */
+
 
 }

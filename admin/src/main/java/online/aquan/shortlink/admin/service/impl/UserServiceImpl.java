@@ -2,6 +2,7 @@ package online.aquan.shortlink.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import online.aquan.shortlink.admin.common.enums.UserErrorCodeEnums;
 import online.aquan.shortlink.admin.dao.eneity.UserDo;
 import online.aquan.shortlink.admin.dao.mapper.UserMapper;
 import online.aquan.shortlink.admin.dto.req.UserRegisterReqDto;
+import online.aquan.shortlink.admin.dto.req.UserUpdateReqDto;
 import online.aquan.shortlink.admin.dto.resp.UserRespDto;
 import online.aquan.shortlink.admin.service.UserService;
 import org.redisson.api.RBloomFilter;
@@ -21,8 +23,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import static online.aquan.shortlink.admin.common.constant.RedisCacheConstant.LOCK_USER_REGISTER_KEY;
-import static online.aquan.shortlink.admin.common.enums.UserErrorCodeEnums.USER_EXIST;
-import static online.aquan.shortlink.admin.common.enums.UserErrorCodeEnums.USER_REGISTER_ERROR;
+import static online.aquan.shortlink.admin.common.enums.UserErrorCodeEnums.*;
 
 @Service
 @RequiredArgsConstructor
@@ -84,4 +85,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo> implements 
             lock.unlock();
         }
     }
+
+    /**
+     * 更新用户信息
+     */
+    @Override
+    public void update(UserUpdateReqDto requestParam) {
+        if(!hasUsername(requestParam.getUsername())){
+            throw new ClientException(USER_NULL);
+        }
+        UserDo userDo = new UserDo();
+        BeanUtil.copyProperties(requestParam,userDo);
+        LambdaUpdateWrapper<UserDo> wrapper = Wrappers.lambdaUpdate(UserDo.class)
+                .eq(UserDo::getUsername, requestParam.getUsername());
+        baseMapper.update(userDo,wrapper);
+    }
+    
+    
 }
