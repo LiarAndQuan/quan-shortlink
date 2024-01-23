@@ -3,9 +3,12 @@ package online.aquan.shortlink.admin.common.enums;
 import online.aquan.shortlink.admin.common.convention.errorcode.IErrorCode;
 
 public enum UserErrorCodeEnums implements IErrorCode {
-    
-    USER_NULL("B00200","用户记录不存在");
-    
+
+    USER_NULL("B00200", "用户记录不存在"),
+
+    USER_EXIST("B00201", "用户名已经存在"),
+    USER_REGISTER_ERROR("B00202", "用户注册失败");
+
     private final String code;
     private final String message;
 

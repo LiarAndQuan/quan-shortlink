@@ -1024,7 +1024,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="298" parent="1" name="shortlink">
-      <LastIntrospectionLocalTimestamp>2024-01-22.11:54:52</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2024-01-23.06:51:35</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <user id="299" parent="1" name="jim">
@@ -1110,10 +1110,18 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="316" parent="304" name="PRIMARY">
+    <index id="316" parent="304" name="t_user_username_uindex">
+      <ColNames>username</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="317" parent="304" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <key id="318" parent="304" name="t_user_username_uindex">
+      <UnderlyingIndexName>t_user_username_uindex</UnderlyingIndexName>
     </key>
   </database-model>
 </dataSource>

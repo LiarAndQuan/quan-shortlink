@@ -4,15 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 用户真实信息接口实现以及用户名是否存在接口实现">
-      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/config/RBloomFilterConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/dto/req/UserRegisterReqDto.java" afterDir="false" />
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 使用布隆过滤器优化了查询用户名是否存在">
+      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/common/constant/RedisCacheConstant.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/config/MyMetaObjectHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/admin/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/common/enums/UserErrorCodeEnums.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/common/enums/UserErrorCodeEnums.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/dao/eneity/UserDo.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/dao/eneity/UserDo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +74,8 @@
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
-      "mysql"
+      "mysql",
+      "redis"
     ]
   }
 }]]></component>
@@ -129,7 +131,7 @@
       <option name="presentableId" value="Default" />
       <updated>1705924341957</updated>
       <workItem from="1705924343014" duration="8168000" />
-      <workItem from="1705974256327" duration="12917000" />
+      <workItem from="1705974256327" duration="17714000" />
     </task>
     <task id="LOCAL-00001" summary="feature: 自定义异常">
       <option name="closed" value="true" />
@@ -195,7 +197,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705983840411</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="feature: 使用布隆过滤器优化了查询用户名是否存在">
+      <option name="closed" value="true" />
+      <created>1705989967221</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1705989967221</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -221,7 +231,8 @@
     <MESSAGE value="feature: 客户端异常状态码枚举" />
     <MESSAGE value="feature: 返回用户脱敏信息接口实现" />
     <MESSAGE value="feature: 用户真实信息接口实现以及用户名是否存在接口实现" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature: 用户真实信息接口实现以及用户名是否存在接口实现" />
+    <MESSAGE value="feature: 使用布隆过滤器优化了查询用户名是否存在" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: 使用布隆过滤器优化了查询用户名是否存在" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
