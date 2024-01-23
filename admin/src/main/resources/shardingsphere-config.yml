@@ -59,7 +59,6 @@ rules:
           # AES 加密密钥
           aes-key-value: fjoasdfjalsdffasdasd
 
-
 # 展现逻辑 SQL & 真实 SQL
 props:
   sql-show: true

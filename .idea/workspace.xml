@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 利用shardingsphere实现用户表的分表">
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 用shardingsphere对敏感数据进行加密">
+      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/dto/req/UserLoginReqDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/dto/resp/UserLoginResDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/common/enums/UserErrorCodeEnums.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/common/enums/UserErrorCodeEnums.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/UserServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin/src/main/resources/shardingsphere-config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/resources/shardingsphere-config.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -138,7 +145,7 @@
       <option name="presentableId" value="Default" />
       <updated>1705924341957</updated>
       <workItem from="1705924343014" duration="8168000" />
-      <workItem from="1705974256327" duration="24303000" />
+      <workItem from="1705974256327" duration="28125000" />
     </task>
     <task id="LOCAL-00001" summary="feature: 自定义异常">
       <option name="closed" value="true" />
@@ -244,7 +251,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706004892117</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="feature: 用shardingsphere对敏感数据进行加密">
+      <option name="closed" value="true" />
+      <created>1706006116276</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1706006116276</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -275,7 +290,8 @@
     <MESSAGE value="feature: 实现了用户注册功能" />
     <MESSAGE value="feature: 后管实现修改用户信息" />
     <MESSAGE value="feature: 利用shardingsphere实现用户表的分表" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature: 利用shardingsphere实现用户表的分表" />
+    <MESSAGE value="feature: 用shardingsphere对敏感数据进行加密" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: 用shardingsphere对敏感数据进行加密" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

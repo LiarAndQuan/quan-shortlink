@@ -1,6 +1,8 @@
 package online.aquan.shortlink.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.lang.UUID;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -11,8 +13,10 @@ import online.aquan.shortlink.admin.common.convention.exception.ServiceException
 import online.aquan.shortlink.admin.common.enums.UserErrorCodeEnums;
 import online.aquan.shortlink.admin.dao.eneity.UserDo;
 import online.aquan.shortlink.admin.dao.mapper.UserMapper;
+import online.aquan.shortlink.admin.dto.req.UserLoginReqDto;
 import online.aquan.shortlink.admin.dto.req.UserRegisterReqDto;
 import online.aquan.shortlink.admin.dto.req.UserUpdateReqDto;
+import online.aquan.shortlink.admin.dto.resp.UserLoginResDto;
 import online.aquan.shortlink.admin.dto.resp.UserRespDto;
 import online.aquan.shortlink.admin.service.UserService;
 import org.redisson.api.RBloomFilter;
@@ -20,7 +24,10 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.TimeUnit;
 
 import static online.aquan.shortlink.admin.common.constant.RedisCacheConstant.LOCK_USER_REGISTER_KEY;
 import static online.aquan.shortlink.admin.common.enums.UserErrorCodeEnums.*;
@@ -32,6 +39,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo> implements 
     //布隆过滤器
     private final RBloomFilter<String> userRegisterCachePenetrationBloomFilter;
     private final RedissonClient redissonClient;
+    private final StringRedisTemplate stringRedisTemplate;
 
     /**
      * 根据用户名查询用户的信息
@@ -43,7 +51,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo> implements 
         UserDo userDo = baseMapper.selectOne(lambdaQueryWrapper);
         if (userDo == null) {
             throw new ServiceException(UserErrorCodeEnums.USER_NULL);
-        } 
+        }
         UserRespDto result = new UserRespDto();
         BeanUtils.copyProperties(userDo, result);
         return result;
@@ -91,15 +99,70 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo> implements 
      */
     @Override
     public void update(UserUpdateReqDto requestParam) {
-        if(!hasUsername(requestParam.getUsername())){
+        if (!hasUsername(requestParam.getUsername())) {
             throw new ClientException(USER_NULL);
         }
         UserDo userDo = new UserDo();
-        BeanUtil.copyProperties(requestParam,userDo);
+        BeanUtil.copyProperties(requestParam, userDo);
         LambdaUpdateWrapper<UserDo> wrapper = Wrappers.lambdaUpdate(UserDo.class)
                 .eq(UserDo::getUsername, requestParam.getUsername());
-        baseMapper.update(userDo,wrapper);
+        baseMapper.update(userDo, wrapper);
     }
-    
-    
+
+    /**
+     * 用户登录功能
+     *
+     * @param requestParam username和password
+     * @return token
+     */
+    @Override
+    public UserLoginResDto login(UserLoginReqDto requestParam) {
+        LambdaQueryWrapper<UserDo> wrapper = Wrappers.lambdaQuery(UserDo.class)
+                .eq(UserDo::getUsername, requestParam.getUsername())
+                .eq(UserDo::getPassword, requestParam.getPassword())
+                .eq(UserDo::getDelFlag, 0);
+        UserDo userDo = baseMapper.selectOne(wrapper);
+        if (userDo == null) {
+            throw new ClientException(USER_NULL);
+        }
+        //判断用户是否已经登录
+        Boolean hasLogin = stringRedisTemplate.hasKey("login_" + requestParam.getUsername());
+        if (hasLogin != null && hasLogin) {
+            throw new ClientException(USER_HAS_LOGIN);
+        }
+
+        /*
+         * 接下来存入redis的结构如下:
+         * Key: login_用户名
+         * Value:
+         *   Key: token
+         *   value: Json 字符串(用户信息)
+         * */
+
+        //首先生成uuid作为token
+        String uuid = UUID.randomUUID().toString();
+        stringRedisTemplate.opsForHash().put("login_" + requestParam.getUsername(), uuid, JSON.toJSONString(userDo));
+        stringRedisTemplate.expire("login" + requestParam.getUsername(), 2, TimeUnit.HOURS);
+        return new UserLoginResDto(uuid);
+    }
+
+    /**
+     * 判断是否已经登录
+     */
+    @Override
+    public Boolean hasLogin(String username, String token) {
+        return stringRedisTemplate.opsForHash().get("login_" + username, token) != null;
+    }
+
+
+    /**
+     * 退出登录,并且需要删除redis里面的信息
+     */
+    @Override
+    public void logout(String username, String token) {
+        if (!hasLogin(username, token)) {
+            throw new ClientException(USER_NOT_LOGIN);
+        }
+        stringRedisTemplate.delete("login_" + username);
+    }
 }

@@ -5,9 +5,11 @@ import cn.hutool.core.bean.BeanUtil;
 import lombok.RequiredArgsConstructor;
 import online.aquan.shortlink.admin.common.convention.result.Result;
 import online.aquan.shortlink.admin.common.convention.result.Results;
+import online.aquan.shortlink.admin.dto.req.UserLoginReqDto;
 import online.aquan.shortlink.admin.dto.req.UserRegisterReqDto;
 import online.aquan.shortlink.admin.dto.req.UserUpdateReqDto;
 import online.aquan.shortlink.admin.dto.resp.UserActualRespDto;
+import online.aquan.shortlink.admin.dto.resp.UserLoginResDto;
 import online.aquan.shortlink.admin.dto.resp.UserRespDto;
 import online.aquan.shortlink.admin.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -64,7 +66,21 @@ public class UserController {
     /**
      * 用户登录
      */
+    @PostMapping("/api/short-link/admin/v1/user/login")
+    public Result<UserLoginResDto> login(@RequestBody UserLoginReqDto requestParam) {
+        return Results.success(userService.login(requestParam));
+    }
+
+    @GetMapping("/api/short-link/admin/v1/user/check-login")
+    public Result<Boolean> hasLogin(@RequestParam String username, @RequestParam String token) {
+        return Results.success(userService.hasLogin(username,token));
+    }
     
+    @DeleteMapping("/api/short-link/admin/v1/user/logout")
+    public Result<Void> logout(@RequestParam String username,@RequestParam String token){
+        userService.logout(username,token);
+        return Results.success();
+    }
 
 
 }
