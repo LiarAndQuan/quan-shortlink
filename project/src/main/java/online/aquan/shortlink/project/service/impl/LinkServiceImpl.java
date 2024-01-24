@@ -1,6 +1,8 @@
 package online.aquan.shortlink.project.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.esotericsoftware.minlog.Log;
@@ -10,7 +12,9 @@ import online.aquan.shortlink.project.common.convention.exception.ServiceExcepti
 import online.aquan.shortlink.project.dao.entity.LinkDo;
 import online.aquan.shortlink.project.dao.mapper.LinkMapper;
 import online.aquan.shortlink.project.dto.rep.LinkCreateReqDto;
+import online.aquan.shortlink.project.dto.rep.LinkPageReqDto;
 import online.aquan.shortlink.project.dto.resp.LinkCreateRespDto;
+import online.aquan.shortlink.project.dto.resp.LinkPageRespDto;
 import online.aquan.shortlink.project.service.LinkService;
 import online.aquan.shortlink.project.toolkit.HashUtil;
 import org.redisson.api.RBloomFilter;
@@ -27,6 +31,9 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
 
     private final RBloomFilter<String> shortLinkCachePenetrationBloomFilter;
 
+    /**
+     * 创建短链接
+     */
     @Override
     public LinkCreateRespDto createShortLink(LinkCreateReqDto requestParam) {
         String shortUrl = generateShortUrl(requestParam.getOriginUrl());
@@ -63,6 +70,9 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                 .gid(requestParam.getGid()).build();
     }
 
+    /**
+     * 生成短链接的shortUrl
+     */
     private String generateShortUrl(String originUrl) {
         int count = 0;
         String shortUrl;
@@ -78,5 +88,21 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             count++;
         }
         return shortUrl;
+    }
+
+    /**
+     * 短链接分页查询
+     * @param requestParam current size ,LinkPageReqDto继承了IPage
+     */
+    @Override
+    public IPage<LinkPageRespDto> pageShortLink(LinkPageReqDto requestParam) {
+        LambdaQueryWrapper<LinkDo> wrapper = Wrappers.lambdaQuery(LinkDo.class)
+                .eq(LinkDo::getGid, requestParam.getGid())
+                .eq(LinkDo::getDelFlag, 0)
+                .eq(LinkDo::getEnableStatus, 0)
+                .orderByDesc(LinkDo::getCreateTime);
+        //分页查询即可
+        IPage<LinkDo> linkDoIPage = baseMapper.selectPage(requestParam, wrapper);
+        return linkDoIPage.convert((item) -> BeanUtil.toBean(item, LinkPageRespDto.class));
     }
 }

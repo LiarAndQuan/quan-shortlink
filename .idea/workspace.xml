@@ -4,8 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="optimize: 优化了用户过滤器的功能">
-      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/config/DatabaseConfiguration.java" afterDir="false" />
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 数据库新增favicon字段">
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dto/rep/LinkPageReqDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dto/resp/LinkPageRespDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/controller/LinkController.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/controller/LinkController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/LinkService.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/LinkService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +58,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.ShortLinkAdminApplication.executor": "Debug",
-    "Spring Boot.ShortLinkApplication.executor": "Run",
+    "Spring Boot.ShortLinkApplication.executor": "Debug",
     "git-widget-placeholder": "master",
     "jdk.selected.JAVA_MODULE": "17",
     "kotlin-language-version-configured": "true",
@@ -88,6 +94,7 @@
       <recent name="Q:\Code\IdeaCode\quan-shortlink" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="online.aquan.shortlink.project.config" />
       <recent name="online.aquan.shortlink.project.common.web" />
       <recent name="online.aquan.shortlink.project.common.database" />
     </key>
@@ -166,7 +173,7 @@
       <workItem from="1705924343014" duration="8168000" />
       <workItem from="1705974256327" duration="34645000" />
       <workItem from="1706062615952" duration="13005000" />
-      <workItem from="1706083952439" duration="12402000" />
+      <workItem from="1706083952439" duration="15379000" />
     </task>
     <task id="LOCAL-00001" summary="feature: 自定义异常">
       <option name="closed" value="true" />
@@ -400,7 +407,23 @@
       <option name="project" value="LOCAL" />
       <updated>1706099338089</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="optimize: 添加mybatis-plus分页插件">
+      <option name="closed" value="true" />
+      <created>1706100511613</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1706100511613</updated>
+    </task>
+    <task id="LOCAL-00031" summary="feature: 数据库新增favicon字段">
+      <option name="closed" value="true" />
+      <created>1706101628403</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1706101628403</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -418,8 +441,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feature: 用户手机号脱敏" />
-    <MESSAGE value="feature: 客户端异常状态码枚举" />
     <MESSAGE value="feature: 返回用户脱敏信息接口实现" />
     <MESSAGE value="feature: 用户真实信息接口实现以及用户名是否存在接口实现" />
     <MESSAGE value="feature: 使用布隆过滤器优化了查询用户名是否存在" />
@@ -443,7 +464,9 @@
     <MESSAGE value="feature: 创建短链接接口的实现" />
     <MESSAGE value="feature: 短链接表使用gid分表" />
     <MESSAGE value="optimize: 优化了用户过滤器的功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="optimize: 优化了用户过滤器的功能" />
+    <MESSAGE value="optimize: 添加mybatis-plus分页插件" />
+    <MESSAGE value="feature: 数据库新增favicon字段" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: 数据库新增favicon字段" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
