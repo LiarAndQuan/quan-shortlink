@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 开发后管新增分组功能">
-      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/dto/resp/GroupRepsDto.java" afterDir="false" />
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 开发后管查询分组功能">
+      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/common/biz/user/UserContext.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/common/biz/user/UserInfoDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/common/biz/user/UserTransmitFilter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/GroupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/GroupController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/GroupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/GroupService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/GroupServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/GroupServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,7 +146,7 @@
       <updated>1705924341957</updated>
       <workItem from="1705924343014" duration="8168000" />
       <workItem from="1705974256327" duration="34645000" />
-      <workItem from="1706062615952" duration="2827000" />
+      <workItem from="1706062615952" duration="4496000" />
     </task>
     <task id="LOCAL-00001" summary="feature: 自定义异常">
       <option name="closed" value="true" />
@@ -285,7 +284,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706063843825</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="feature: 开发后管查询分组功能">
+      <option name="closed" value="true" />
+      <created>1706065736316</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1706065736316</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -320,7 +327,8 @@
     <MESSAGE value="feature: 后管实现登录,查询是否登录以及退出登录功能" />
     <MESSAGE value="feature: 分组功能基础代码的构建" />
     <MESSAGE value="feature: 开发后管新增分组功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature: 开发后管新增分组功能" />
+    <MESSAGE value="feature: 开发后管查询分组功能" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: 开发后管查询分组功能" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
