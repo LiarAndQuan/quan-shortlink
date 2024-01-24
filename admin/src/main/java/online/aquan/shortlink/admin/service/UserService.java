@@ -1,7 +1,7 @@
 package online.aquan.shortlink.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import online.aquan.shortlink.admin.dao.eneity.UserDo;
+import online.aquan.shortlink.admin.dao.entity.UserDo;
 import online.aquan.shortlink.admin.dto.req.UserLoginReqDto;
 import online.aquan.shortlink.admin.dto.req.UserRegisterReqDto;
 import online.aquan.shortlink.admin.dto.req.UserUpdateReqDto;

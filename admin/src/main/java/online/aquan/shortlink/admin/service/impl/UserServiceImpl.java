@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import online.aquan.shortlink.admin.common.convention.exception.ClientException;
 import online.aquan.shortlink.admin.common.convention.exception.ServiceException;
 import online.aquan.shortlink.admin.common.enums.UserErrorCodeEnums;
-import online.aquan.shortlink.admin.dao.eneity.UserDo;
+import online.aquan.shortlink.admin.dao.entity.UserDo;
 import online.aquan.shortlink.admin.dao.mapper.UserMapper;
 import online.aquan.shortlink.admin.dto.req.UserLoginReqDto;
 import online.aquan.shortlink.admin.dto.req.UserRegisterReqDto;
