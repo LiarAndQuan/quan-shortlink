@@ -25,7 +25,7 @@ public class UserTransmitFilter implements Filter {
         //获取url
         String requestURI = httpServletRequest.getRequestURI();
         //如果不是登录的url
-        if (!Objects.equals(requestURI, "/api/short-link/v1/user/login")) {
+        if (!Objects.equals(requestURI, "/api/short-link/admin/v1/user/login")) {
             //获取名字和token之后从redis取出用户的json数据
             String username = httpServletRequest.getHeader("username");
             String token = httpServletRequest.getHeader("token");

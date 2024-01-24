@@ -2,12 +2,14 @@ package online.aquan.shortlink.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import online.aquan.shortlink.admin.common.biz.user.UserContext;
 import online.aquan.shortlink.admin.dao.entity.GroupDo;
 import online.aquan.shortlink.admin.dao.mapper.GroupMapper;
 import online.aquan.shortlink.admin.dto.req.GroupSaveDto;
+import online.aquan.shortlink.admin.dto.req.GroupUpdateDto;
 import online.aquan.shortlink.admin.dto.resp.GroupRepsDto;
 import online.aquan.shortlink.admin.service.GroupService;
 import online.aquan.shortlink.admin.toolkit.RandomGenerator;
@@ -62,4 +64,19 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDo> implemen
         return BeanUtil.copyToList(groupDos, GroupRepsDto.class);
     }
 
+    /**
+     * 修改短链接
+     * @param requestParam gid,new name
+     */
+    @Override
+    public void update(GroupUpdateDto requestParam) {
+        LambdaUpdateWrapper<GroupDo> wrapper = Wrappers.lambdaUpdate(GroupDo.class)
+                .eq(GroupDo::getGid, requestParam.getGid())
+                .eq(GroupDo::getDelFlag,0);
+        GroupDo groupDo = GroupDo.builder()
+                .gid(requestParam.getGid())
+                .name(requestParam.getName())
+                .build();
+        baseMapper.update(groupDo,wrapper);
+    }
 }
