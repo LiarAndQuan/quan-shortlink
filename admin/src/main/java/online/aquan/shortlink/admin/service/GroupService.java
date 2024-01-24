@@ -3,6 +3,7 @@ package online.aquan.shortlink.admin.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import online.aquan.shortlink.admin.dao.entity.GroupDo;
 import online.aquan.shortlink.admin.dto.req.GroupSaveDto;
+import online.aquan.shortlink.admin.dto.req.GroupSortDto;
 import online.aquan.shortlink.admin.dto.req.GroupUpdateDto;
 import online.aquan.shortlink.admin.dto.resp.GroupRepsDto;
 
@@ -14,5 +15,9 @@ public interface GroupService extends IService<GroupDo> {
 
     List<GroupRepsDto> getGroupList();
 
-    void update(GroupUpdateDto requestParam);
+    void updateGroup(GroupUpdateDto requestParam);
+
+    void deleteGroup(String gid);
+
+    void sortGroup(List<GroupSortDto> requestParam);
 }

@@ -9,6 +9,7 @@ import online.aquan.shortlink.admin.common.biz.user.UserContext;
 import online.aquan.shortlink.admin.dao.entity.GroupDo;
 import online.aquan.shortlink.admin.dao.mapper.GroupMapper;
 import online.aquan.shortlink.admin.dto.req.GroupSaveDto;
+import online.aquan.shortlink.admin.dto.req.GroupSortDto;
 import online.aquan.shortlink.admin.dto.req.GroupUpdateDto;
 import online.aquan.shortlink.admin.dto.resp.GroupRepsDto;
 import online.aquan.shortlink.admin.service.GroupService;
@@ -66,17 +67,56 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDo> implemen
 
     /**
      * 修改短链接
+     *
      * @param requestParam gid,new name
      */
     @Override
-    public void update(GroupUpdateDto requestParam) {
+    public void updateGroup(GroupUpdateDto requestParam) {
         LambdaUpdateWrapper<GroupDo> wrapper = Wrappers.lambdaUpdate(GroupDo.class)
                 .eq(GroupDo::getGid, requestParam.getGid())
-                .eq(GroupDo::getDelFlag,0);
+                .eq(GroupDo::getUsername, UserContext.getUsername())
+                .eq(GroupDo::getDelFlag, 0);
         GroupDo groupDo = GroupDo.builder()
                 .gid(requestParam.getGid())
                 .name(requestParam.getName())
                 .build();
-        baseMapper.update(groupDo,wrapper);
+        baseMapper.update(groupDo, wrapper);
+    }
+
+    /**
+     * 删除短链接
+     *
+     * @param gid gid
+     */
+    @Override
+    public void deleteGroup(String gid) {
+        LambdaUpdateWrapper<GroupDo> wrapper = Wrappers.lambdaUpdate(GroupDo.class)
+                .eq(GroupDo::getDelFlag, 0)
+                .eq(GroupDo::getGid, gid)
+                .eq(GroupDo::getUsername, UserContext.getUsername());
+        GroupDo groupDo = new GroupDo();
+        groupDo.setDelFlag(1);
+        baseMapper.update(groupDo, wrapper);
+    }
+
+    /**
+     * 排序短链接
+     *
+     * @param requestParam gid,sortOrder
+     */
+    @Override
+    public void sortGroup(List<GroupSortDto> requestParam) {
+        requestParam.forEach(
+                (item) -> {
+                    LambdaUpdateWrapper<GroupDo> wrapper = Wrappers.lambdaUpdate(GroupDo.class)
+                            .eq(GroupDo::getGid, item.getGid())
+                            .eq(GroupDo::getUsername, UserContext.getUsername())
+                            .eq(GroupDo::getDelFlag, 0);
+                    GroupDo groupDo = GroupDo.builder()
+                            .sortOrder(item.getSortOrder())
+                            .build();
+                    baseMapper.update(groupDo, wrapper);
+                }
+        );
     }
 }
