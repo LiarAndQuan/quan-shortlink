@@ -35,6 +35,14 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDo> implemen
      */
     @Override
     public void saveGroup(GroupSaveDto requestParam) {
+        saveGroup(UserContext.getUsername(),requestParam.getName());
+    }
+
+    /**
+     * 新增短链接的分组
+     */
+    @Override
+    public void saveGroup(String username, String groupName) {
         String gid;
         //生成一个数据库中没有的gid
         while (true) {
@@ -50,8 +58,8 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDo> implemen
         //插入数据
         GroupDo groupDo = GroupDo.builder()
                 .gid(gid)
-                .name(requestParam.getName())
-                .username(UserContext.getUsername())
+                .name(groupName)
+                .username(username)
                 .sortOrder(0).build();
         baseMapper.insert(groupDo);
     }

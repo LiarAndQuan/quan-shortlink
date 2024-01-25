@@ -18,6 +18,7 @@ import online.aquan.shortlink.admin.dto.req.UserRegisterReqDto;
 import online.aquan.shortlink.admin.dto.req.UserUpdateReqDto;
 import online.aquan.shortlink.admin.dto.resp.UserLoginResDto;
 import online.aquan.shortlink.admin.dto.resp.UserRespDto;
+import online.aquan.shortlink.admin.service.GroupService;
 import online.aquan.shortlink.admin.service.UserService;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
@@ -40,6 +41,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo> implements 
     private final RBloomFilter<String> userRegisterCachePenetrationBloomFilter;
     private final RedissonClient redissonClient;
     private final StringRedisTemplate stringRedisTemplate;
+    private final GroupService groupService;
 
     /**
      * 根据用户名查询用户的信息
@@ -87,6 +89,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo> implements 
                     throw new ClientException(USER_EXIST);
                 }
                 userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
+                groupService.saveGroup(requestParam.getUsername(),"默认分组");
                 return;
             }
         } finally {

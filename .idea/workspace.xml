@@ -4,13 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: mybatis-plus配置逻辑删除">
-      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/resp/LinkGroupCountRespDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/LinkController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/LinkController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/dto/resp/GroupRepsDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/dto/resp/GroupRepsDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/LinkRemoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/LinkRemoteService.java" afterDir="false" />
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 后管调用中台短链接组内数量接口,实现查询短链接分组返回组内具体链接数量">
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/GroupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/GroupService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/GroupServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/GroupServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/UserServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +96,7 @@
       <recent name="online.aquan.shortlink.project.common.database" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.ShortLinkApplication">
+  <component name="RunManager" selected="Spring Boot.ShortLinkAdminApplication">
     <configuration name="UserShardingTableTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="aquan.online.shortlink.admin.test.UserShardingTableTest" />
       <module name="shortlink-admin" />
@@ -147,8 +144,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.ShortLinkApplication" />
         <item itemvalue="Spring Boot.ShortLinkAdminApplication" />
+        <item itemvalue="Spring Boot.ShortLinkApplication" />
         <item itemvalue="应用程序.UserShardingTableTest" />
         <item itemvalue="HTTP 请求.ShortLinkAdminApplication | #1" />
         <item itemvalue="HTTP 请求.ShortLinkAdminApplication | #2" />
@@ -174,7 +171,7 @@
       <workItem from="1705974256327" duration="34645000" />
       <workItem from="1706062615952" duration="13005000" />
       <workItem from="1706083952439" duration="17029000" />
-      <workItem from="1706148859528" duration="21134000" />
+      <workItem from="1706148859528" duration="21942000" />
     </task>
     <task id="LOCAL-00001" summary="feature: 自定义异常">
       <option name="closed" value="true" />
@@ -472,7 +469,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706170402427</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="feature: 后管调用中台短链接组内数量接口,实现查询短链接分组返回组内具体链接数量">
+      <option name="closed" value="true" />
+      <created>1706173747134</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1706173747134</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -490,7 +495,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feature: 利用shardingsphere实现用户表的分表" />
     <MESSAGE value="feature: 用shardingsphere对敏感数据进行加密" />
     <MESSAGE value="feature: 后管实现登录,查询是否登录以及退出登录功能" />
     <MESSAGE value="feature: 分组功能基础代码的构建" />
@@ -515,7 +519,8 @@
     <MESSAGE value="feature: 短链接分组表分表" />
     <MESSAGE value="feature: 中台开发统计组内短链接数量" />
     <MESSAGE value="feature: mybatis-plus配置逻辑删除" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature: mybatis-plus配置逻辑删除" />
+    <MESSAGE value="feature: 后管调用中台短链接组内数量接口,实现查询短链接分组返回组内具体链接数量" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: 后管调用中台短链接组内数量接口,实现查询短链接分组返回组内具体链接数量" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -524,11 +529,6 @@
           <url>file://$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/common/serialize/PhoneDesensitizationSerializer.java</url>
           <line>16</line>
           <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/GroupServiceImpl.java</url>
-          <line>72</line>
-          <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

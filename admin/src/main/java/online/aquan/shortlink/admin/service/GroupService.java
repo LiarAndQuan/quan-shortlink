@@ -20,4 +20,6 @@ public interface GroupService extends IService<GroupDo> {
     void deleteGroup(String gid);
 
     void sortGroup(List<GroupSortDto> requestParam);
+
+    void saveGroup(String username, String groupName);
 }
