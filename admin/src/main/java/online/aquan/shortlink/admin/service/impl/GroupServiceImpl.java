@@ -6,21 +6,29 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import online.aquan.shortlink.admin.common.biz.user.UserContext;
+import online.aquan.shortlink.admin.common.convention.result.Result;
 import online.aquan.shortlink.admin.dao.entity.GroupDo;
 import online.aquan.shortlink.admin.dao.mapper.GroupMapper;
 import online.aquan.shortlink.admin.dto.req.GroupSaveDto;
 import online.aquan.shortlink.admin.dto.req.GroupSortDto;
 import online.aquan.shortlink.admin.dto.req.GroupUpdateDto;
 import online.aquan.shortlink.admin.dto.resp.GroupRepsDto;
+import online.aquan.shortlink.admin.remote.dto.LinkRemoteService;
+import online.aquan.shortlink.admin.remote.dto.resp.LinkGroupCountRespDto;
 import online.aquan.shortlink.admin.service.GroupService;
 import online.aquan.shortlink.admin.toolkit.RandomGenerator;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDo> implements GroupService {
+
+    private final LinkRemoteService linkRemoteService = new LinkRemoteService() {
+    };
 
     /**
      * 新增短链接的分组
@@ -61,8 +69,25 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDo> implemen
                 .eq(GroupDo::getDelFlag, 0)
                 //降序排序
                 .orderByDesc(GroupDo::getSortOrder, GroupDo::getUpdateTime);
+        //获取所有的分组
         List<GroupDo> groupDos = baseMapper.selectList(wrapper);
-        return BeanUtil.copyToList(groupDos, GroupRepsDto.class);
+        //调用中台获取所有的gid的linkCount
+        Result<List<LinkGroupCountRespDto>> groupLinkCount = linkRemoteService
+                .getGroupLinkCount(groupDos.stream().map(GroupDo::getGid).toList());
+        List<GroupRepsDto> groupRepsDtos = BeanUtil.copyToList(groupDos, GroupRepsDto.class);
+        //将所有的数量赋值给对应的gid即可
+        Map<String, Integer> map = new HashMap<>();
+        groupLinkCount.getData().forEach(
+                (item) -> {
+                    map.put(item.getGid(), item.getShortLinkCount());
+                }
+        );
+        groupRepsDtos.forEach(
+                (item) -> {
+                    item.setShortLinkCount(map.get(item.getGid()));
+                }
+        );
+        return groupRepsDtos;
     }
 
     /**

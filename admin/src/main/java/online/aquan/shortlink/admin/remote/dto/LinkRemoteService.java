@@ -9,10 +9,12 @@ import online.aquan.shortlink.admin.common.convention.result.Result;
 import online.aquan.shortlink.admin.remote.dto.rep.LinkCreateReqDto;
 import online.aquan.shortlink.admin.remote.dto.rep.LinkPageReqDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkCreateRespDto;
+import online.aquan.shortlink.admin.remote.dto.resp.LinkGroupCountRespDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkPageRespDto;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 
 
 @Component
@@ -44,6 +46,19 @@ public interface LinkRemoteService {
         map.put("gid", requestParam.getGid());
         String resp = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/page",
                 map);
+        return JSON.parseObject(resp, new TypeReference<>() {
+        });
+    }
+
+    /**
+     * 调用中台的查询组内短链接数量接口
+     * @param requestParam gid的集合
+     * @return gid-shortLinkCount
+     */
+    default Result<List<LinkGroupCountRespDto>> getGroupLinkCount(List<String> requestParam) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("requestParam", requestParam);
+        String resp = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/count", map);
         return JSON.parseObject(resp, new TypeReference<>() {
         });
     }

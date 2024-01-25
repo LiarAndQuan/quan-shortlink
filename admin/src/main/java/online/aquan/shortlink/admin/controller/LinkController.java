@@ -7,11 +7,11 @@ import online.aquan.shortlink.admin.remote.dto.LinkRemoteService;
 import online.aquan.shortlink.admin.remote.dto.rep.LinkCreateReqDto;
 import online.aquan.shortlink.admin.remote.dto.rep.LinkPageReqDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkCreateRespDto;
+import online.aquan.shortlink.admin.remote.dto.resp.LinkGroupCountRespDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkPageRespDto;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -35,6 +35,11 @@ public class LinkController {
     @GetMapping("/api/short-link/admin/v1/page")
     public Result<IPage<LinkPageRespDto>> pageShortLink(LinkPageReqDto requestParam) {
         return linkRemoteService.pageLink(requestParam);
+    }
+
+    @GetMapping("/api/short-link/admin/v1/count")
+    public Result<List<LinkGroupCountRespDto>> getGroupLinkCount(@RequestParam("requestParam") List<String> requestParam) {
+        return linkRemoteService.getGroupLinkCount(requestParam);
     }
 
 }

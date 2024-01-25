@@ -15,6 +15,11 @@ public class GroupRepsDto {
      * 分组名称
      */
     private String name;
+
+    /**
+     * 短链接数量
+     */
+    private Integer shortLinkCount;
     
     /**
      * 分组排序

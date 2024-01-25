@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 中台开发统计组内短链接数量" />
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: mybatis-plus配置逻辑删除">
+      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/resp/LinkGroupCountRespDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/LinkController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/LinkController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/dto/resp/GroupRepsDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/dto/resp/GroupRepsDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/LinkRemoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/LinkRemoteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/GroupServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/GroupServiceImpl.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -86,6 +93,7 @@
       <recent name="Q:\Code\IdeaCode\quan-shortlink\project\src\main\java\online\aquan\shortlink\project\common\biz" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="online.aquan.shortlink.admin.remote.dto.resp" />
       <recent name="online.aquan.shortlink.project.config" />
       <recent name="online.aquan.shortlink.project.common.web" />
       <recent name="online.aquan.shortlink.project.common.database" />
@@ -166,7 +174,7 @@
       <workItem from="1705974256327" duration="34645000" />
       <workItem from="1706062615952" duration="13005000" />
       <workItem from="1706083952439" duration="17029000" />
-      <workItem from="1706148859528" duration="17825000" />
+      <workItem from="1706148859528" duration="21134000" />
     </task>
     <task id="LOCAL-00001" summary="feature: 自定义异常">
       <option name="closed" value="true" />
@@ -456,7 +464,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706169039338</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="feature: mybatis-plus配置逻辑删除">
+      <option name="closed" value="true" />
+      <created>1706170402427</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1706170402427</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -474,7 +490,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feature: 后管实现修改用户信息" />
     <MESSAGE value="feature: 利用shardingsphere实现用户表的分表" />
     <MESSAGE value="feature: 用shardingsphere对敏感数据进行加密" />
     <MESSAGE value="feature: 后管实现登录,查询是否登录以及退出登录功能" />
@@ -499,7 +514,8 @@
     <MESSAGE value="optimize: 优化查询短链接分组返回信息" />
     <MESSAGE value="feature: 短链接分组表分表" />
     <MESSAGE value="feature: 中台开发统计组内短链接数量" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature: 中台开发统计组内短链接数量" />
+    <MESSAGE value="feature: mybatis-plus配置逻辑删除" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: mybatis-plus配置逻辑删除" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -510,12 +526,17 @@
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/LinkRemoteService.java</url>
-          <line>44</line>
-          <option name="timeStamp" value="17" />
+          <url>file://$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/GroupServiceImpl.java</url>
+          <line>72</line>
+          <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="online.aquan.shortlink.admin.common.convention.result.Result" memberName="code" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
