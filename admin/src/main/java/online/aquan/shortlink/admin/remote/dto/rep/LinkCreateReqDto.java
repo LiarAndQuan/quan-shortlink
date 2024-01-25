@@ -1,4 +1,4 @@
-package online.aquan.shortlink.project.dto.rep;
+package online.aquan.shortlink.admin.remote.dto.rep;
 
 
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -13,17 +13,17 @@ public class LinkCreateReqDto {
      * 域名
      */
     private String domain;
-    
+
     /**
      * 原始链接
      */
     private String originUrl;
-    
+
     /**
      * 分组标识
      */
     private String gid;
-    
+
     /**
      * 创建类型 0：接口创建 1：控制台创建
      */

@@ -21,7 +21,7 @@ public class LinkController {
     /**
      * 创建短链接
      */
-    @PostMapping("/api/short-link/admin/v1/create")
+    @PostMapping("/api/short-link/v1/create")
     public Result<LinkCreateRespDto> createShortLink(@RequestBody LinkCreateReqDto requestParam){
         return Results.success(linkService.createShortLink(requestParam));
     }
@@ -31,8 +31,8 @@ public class LinkController {
      * @param requestParam gid
      * @return 短链接集合
      */
-    @GetMapping("/api/short-link/admin/v1/page")
-    public Result<IPage<LinkPageRespDto>> pageShortLink( LinkPageReqDto requestParam){
+    @GetMapping("/api/short-link/v1/page")
+    public Result<IPage<LinkPageRespDto>> pageShortLink(LinkPageReqDto requestParam){
         return Results.success(linkService.pageShortLink(requestParam));
     }
 }
