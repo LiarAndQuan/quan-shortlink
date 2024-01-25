@@ -2,6 +2,7 @@ package online.aquan.shortlink.project.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -14,6 +15,7 @@ import online.aquan.shortlink.project.dao.mapper.LinkMapper;
 import online.aquan.shortlink.project.dto.rep.LinkCreateReqDto;
 import online.aquan.shortlink.project.dto.rep.LinkPageReqDto;
 import online.aquan.shortlink.project.dto.resp.LinkCreateRespDto;
+import online.aquan.shortlink.project.dto.resp.LinkGroupCountRespDto;
 import online.aquan.shortlink.project.dto.resp.LinkPageRespDto;
 import online.aquan.shortlink.project.service.LinkService;
 import online.aquan.shortlink.project.toolkit.HashUtil;
@@ -22,6 +24,8 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -104,5 +108,23 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
         //分页查询即可
         IPage<LinkDo> linkDoIPage = baseMapper.selectPage(requestParam, wrapper);
         return linkDoIPage.convert((item) -> BeanUtil.toBean(item, LinkPageRespDto.class));
+    }
+
+    /**
+     * 短链接分组中有多少条短链接
+     *
+     * @param requestParam List --gid
+     * @return gid, linkCount
+     */
+    @Override
+    public List<LinkGroupCountRespDto> getLinkGroupCount(List<String> requestParam) {
+        QueryWrapper<LinkDo> wrapper = Wrappers.query(new LinkDo())
+                .select("gid ,count(*) as shortLinkCount")
+                .groupBy("gid")
+                .in("gid", requestParam)
+                .eq("enable_status", 0)
+                .eq("del_flag", 0);
+        List<Map<String, Object>> maps = baseMapper.selectMaps(wrapper);
+        return BeanUtil.copyToList(maps, LinkGroupCountRespDto.class);
     }
 }

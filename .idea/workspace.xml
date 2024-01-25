@@ -4,8 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 开发后管调用中台服务">
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 短链接分组表分表">
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dto/resp/LinkGroupCountRespDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/controller/LinkController.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/controller/LinkController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/LinkService.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/LinkService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +73,7 @@
     "project.structure.side.proportion": "0.0",
     "settings.editor.selected.configurable": "editor.preferences.tabs",
     "vue.rearranger.settings.migration": "true",
-    "应用程序.UserShardingTableTest.executor": "Debug"
+    "应用程序.UserShardingTableTest.executor": "Run"
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
@@ -93,7 +99,7 @@
       <recent name="online.aquan.shortlink.project.common.database" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.ShortLinkAdminApplication">
+  <component name="RunManager" selected="Spring Boot.ShortLinkApplication">
     <configuration name="UserShardingTableTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="aquan.online.shortlink.admin.test.UserShardingTableTest" />
       <module name="shortlink-admin" />
@@ -141,8 +147,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.ShortLinkAdminApplication" />
         <item itemvalue="Spring Boot.ShortLinkApplication" />
+        <item itemvalue="Spring Boot.ShortLinkAdminApplication" />
         <item itemvalue="应用程序.UserShardingTableTest" />
         <item itemvalue="HTTP 请求.ShortLinkAdminApplication | #1" />
         <item itemvalue="HTTP 请求.ShortLinkAdminApplication | #2" />
@@ -168,7 +174,7 @@
       <workItem from="1705974256327" duration="34645000" />
       <workItem from="1706062615952" duration="13005000" />
       <workItem from="1706083952439" duration="17029000" />
-      <workItem from="1706148859528" duration="13399000" />
+      <workItem from="1706148859528" duration="16676000" />
     </task>
     <task id="LOCAL-00001" summary="feature: 自定义异常">
       <option name="closed" value="true" />
@@ -434,7 +440,23 @@
       <option name="project" value="LOCAL" />
       <updated>1706162425591</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="optimize: 优化查询短链接分组返回信息">
+      <option name="closed" value="true" />
+      <created>1706165131228</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1706165131228</updated>
+    </task>
+    <task id="LOCAL-00035" summary="feature: 短链接分组表分表">
+      <option name="closed" value="true" />
+      <created>1706168982500</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1706168982500</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -452,8 +474,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feature: 使用布隆过滤器优化了查询用户名是否存在" />
-    <MESSAGE value="feature: 使用mybatis-plus中的自动填充功能" />
     <MESSAGE value="feature: 实现了用户注册功能" />
     <MESSAGE value="feature: 后管实现修改用户信息" />
     <MESSAGE value="feature: 利用shardingsphere实现用户表的分表" />
@@ -477,7 +497,9 @@
     <MESSAGE value="feature: 数据库新增favicon字段" />
     <MESSAGE value="feature: 开发短链接分组查询接口" />
     <MESSAGE value="feature: 开发后管调用中台服务" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature: 开发后管调用中台服务" />
+    <MESSAGE value="optimize: 优化查询短链接分组返回信息" />
+    <MESSAGE value="feature: 短链接分组表分表" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: 短链接分组表分表" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -491,6 +513,11 @@
           <url>file://$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/LinkRemoteService.java</url>
           <line>44</line>
           <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java</url>
+          <line>126</line>
+          <option name="timeStamp" value="19" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
