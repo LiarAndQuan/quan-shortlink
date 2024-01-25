@@ -25,5 +25,11 @@ spring:
     redis:
       host: 127.0.0.1
       port: 6379
-#  jackson:
-#    date-format: yyyy-MM-dd HH:mm:ss
+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: delFlag
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      id-type: auto            # 主键生成策略，可以根据你的需求配置
