@@ -1,6 +1,7 @@
 package online.aquan.shortlink.project.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -14,9 +15,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import online.aquan.shortlink.project.common.constant.VailDateTypeEnum;
+import online.aquan.shortlink.project.common.constant.RedisKeyConstant;
 import online.aquan.shortlink.project.common.convention.exception.ClientException;
 import online.aquan.shortlink.project.common.convention.exception.ServiceException;
+import online.aquan.shortlink.project.common.enums.VailDateTypeEnum;
 import online.aquan.shortlink.project.dao.entity.LinkDo;
 import online.aquan.shortlink.project.dao.entity.LinkGotoDo;
 import online.aquan.shortlink.project.dao.mapper.LinkGotoMapper;
@@ -30,7 +32,10 @@ import online.aquan.shortlink.project.dto.resp.LinkPageRespDto;
 import online.aquan.shortlink.project.service.LinkService;
 import online.aquan.shortlink.project.toolkit.HashUtil;
 import org.redisson.api.RBloomFilter;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +52,8 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
 
     private final RBloomFilter<String> shortLinkCachePenetrationBloomFilter;
     private final LinkGotoMapper linkGotoMapper;
+    private final StringRedisTemplate stringRedisTemplate;
+    private final RedissonClient redissonClient;
 
     /**
      * 创建短链接
@@ -126,11 +133,11 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
         //分页查询即可
         IPage<LinkDo> linkDoIPage = baseMapper.selectPage(requestParam, wrapper);
         return linkDoIPage.convert((item) ->
-                {
-                    LinkPageRespDto linkPageRespDto = BeanUtil.toBean(item, LinkPageRespDto.class);
-                    linkPageRespDto.setDomain("http://"+linkPageRespDto.getDomain());
-                    return linkPageRespDto;
-                });
+        {
+            LinkPageRespDto linkPageRespDto = BeanUtil.toBean(item, LinkPageRespDto.class);
+            linkPageRespDto.setDomain("http://" + linkPageRespDto.getDomain());
+            return linkPageRespDto;
+        });
     }
 
     /**
@@ -198,22 +205,41 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     @Override
     public void restoreLink(String shortUrl, ServletRequest servletRequest, ServletResponse servletResponse) {
         String fullUrl = servletRequest.getServerName() + "/" + shortUrl;
-        //首先查出短链接对应的gid
-        LambdaQueryWrapper<LinkGotoDo> wrapper = Wrappers.lambdaQuery(LinkGotoDo.class)
-                .eq(LinkGotoDo::getFullShortUrl, fullUrl);
-        LinkGotoDo linkGotoDo = linkGotoMapper.selectOne(wrapper);
-        if (linkGotoDo == null) {
+        String originUrl = stringRedisTemplate.opsForValue().get(RedisKeyConstant.GOTO_LINK_KEY + fullUrl);
+        //如果缓存中直接就存在
+        if (StrUtil.isNotBlank(originUrl)) {
+            ((HttpServletResponse) servletResponse).sendRedirect(originUrl);
             return;
         }
-        //根据shortUrl和gid查询出originUrl
-        String gid = linkGotoDo.getGid();
-        LambdaQueryWrapper<LinkDo> wrapper1 = Wrappers.lambdaQuery(LinkDo.class)
-                .eq(LinkDo::getGid, gid)
-                .eq(LinkDo::getShortUri, shortUrl)
-                .eq(LinkDo::getEnableStatus, 0);
-        LinkDo linkDo = baseMapper.selectOne(wrapper1);
-        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
-        httpServletResponse.sendRedirect(linkDo.getOriginUrl());
+        RLock lock = redissonClient.getLock(RedisKeyConstant.LOCK_GOTO_LINK_KEY + fullUrl);
+        lock.lock();
+        try {
+            //进来之后再次判断是否在缓存中,因为添加了分布式锁,在此之前可能已经存入缓存中
+            String originUrl1 = stringRedisTemplate.opsForValue().get(RedisKeyConstant.GOTO_LINK_KEY + fullUrl);
+            if (StrUtil.isNotBlank(originUrl1)) {
+                ((HttpServletResponse) servletResponse).sendRedirect(originUrl);
+                return;
+            }
+            LambdaQueryWrapper<LinkGotoDo> wrapper = Wrappers.lambdaQuery(LinkGotoDo.class)
+                    .eq(LinkGotoDo::getFullShortUrl, fullUrl);
+            LinkGotoDo linkGotoDo = linkGotoMapper.selectOne(wrapper);
+            if (linkGotoDo == null) {
+                return;
+            }
+            //根据shortUrl和gid查询出originUrl
+            String gid = linkGotoDo.getGid();
+            LambdaQueryWrapper<LinkDo> wrapper1 = Wrappers.lambdaQuery(LinkDo.class)
+                    .eq(LinkDo::getGid, gid)
+                    .eq(LinkDo::getShortUri, shortUrl)
+                    .eq(LinkDo::getEnableStatus, 0);
+            LinkDo linkDo = baseMapper.selectOne(wrapper1);
+            if (linkDo != null) {
+                ((HttpServletResponse) servletResponse).sendRedirect(linkDo.getOriginUrl());
+                stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_KEY + fullUrl, linkDo.getOriginUrl());
+            }
+        } finally {
+            lock.unlock();
+        }
     }
 
 }

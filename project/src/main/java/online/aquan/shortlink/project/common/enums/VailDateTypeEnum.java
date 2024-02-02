@@ -1,4 +1,4 @@
-package online.aquan.shortlink.project.common.constant;
+package online.aquan.shortlink.project.common.enums;
 
 import lombok.Getter;
 
