@@ -43,6 +43,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -211,6 +212,17 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             ((HttpServletResponse) servletResponse).sendRedirect(originUrl);
             return;
         }
+        //缓存中不存在的话,我们就可以查询布隆过滤器看看fullUrl是否存在,不存在直接返回
+        boolean contains = shortLinkCachePenetrationBloomFilter.contains(fullUrl);
+        if (!contains) {
+            return;
+        }
+        //布隆过滤器可能会误判,为了防止恶意误判的请求,使用判断空值来解决穿透问题
+        String isNull = stringRedisTemplate.opsForValue().get(RedisKeyConstant.GOTO_LINK_IS_NULL_KEY + fullUrl);
+        //如果这里不等于null,说明我们在数据库查询为空时已经在redis中标记了不存在
+        if (StrUtil.isNotBlank(isNull)) {
+            return;
+        }
         RLock lock = redissonClient.getLock(RedisKeyConstant.LOCK_GOTO_LINK_KEY + fullUrl);
         lock.lock();
         try {
@@ -223,7 +235,10 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             LambdaQueryWrapper<LinkGotoDo> wrapper = Wrappers.lambdaQuery(LinkGotoDo.class)
                     .eq(LinkGotoDo::getFullShortUrl, fullUrl);
             LinkGotoDo linkGotoDo = linkGotoMapper.selectOne(wrapper);
+            //如果数据库中也不存在,为了防止恶意的缓存穿透,设置一个短时间的值在redis中
+            //这样的话在短时间内访问同样的导致布隆过滤器误判的短链接会被return
             if (linkGotoDo == null) {
+                stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_IS_NULL_KEY + fullUrl, "-", 30, TimeUnit.SECONDS);
                 return;
             }
             //根据shortUrl和gid查询出originUrl
