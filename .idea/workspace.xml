@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 短链接跳转预防缓存击穿">
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 短链接跳转预防缓存穿透">
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/common/constant/LinkConstant.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/toolkit/LinkUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/common/constant/RedisKeyConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/common/constant/RedisKeyConstant.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -174,7 +175,7 @@
       <workItem from="1706083952439" duration="17029000" />
       <workItem from="1706148859528" duration="22630000" />
       <workItem from="1706250386087" duration="1825000" />
-      <workItem from="1706836223266" duration="22380000" />
+      <workItem from="1706836223266" duration="23871000" />
     </task>
     <task id="LOCAL-00001" summary="feature: 自定义异常">
       <option name="closed" value="true" />
@@ -544,7 +545,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706879956607</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="feature: 短链接跳转预防缓存穿透">
+      <option name="closed" value="true" />
+      <created>1706881758222</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1706881758222</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -562,7 +571,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feature: 修改用户登录有效期为30天" />
     <MESSAGE value="feature: 修改短链接分组功能的实现" />
     <MESSAGE value="feature: 排序短链接分组功能的实现" />
     <MESSAGE value="feature: 初始化中台项目代码" />
@@ -587,7 +595,8 @@
     <MESSAGE value="feature: 中台短链接跳转功能的开发" />
     <MESSAGE value="feature: 修改默认返回的协议为http" />
     <MESSAGE value="feature: 短链接跳转预防缓存击穿" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature: 短链接跳转预防缓存击穿" />
+    <MESSAGE value="feature: 短链接跳转预防缓存穿透" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: 短链接跳转预防缓存穿透" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

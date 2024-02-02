@@ -31,6 +31,7 @@ import online.aquan.shortlink.project.dto.resp.LinkGroupCountRespDto;
 import online.aquan.shortlink.project.dto.resp.LinkPageRespDto;
 import online.aquan.shortlink.project.service.LinkService;
 import online.aquan.shortlink.project.toolkit.HashUtil;
+import online.aquan.shortlink.project.toolkit.LinkUtil;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -94,6 +95,9 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
         linkGotoDo.setGid(requestParam.getGid());
         linkGotoDo.setFullShortUrl(fullUrl);
         linkGotoMapper.insert(linkGotoDo);
+        //缓存预热
+        stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_KEY + fullUrl, requestParam.getOriginUrl(),
+                LinkUtil.getValidCacheTime(requestParam.getValidDate()), TimeUnit.SECONDS);
         return LinkCreateRespDto.builder()
                 .fullShortUrl("http://" + fullUrl)
                 .originUrl(requestParam.getOriginUrl())
