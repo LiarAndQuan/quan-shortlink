@@ -2,6 +2,8 @@ package online.aquan.shortlink.project.controller;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import lombok.RequiredArgsConstructor;
 import online.aquan.shortlink.project.common.convention.result.Result;
 import online.aquan.shortlink.project.common.convention.result.Results;
@@ -53,5 +55,10 @@ public class LinkController {
     public Result<Void> updateLink(@RequestBody LinkUpdateReqDto requestParam) {
         linkService.updateLink(requestParam);
         return Results.success();
+    }
+
+    @GetMapping("{short_url}")
+    public void restoreLink(@PathVariable("short_url") String short_url, ServletRequest servletRequest, ServletResponse servletResponse) {
+        linkService.restoreLink(short_url, servletRequest, servletResponse);
     }
 }

@@ -7,15 +7,16 @@ import lombok.Data;
 @Data
 @TableName("t_link_goto")
 public class LinkGotoDo {
+    
     /**
      * id
      */
     private String id;
 
     /**
-     * 短链接
+     * 完整的短链接
      */
-    private String shortUrl;
+    private String fullShortUrl;
 
     /**
      * 短链接对应的gid

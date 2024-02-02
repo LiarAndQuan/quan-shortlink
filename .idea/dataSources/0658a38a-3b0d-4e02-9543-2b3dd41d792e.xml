@@ -1015,7 +1015,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="295" parent="1" name="shortlink">
-      <LastIntrospectionLocalTimestamp>2024-02-02.09:02:01</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2024-02-02.10:54:29</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="296" parent="1" name="ssm">
@@ -3898,13 +3898,14 @@ username</ColNames>
       <UnderlyingIndexName>idx_unique_full_short_url</UnderlyingIndexName>
     </key>
     <column id="880" parent="336" name="id">
+      <AutoIncrement>1</AutoIncrement>
       <Comment>ID</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="881" parent="336" name="short_url">
-      <DasType>varchar(8)|0s</DasType>
+    <column id="881" parent="336" name="full_short_url">
+      <DasType>varchar(128)|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="882" parent="336" name="gid">
@@ -3922,13 +3923,14 @@ username</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="885" parent="337" name="id">
+      <AutoIncrement>1</AutoIncrement>
       <Comment>ID</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="886" parent="337" name="short_url">
-      <DasType>varchar(8)|0s</DasType>
+    <column id="886" parent="337" name="full_short_url">
+      <DasType>varchar(128)|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="887" parent="337" name="gid">
@@ -3946,13 +3948,14 @@ username</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="890" parent="338" name="id">
+      <AutoIncrement>1</AutoIncrement>
       <Comment>ID</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="891" parent="338" name="short_url">
-      <DasType>varchar(8)|0s</DasType>
+    <column id="891" parent="338" name="full_short_url">
+      <DasType>varchar(128)|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="892" parent="338" name="gid">
@@ -3970,13 +3973,14 @@ username</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="895" parent="339" name="id">
+      <AutoIncrement>1</AutoIncrement>
       <Comment>ID</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="896" parent="339" name="short_url">
-      <DasType>varchar(8)|0s</DasType>
+    <column id="896" parent="339" name="full_short_url">
+      <DasType>varchar(128)|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="897" parent="339" name="gid">
@@ -3994,13 +3998,14 @@ username</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="900" parent="340" name="id">
+      <AutoIncrement>1</AutoIncrement>
       <Comment>ID</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="901" parent="340" name="short_url">
-      <DasType>varchar(8)|0s</DasType>
+    <column id="901" parent="340" name="full_short_url">
+      <DasType>varchar(128)|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="902" parent="340" name="gid">
@@ -4018,13 +4023,14 @@ username</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="905" parent="341" name="id">
+      <AutoIncrement>1</AutoIncrement>
       <Comment>ID</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="906" parent="341" name="short_url">
-      <DasType>varchar(8)|0s</DasType>
+    <column id="906" parent="341" name="full_short_url">
+      <DasType>varchar(128)|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="907" parent="341" name="gid">
@@ -4042,13 +4048,14 @@ username</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="910" parent="342" name="id">
+      <AutoIncrement>1</AutoIncrement>
       <Comment>ID</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="911" parent="342" name="short_url">
-      <DasType>varchar(8)|0s</DasType>
+    <column id="911" parent="342" name="full_short_url">
+      <DasType>varchar(128)|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="912" parent="342" name="gid">
@@ -4066,13 +4073,14 @@ username</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="915" parent="343" name="id">
+      <AutoIncrement>1</AutoIncrement>
       <Comment>ID</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="916" parent="343" name="short_url">
-      <DasType>varchar(8)|0s</DasType>
+    <column id="916" parent="343" name="full_short_url">
+      <DasType>varchar(128)|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="917" parent="343" name="gid">
@@ -4090,13 +4098,14 @@ username</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="920" parent="344" name="id">
+      <AutoIncrement>1</AutoIncrement>
       <Comment>ID</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="921" parent="344" name="short_url">
-      <DasType>varchar(8)|0s</DasType>
+    <column id="921" parent="344" name="full_short_url">
+      <DasType>varchar(128)|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="922" parent="344" name="gid">
@@ -4114,13 +4123,14 @@ username</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="925" parent="345" name="id">
+      <AutoIncrement>1</AutoIncrement>
       <Comment>ID</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="926" parent="345" name="short_url">
-      <DasType>varchar(8)|0s</DasType>
+    <column id="926" parent="345" name="full_short_url">
+      <DasType>varchar(128)|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="927" parent="345" name="gid">
@@ -4138,13 +4148,14 @@ username</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="930" parent="346" name="id">
+      <AutoIncrement>1</AutoIncrement>
       <Comment>ID</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="931" parent="346" name="short_url">
-      <DasType>varchar(8)|0s</DasType>
+    <column id="931" parent="346" name="full_short_url">
+      <DasType>varchar(128)|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="932" parent="346" name="gid">
@@ -4162,13 +4173,14 @@ username</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="935" parent="347" name="id">
+      <AutoIncrement>1</AutoIncrement>
       <Comment>ID</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="936" parent="347" name="short_url">
-      <DasType>varchar(8)|0s</DasType>
+    <column id="936" parent="347" name="full_short_url">
+      <DasType>varchar(128)|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="937" parent="347" name="gid">
@@ -4186,13 +4198,14 @@ username</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="940" parent="348" name="id">
+      <AutoIncrement>1</AutoIncrement>
       <Comment>ID</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="941" parent="348" name="short_url">
-      <DasType>varchar(8)|0s</DasType>
+    <column id="941" parent="348" name="full_short_url">
+      <DasType>varchar(128)|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="942" parent="348" name="gid">
@@ -4210,13 +4223,14 @@ username</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="945" parent="349" name="id">
+      <AutoIncrement>1</AutoIncrement>
       <Comment>ID</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="946" parent="349" name="short_url">
-      <DasType>varchar(8)|0s</DasType>
+    <column id="946" parent="349" name="full_short_url">
+      <DasType>varchar(128)|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="947" parent="349" name="gid">
@@ -4234,13 +4248,14 @@ username</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="950" parent="350" name="id">
+      <AutoIncrement>1</AutoIncrement>
       <Comment>ID</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="951" parent="350" name="short_url">
-      <DasType>varchar(8)|0s</DasType>
+    <column id="951" parent="350" name="full_short_url">
+      <DasType>varchar(128)|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="952" parent="350" name="gid">
@@ -4258,13 +4273,14 @@ username</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="955" parent="351" name="id">
+      <AutoIncrement>1</AutoIncrement>
       <Comment>ID</Comment>
       <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="956" parent="351" name="short_url">
-      <DasType>varchar(8)|0s</DasType>
+    <column id="956" parent="351" name="full_short_url">
+      <DasType>varchar(128)|0s</DasType>
       <Position>2</Position>
     </column>
     <column id="957" parent="351" name="gid">

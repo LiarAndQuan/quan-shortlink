@@ -10,7 +10,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.esotericsoftware.minlog.Log;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import online.aquan.shortlink.project.common.constant.VailDateTypeEnum;
 import online.aquan.shortlink.project.common.convention.exception.ClientException;
@@ -82,7 +84,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
         //插入之后还需要新增一条linkGoto记录
         LinkGotoDo linkGotoDo = new LinkGotoDo();
         linkGotoDo.setGid(requestParam.getGid());
-        linkGotoDo.setShortUrl(fullUrl);
+        linkGotoDo.setFullShortUrl(fullUrl);
         linkGotoMapper.insert(linkGotoDo);
         return LinkCreateRespDto.builder()
                 .fullShortUrl(fullUrl)
@@ -186,19 +188,27 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             baseMapper.insert(linkDo);
         }
     }
+    
+    @SneakyThrows
     @Override
     public void restoreLink(String shortUrl, ServletRequest servletRequest, ServletResponse servletResponse) {
-//        String fullUrl = servletRequest.getServerName() + "/" + shortUrl;
-//        //首先查出短链接对应的gid
-//        LambdaQueryWrapper<LinkGotoDo> wrapper = Wrappers.lambdaQuery(LinkGotoDo.class)
-//                .eq(LinkGotoDo::getShortUrl, fullUrl);
-//        LinkGotoDo linkGotoDo = linkGotoMapper.selectOne(wrapper);
-//        if (linkGotoDo == null) {
-//            return;
-//        }
-//        String gid = linkGotoDo.getGid();
-
+        String fullUrl = servletRequest.getServerName() + "/" + shortUrl;
+        //首先查出短链接对应的gid
+        LambdaQueryWrapper<LinkGotoDo> wrapper = Wrappers.lambdaQuery(LinkGotoDo.class)
+                .eq(LinkGotoDo::getFullShortUrl, fullUrl);
+        LinkGotoDo linkGotoDo = linkGotoMapper.selectOne(wrapper);
+        if (linkGotoDo == null) {
+            return;
+        }
+        //根据shortUrl和gid查询出originUrl
+        String gid = linkGotoDo.getGid();
+        LambdaQueryWrapper<LinkDo> wrapper1 = Wrappers.lambdaQuery(LinkDo.class)
+                .eq(LinkDo::getGid, gid)
+                .eq(LinkDo::getShortUri, shortUrl)
+                .eq(LinkDo::getEnableStatus,0);
+        LinkDo linkDo = baseMapper.selectOne(wrapper1);
+        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+        httpServletResponse.sendRedirect(linkDo.getOriginUrl());
     }
-
-
+    
 }

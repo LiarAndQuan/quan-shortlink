@@ -2,6 +2,8 @@ package online.aquan.shortlink.project.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import online.aquan.shortlink.project.dao.entity.LinkDo;
 import online.aquan.shortlink.project.dto.rep.LinkCreateReqDto;
 import online.aquan.shortlink.project.dto.rep.LinkPageReqDto;
@@ -20,4 +22,6 @@ public interface LinkService extends IService<LinkDo> {
     List<LinkGroupCountRespDto> getLinkGroupCount(List<String> requestParam);
 
     void updateLink(LinkUpdateReqDto requestParam);
+
+    void restoreLink(String shortUrl, ServletRequest servletRequest, ServletResponse servletResponse);
 }
