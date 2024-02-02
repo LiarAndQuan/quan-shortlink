@@ -87,7 +87,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
         linkGotoDo.setFullShortUrl(fullUrl);
         linkGotoMapper.insert(linkGotoDo);
         return LinkCreateRespDto.builder()
-                .fullShortUrl(fullUrl)
+                .fullShortUrl("http://" + fullUrl)
                 .originUrl(requestParam.getOriginUrl())
                 .gid(requestParam.getGid()).build();
     }
@@ -125,7 +125,12 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                 .orderByDesc(LinkDo::getCreateTime);
         //分页查询即可
         IPage<LinkDo> linkDoIPage = baseMapper.selectPage(requestParam, wrapper);
-        return linkDoIPage.convert((item) -> BeanUtil.toBean(item, LinkPageRespDto.class));
+        return linkDoIPage.convert((item) ->
+                {
+                    LinkPageRespDto linkPageRespDto = BeanUtil.toBean(item, LinkPageRespDto.class);
+                    linkPageRespDto.setDomain("http://"+linkPageRespDto.getDomain());
+                    return linkPageRespDto;
+                });
     }
 
     /**
@@ -188,7 +193,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             baseMapper.insert(linkDo);
         }
     }
-    
+
     @SneakyThrows
     @Override
     public void restoreLink(String shortUrl, ServletRequest servletRequest, ServletResponse servletResponse) {
@@ -205,10 +210,10 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
         LambdaQueryWrapper<LinkDo> wrapper1 = Wrappers.lambdaQuery(LinkDo.class)
                 .eq(LinkDo::getGid, gid)
                 .eq(LinkDo::getShortUri, shortUrl)
-                .eq(LinkDo::getEnableStatus,0);
+                .eq(LinkDo::getEnableStatus, 0);
         LinkDo linkDo = baseMapper.selectOne(wrapper1);
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
         httpServletResponse.sendRedirect(linkDo.getOriginUrl());
     }
-    
+
 }

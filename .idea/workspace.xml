@@ -4,16 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="fix: 修复了布隆过滤器中保存的不是fullUrl的bug">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" afterDir="false" />
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 中台短链接跳转功能的开发">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/test/java/aquan/online/shortlink/admin/test/UserShardingTableTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/test/java/aquan/online/shortlink/admin/test/UserShardingTableTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/controller/LinkController.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/controller/LinkController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/entity/LinkGotoDo.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/entity/LinkGotoDo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/mapper/LinkGotoMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/mapper/LinkGotoMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/LinkService.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/LinkService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/resources/shardingsphere-config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/shardingsphere-config.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,7 +173,7 @@
       <workItem from="1706083952439" duration="17029000" />
       <workItem from="1706148859528" duration="22630000" />
       <workItem from="1706250386087" duration="1825000" />
-      <workItem from="1706836223266" duration="14478000" />
+      <workItem from="1706836223266" duration="16953000" />
     </task>
     <task id="LOCAL-00001" summary="feature: 自定义异常">
       <option name="closed" value="true" />
@@ -526,7 +519,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706869605935</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="feature: 中台短链接跳转功能的开发">
+      <option name="closed" value="true" />
+      <created>1706872658032</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1706872658032</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -544,7 +545,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feature: 封装用户上下文" />
     <MESSAGE value="feature: 设置用户过滤器,将用户信息存入上下文" />
     <MESSAGE value="feature: 后管完善了获取用户名的功能" />
     <MESSAGE value="feature: 修改用户登录有效期为30天" />
@@ -569,7 +569,8 @@
     <MESSAGE value="feature: 后管远程调用短链接修改功能" />
     <MESSAGE value="feature: 新增link_goto表及其分表" />
     <MESSAGE value="fix: 修复了布隆过滤器中保存的不是fullUrl的bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: 修复了布隆过滤器中保存的不是fullUrl的bug" />
+    <MESSAGE value="feature: 中台短链接跳转功能的开发" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: 中台短链接跳转功能的开发" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -578,16 +579,6 @@
           <url>file://$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/common/serialize/PhoneDesensitizationSerializer.java</url>
           <line>16</line>
           <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java</url>
-          <line>194</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/controller/LinkController.java</url>
-          <line>61</line>
-          <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
