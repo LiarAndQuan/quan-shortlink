@@ -3,9 +3,11 @@ package online.aquan.shortlink.admin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import online.aquan.shortlink.admin.common.convention.result.Result;
+import online.aquan.shortlink.admin.common.convention.result.Results;
 import online.aquan.shortlink.admin.remote.dto.LinkRemoteService;
 import online.aquan.shortlink.admin.remote.dto.rep.LinkCreateReqDto;
 import online.aquan.shortlink.admin.remote.dto.rep.LinkPageReqDto;
+import online.aquan.shortlink.admin.remote.dto.rep.LinkUpdateReqDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkCreateRespDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkGroupCountRespDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkPageRespDto;
@@ -40,6 +42,14 @@ public class LinkController {
     @GetMapping("/api/short-link/admin/v1/count")
     public Result<List<LinkGroupCountRespDto>> getGroupLinkCount(@RequestParam("requestParam") List<String> requestParam) {
         return linkRemoteService.getGroupLinkCount(requestParam);
+    }
+
+    /**
+     * 修改短链接
+     */
+    @PostMapping("/api/short-link/admin/v1/update")
+    public Result<Void> updateLink(@RequestBody LinkUpdateReqDto requestParam) {
+        return linkRemoteService.updateLink(requestParam);
     }
 
 }

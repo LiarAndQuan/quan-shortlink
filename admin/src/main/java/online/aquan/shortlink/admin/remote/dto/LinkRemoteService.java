@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import online.aquan.shortlink.admin.common.convention.result.Result;
 import online.aquan.shortlink.admin.remote.dto.rep.LinkCreateReqDto;
 import online.aquan.shortlink.admin.remote.dto.rep.LinkPageReqDto;
+import online.aquan.shortlink.admin.remote.dto.rep.LinkUpdateReqDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkCreateRespDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkGroupCountRespDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkPageRespDto;
@@ -52,6 +53,7 @@ public interface LinkRemoteService {
 
     /**
      * 调用中台的查询组内短链接数量接口
+     *
      * @param requestParam gid的集合
      * @return gid-shortLinkCount
      */
@@ -59,6 +61,13 @@ public interface LinkRemoteService {
         HashMap<String, Object> map = new HashMap<>();
         map.put("requestParam", requestParam);
         String resp = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/count", map);
+        return JSON.parseObject(resp, new TypeReference<>() {
+        });
+    }
+
+    default Result<Void> updateLink(LinkUpdateReqDto requestParam) {
+        String jsonString = JSON.toJSONString(requestParam);
+        String resp = HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/update", jsonString);
         return JSON.parseObject(resp, new TypeReference<>() {
         });
     }
