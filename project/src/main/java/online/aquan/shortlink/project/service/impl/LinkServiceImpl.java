@@ -8,12 +8,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.esotericsoftware.minlog.Log;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import online.aquan.shortlink.project.common.constant.VailDateTypeEnum;
 import online.aquan.shortlink.project.common.convention.exception.ClientException;
 import online.aquan.shortlink.project.common.convention.exception.ServiceException;
 import online.aquan.shortlink.project.dao.entity.LinkDo;
+import online.aquan.shortlink.project.dao.entity.LinkGotoDo;
+import online.aquan.shortlink.project.dao.mapper.LinkGotoMapper;
 import online.aquan.shortlink.project.dao.mapper.LinkMapper;
 import online.aquan.shortlink.project.dto.rep.LinkCreateReqDto;
 import online.aquan.shortlink.project.dto.rep.LinkPageReqDto;
@@ -40,13 +44,14 @@ import java.util.Objects;
 public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements LinkService {
 
     private final RBloomFilter<String> shortLinkCachePenetrationBloomFilter;
+    private final LinkGotoMapper linkGotoMapper;
 
     /**
      * 创建短链接
      */
     @Override
     public LinkCreateRespDto createShortLink(LinkCreateReqDto requestParam) {
-        String shortUrl = generateShortUrl(requestParam.getOriginUrl());
+        String shortUrl = generateShortUrl(requestParam);
         String fullUrl = requestParam.getDomain() + "/" + shortUrl;
         LinkDo linkDo = LinkDo.builder()
                 .domain(requestParam.getDomain())
@@ -66,14 +71,19 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             那么就是同时有很多个相同的请求一起发送过来导致的并发问题
             此时查询数据库*/
             LambdaQueryWrapper<LinkDo> wrapper = Wrappers.lambdaQuery(LinkDo.class)
-                    .eq(LinkDo::getShortUri, shortUrl);
+                    .eq(LinkDo::getFullShortUrl, fullUrl);
             LinkDo linkDo1 = baseMapper.selectOne(wrapper);
             if (linkDo1 != null) {
-                Log.warn("短链接:{} 重复生成", shortUrl);
+                Log.warn("短链接:{} 重复生成", fullUrl);
                 throw new ServiceException("短链接重复生成");
             }
         }
-        shortLinkCachePenetrationBloomFilter.add(shortUrl);
+        shortLinkCachePenetrationBloomFilter.add(fullUrl);
+        //插入之后还需要新增一条linkGoto记录
+        LinkGotoDo linkGotoDo = new LinkGotoDo();
+        linkGotoDo.setGid(requestParam.getGid());
+        linkGotoDo.setShortUrl(fullUrl);
+        linkGotoMapper.insert(linkGotoDo);
         return LinkCreateRespDto.builder()
                 .fullShortUrl(fullUrl)
                 .originUrl(requestParam.getOriginUrl())
@@ -83,16 +93,16 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     /**
      * 生成短链接的shortUrl
      */
-    private String generateShortUrl(String originUrl) {
+    private String generateShortUrl(LinkCreateReqDto requestParam) {
         int count = 0;
         String shortUrl;
         while (true) {
             if (count >= 10) {
                 throw new ServiceException("短链接创建过于频繁,请稍后再试");
             }
-            String str = originUrl + LocalDateTime.now();
+            String str = requestParam.getOriginUrl() + LocalDateTime.now();
             shortUrl = HashUtil.hashToBase62(str);
-            if (!shortLinkCachePenetrationBloomFilter.contains(shortUrl)) {
+            if (!shortLinkCachePenetrationBloomFilter.contains(requestParam.getDomain() + "/" + shortUrl)) {
                 break;
             }
             count++;
@@ -109,7 +119,6 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     public IPage<LinkPageRespDto> pageShortLink(LinkPageReqDto requestParam) {
         LambdaQueryWrapper<LinkDo> wrapper = Wrappers.lambdaQuery(LinkDo.class)
                 .eq(LinkDo::getGid, requestParam.getGid())
-                .eq(LinkDo::getDelFlag, 0)
                 .eq(LinkDo::getEnableStatus, 0)
                 .orderByDesc(LinkDo::getCreateTime);
         //分页查询即可
@@ -129,8 +138,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                 .select("gid ,count(*) as shortLinkCount")
                 .groupBy("gid")
                 .in("gid", requestParam)
-                .eq("enable_status", 0)
-                .eq("del_flag", 0);
+                .eq("enable_status", 0);
         List<Map<String, Object>> maps = baseMapper.selectMaps(wrapper);
         return BeanUtil.copyToList(maps, LinkGroupCountRespDto.class);
     }
@@ -158,8 +166,8 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                 .favicon(requestParam.getFavicon())
                 .enableStatus(0)
                 .validDateType(requestParam.getValidDateType())
-                .validDate(requestParam.getValidDateType() == VailDateTypeEnum.PERMANENT.getType()?
-                        null:requestParam.getValidDate())
+                .validDate(requestParam.getValidDateType() == VailDateTypeEnum.PERMANENT.getType() ?
+                        null : requestParam.getValidDate())
                 .describe(requestParam.getDescribe())
                 .build();
         if (Objects.equals(requestParam.getGid(), originLinkDo.getGid())) {
@@ -178,4 +186,19 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             baseMapper.insert(linkDo);
         }
     }
+    @Override
+    public void restoreLink(String shortUrl, ServletRequest servletRequest, ServletResponse servletResponse) {
+//        String fullUrl = servletRequest.getServerName() + "/" + shortUrl;
+//        //首先查出短链接对应的gid
+//        LambdaQueryWrapper<LinkGotoDo> wrapper = Wrappers.lambdaQuery(LinkGotoDo.class)
+//                .eq(LinkGotoDo::getShortUrl, fullUrl);
+//        LinkGotoDo linkGotoDo = linkGotoMapper.selectOne(wrapper);
+//        if (linkGotoDo == null) {
+//            return;
+//        }
+//        String gid = linkGotoDo.getGid();
+
+    }
+
+
 }
