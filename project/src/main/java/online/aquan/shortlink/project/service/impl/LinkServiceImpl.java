@@ -3,17 +3,21 @@ package online.aquan.shortlink.project.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.esotericsoftware.minlog.Log;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import online.aquan.shortlink.project.common.constant.VailDateTypeEnum;
+import online.aquan.shortlink.project.common.convention.exception.ClientException;
 import online.aquan.shortlink.project.common.convention.exception.ServiceException;
 import online.aquan.shortlink.project.dao.entity.LinkDo;
 import online.aquan.shortlink.project.dao.mapper.LinkMapper;
 import online.aquan.shortlink.project.dto.rep.LinkCreateReqDto;
 import online.aquan.shortlink.project.dto.rep.LinkPageReqDto;
+import online.aquan.shortlink.project.dto.rep.LinkUpdateReqDto;
 import online.aquan.shortlink.project.dto.resp.LinkCreateRespDto;
 import online.aquan.shortlink.project.dto.resp.LinkGroupCountRespDto;
 import online.aquan.shortlink.project.dto.resp.LinkPageRespDto;
@@ -22,10 +26,12 @@ import online.aquan.shortlink.project.toolkit.HashUtil;
 import org.redisson.api.RBloomFilter;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 @Service
@@ -96,6 +102,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
 
     /**
      * 短链接分页查询
+     *
      * @param requestParam current size ,LinkPageReqDto继承了IPage
      */
     @Override
@@ -126,5 +133,49 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                 .eq("del_flag", 0);
         List<Map<String, Object>> maps = baseMapper.selectMaps(wrapper);
         return BeanUtil.copyToList(maps, LinkGroupCountRespDto.class);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateLink(LinkUpdateReqDto requestParam) {
+        LambdaQueryWrapper<LinkDo> wrapper = Wrappers.lambdaQuery(LinkDo.class)
+                .eq(LinkDo::getGid, requestParam.getGid())
+                .eq(LinkDo::getFullShortUrl, requestParam.getFullShortUrl())
+                .eq(LinkDo::getEnableStatus, 0);
+        LinkDo originLinkDo = baseMapper.selectOne(wrapper);
+        if (originLinkDo == null) {
+            throw new ClientException("修改的短链接不存在");
+        }
+        //如果是一样的gid,那么就直接修改就可以了,否则就需要先删除再插入,因为使用的是gid分片
+        LinkDo linkDo = LinkDo.builder()
+                .domain(originLinkDo.getDomain())
+                .shortUri(originLinkDo.getShortUri())
+                .fullShortUrl(originLinkDo.getFullShortUrl())
+                .clickNum(originLinkDo.getClickNum())
+                .gid(originLinkDo.getGid())
+                .createdType(originLinkDo.getCreatedType())
+                .originUrl(requestParam.getOriginUrl())
+                .favicon(requestParam.getFavicon())
+                .enableStatus(0)
+                .validDateType(requestParam.getValidDateType())
+                .validDate(requestParam.getValidDateType() == VailDateTypeEnum.PERMANENT.getType()?
+                        null:requestParam.getValidDate())
+                .describe(requestParam.getDescribe())
+                .build();
+        if (Objects.equals(requestParam.getGid(), originLinkDo.getGid())) {
+            LambdaUpdateWrapper<LinkDo> updateWrapper = Wrappers.lambdaUpdate(LinkDo.class)
+                    .eq(LinkDo::getFullShortUrl, requestParam.getFullShortUrl())
+                    .eq(LinkDo::getGid, requestParam.getGid())
+                    .eq(LinkDo::getEnableStatus, 0);
+            baseMapper.update(linkDo, updateWrapper);
+        } else {
+            LambdaQueryWrapper<LinkDo> deleteWrapper = Wrappers.lambdaQuery(LinkDo.class)
+                    .eq(LinkDo::getFullShortUrl, requestParam.getFullShortUrl())
+                    .eq(LinkDo::getGid, requestParam.getGid())
+                    .eq(LinkDo::getEnableStatus, 0);
+            baseMapper.delete(deleteWrapper);
+            //todo 这里需要将LinkDo里面的gid改成requestParam里面传入的新gid
+            baseMapper.insert(linkDo);
+        }
     }
 }

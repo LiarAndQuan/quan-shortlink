@@ -7,6 +7,7 @@ import online.aquan.shortlink.project.common.convention.result.Result;
 import online.aquan.shortlink.project.common.convention.result.Results;
 import online.aquan.shortlink.project.dto.rep.LinkCreateReqDto;
 import online.aquan.shortlink.project.dto.rep.LinkPageReqDto;
+import online.aquan.shortlink.project.dto.rep.LinkUpdateReqDto;
 import online.aquan.shortlink.project.dto.resp.LinkCreateRespDto;
 import online.aquan.shortlink.project.dto.resp.LinkGroupCountRespDto;
 import online.aquan.shortlink.project.dto.resp.LinkPageRespDto;
@@ -43,5 +44,14 @@ public class LinkController {
     @GetMapping("/api/short-link/v1/count")
     public Result<List<LinkGroupCountRespDto>> getLinkGroupCount(@RequestParam("requestParam") List<String> requestParam) {
         return Results.success(linkService.getLinkGroupCount(requestParam));
+    }
+
+    /**
+     * 修改短链接
+     */
+    @PostMapping("/api/short-link/v1/update")
+    public Result<Void> updateLink(@RequestBody LinkUpdateReqDto requestParam) {
+        linkService.updateLink(requestParam);
+        return Results.success();
     }
 }

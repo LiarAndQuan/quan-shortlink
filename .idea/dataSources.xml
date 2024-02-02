@@ -12,6 +12,9 @@
         <property name="com.intellij.clouds.kubernetes.db.container.port" />
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
+      <driver-properties>
+        <property name="allowPublicKeyRetrieval" value="TRUE" />
+      </driver-properties>
     </data-source>
     <data-source source="LOCAL" name="redis@localhost" uuid="d2d285ff-7b80-4018-ac9b-0b72ae859fdb">
       <driver-ref>redis</driver-ref>

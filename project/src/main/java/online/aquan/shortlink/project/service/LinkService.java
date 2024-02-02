@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import online.aquan.shortlink.project.dao.entity.LinkDo;
 import online.aquan.shortlink.project.dto.rep.LinkCreateReqDto;
 import online.aquan.shortlink.project.dto.rep.LinkPageReqDto;
+import online.aquan.shortlink.project.dto.rep.LinkUpdateReqDto;
 import online.aquan.shortlink.project.dto.resp.LinkCreateRespDto;
 import online.aquan.shortlink.project.dto.resp.LinkGroupCountRespDto;
 import online.aquan.shortlink.project.dto.resp.LinkPageRespDto;
@@ -17,4 +18,6 @@ public interface LinkService extends IService<LinkDo> {
     IPage<LinkPageRespDto> pageShortLink(LinkPageReqDto requestParam);
 
     List<LinkGroupCountRespDto> getLinkGroupCount(List<String> requestParam);
+
+    void updateLink(LinkUpdateReqDto requestParam);
 }

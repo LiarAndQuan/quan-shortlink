@@ -4,10 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 后管调用中台短链接组内数量接口,实现查询短链接分组返回组内具体链接数量">
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/GroupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/GroupService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/GroupServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/GroupServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/UserServiceImpl.java" afterDir="false" />
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 用户注册时新增默认分组">
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/common/constant/VailDateTypeEnum.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dto/rep/LinkUpdateReqDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/controller/LinkController.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/controller/LinkController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/LinkService.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/LinkService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,8 +58,8 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.ShortLinkAdminApplication.executor": "Debug",
-    "Spring Boot.ShortLinkApplication.executor": "Debug",
+    "Spring Boot.ShortLinkAdminApplication.executor": "Run",
+    "Spring Boot.ShortLinkApplication.executor": "Run",
     "git-widget-placeholder": "master",
     "jdk.selected.JAVA_MODULE": "17",
     "kotlin-language-version-configured": "true",
@@ -96,7 +101,7 @@
       <recent name="online.aquan.shortlink.project.common.database" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.ShortLinkAdminApplication">
+  <component name="RunManager" selected="Spring Boot.ShortLinkApplication">
     <configuration name="UserShardingTableTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="aquan.online.shortlink.admin.test.UserShardingTableTest" />
       <module name="shortlink-admin" />
@@ -144,8 +149,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.ShortLinkAdminApplication" />
         <item itemvalue="Spring Boot.ShortLinkApplication" />
+        <item itemvalue="Spring Boot.ShortLinkAdminApplication" />
         <item itemvalue="应用程序.UserShardingTableTest" />
         <item itemvalue="HTTP 请求.ShortLinkAdminApplication | #1" />
         <item itemvalue="HTTP 请求.ShortLinkAdminApplication | #2" />
@@ -171,7 +176,9 @@
       <workItem from="1705974256327" duration="34645000" />
       <workItem from="1706062615952" duration="13005000" />
       <workItem from="1706083952439" duration="17029000" />
-      <workItem from="1706148859528" duration="21942000" />
+      <workItem from="1706148859528" duration="22630000" />
+      <workItem from="1706250386087" duration="1825000" />
+      <workItem from="1706836223266" duration="5663000" />
     </task>
     <task id="LOCAL-00001" summary="feature: 自定义异常">
       <option name="closed" value="true" />
@@ -477,7 +484,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706173747134</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="feature: 用户注册时新增默认分组">
+      <option name="closed" value="true" />
+      <created>1706174387160</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1706174387160</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -495,7 +510,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feature: 用shardingsphere对敏感数据进行加密" />
     <MESSAGE value="feature: 后管实现登录,查询是否登录以及退出登录功能" />
     <MESSAGE value="feature: 分组功能基础代码的构建" />
     <MESSAGE value="feature: 开发后管新增分组功能" />
@@ -520,7 +534,8 @@
     <MESSAGE value="feature: 中台开发统计组内短链接数量" />
     <MESSAGE value="feature: mybatis-plus配置逻辑删除" />
     <MESSAGE value="feature: 后管调用中台短链接组内数量接口,实现查询短链接分组返回组内具体链接数量" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature: 后管调用中台短链接组内数量接口,实现查询短链接分组返回组内具体链接数量" />
+    <MESSAGE value="feature: 用户注册时新增默认分组" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: 用户注册时新增默认分组" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
