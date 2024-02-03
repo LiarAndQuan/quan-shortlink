@@ -4,11 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 创建短链接时进行缓存预热">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" afterDir="false" />
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 新增短链接缓存设置时间">
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/controller/LinkNotFoundController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/controller/UrlTitleController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/UrlTitleService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/UrlTitleServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/resources/templates/notfound.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/project/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +27,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="HTML File" />
         <option value="Interface" />
         <option value="Class" />
       </list>
@@ -45,6 +52,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
     "HTTP 请求.ShortLinkAdminApplication | #1.executor": "Run",
     "HTTP 请求.ShortLinkAdminApplication | #2.executor": "Run",
     "RequestMappingsPanelOrder0": "0",
@@ -55,7 +63,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.ShortLinkAdminApplication.executor": "Debug",
-    "Spring Boot.ShortLinkApplication.executor": "Run",
+    "Spring Boot.ShortLinkApplication.executor": "Debug",
     "git-widget-placeholder": "master",
     "jdk.selected.JAVA_MODULE": "17",
     "kotlin-language-version-configured": "true",
@@ -176,15 +184,7 @@
       <workItem from="1706148859528" duration="22630000" />
       <workItem from="1706250386087" duration="1825000" />
       <workItem from="1706836223266" duration="24089000" />
-      <workItem from="1706925455026" duration="1390000" />
-    </task>
-    <task id="LOCAL-00001" summary="feature: 自定义异常">
-      <option name="closed" value="true" />
-      <created>1705981111468</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1705981111468</updated>
+      <workItem from="1706925455026" duration="3743000" />
     </task>
     <task id="LOCAL-00002" summary="feature: 自定义异常类">
       <option name="closed" value="true" />
@@ -562,7 +562,23 @@
       <option name="project" value="LOCAL" />
       <updated>1706883286007</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="fix: 修复了判断短链接有效时间秒数绝对值的bug">
+      <option name="closed" value="true" />
+      <created>1706927056323</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1706927056323</updated>
+    </task>
+    <task id="LOCAL-00050" summary="feature: 新增短链接缓存设置时间">
+      <option name="closed" value="true" />
+      <created>1706927081480</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1706927081481</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -580,8 +596,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feature: 排序短链接分组功能的实现" />
-    <MESSAGE value="feature: 初始化中台项目代码" />
     <MESSAGE value="feature: 短链接生成算法" />
     <MESSAGE value="feature: 创建短链接接口的实现" />
     <MESSAGE value="feature: 短链接表使用gid分表" />
@@ -605,7 +619,9 @@
     <MESSAGE value="feature: 短链接跳转预防缓存击穿" />
     <MESSAGE value="feature: 短链接跳转预防缓存穿透" />
     <MESSAGE value="feature: 创建短链接时进行缓存预热" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature: 创建短链接时进行缓存预热" />
+    <MESSAGE value="fix: 修复了判断短链接有效时间秒数绝对值的bug" />
+    <MESSAGE value="feature: 新增短链接缓存设置时间" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: 新增短链接缓存设置时间" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

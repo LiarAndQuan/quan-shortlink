@@ -220,12 +220,14 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
         //缓存中不存在的话,我们就可以查询布隆过滤器看看fullUrl是否存在,不存在直接返回
         boolean contains = shortLinkCachePenetrationBloomFilter.contains(fullShortUrl);
         if (!contains) {
+            ((HttpServletResponse) servletResponse).sendRedirect("/page/notfound");
             return;
         }
         //布隆过滤器可能会误判导致不存在的变成存在,为了防止恶意误判的请求,使用判断空值来解决穿透问题
         String isNull = stringRedisTemplate.opsForValue().get(RedisKeyConstant.GOTO_LINK_IS_NULL_KEY + fullShortUrl);
         //如果这里不等于null,说明我们在数据库查询为空时已经在redis中标记了不存在
         if (StrUtil.isNotBlank(isNull)) {
+            ((HttpServletResponse) servletResponse).sendRedirect("/page/notfound");
             return;
         }
         RLock lock = redissonClient.getLock(RedisKeyConstant.LOCK_GOTO_LINK_KEY + fullShortUrl);
@@ -245,6 +247,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             //这样的话在短时间内访问同样的导致布隆过滤器误判的短链接会被return
             if (linkGotoDo == null) {
                 stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_IS_NULL_KEY + fullShortUrl, "-", 30, TimeUnit.MINUTES);
+                ((HttpServletResponse) servletResponse).sendRedirect("/page/notfound");
                 return;
             }
             //根据shortUrl和gid查询出originUrl
@@ -258,6 +261,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                 //判断是否在有效期内
                 if(linkDo.getValidDate()!=null&&linkDo.getValidDate().before(new Date())){
                     stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_IS_NULL_KEY+fullShortUrl,"-",30,TimeUnit.MINUTES);
+                    ((HttpServletResponse) servletResponse).sendRedirect("/page/notfound");
                     return;
                 }
                 //设置缓存有效期
