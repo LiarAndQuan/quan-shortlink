@@ -4,21 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 获取url的favicon图标">
-      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/RecycleBinController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/req/RecycleBinCreateReqDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/controller/RecycleBinController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/mapper/RecycleBinMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dto/rep/RecycleBinCreateReqDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/RecycleBinService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/RecycleBinServiceImpl.java" afterDir="false" />
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="refactor: 将LinkController中的获取网站标题移至UrlTitleController">
+      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/req/RecycleBinPageReqDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/RecycleBinService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/service/impl/RecycleBinServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dto/rep/RecycleBinPageReqDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/LinkController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/LinkController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/RecycleBinController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/RecycleBinController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/UrlTitleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/UrlTitleController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/LinkRemoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/LinkRemoteService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/rep/LinkCreateReqDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/req/LinkCreateReqDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/rep/LinkPageReqDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/req/LinkPageReqDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/rep/LinkUpdateReqDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/req/LinkUpdateReqDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/controller/RecycleBinController.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/controller/RecycleBinController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/RecycleBinService.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/RecycleBinService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/RecycleBinServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/RecycleBinServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,14 +101,14 @@
       <recent name="Q:\Code\IdeaCode\quan-shortlink\project\src\main\java\online\aquan\shortlink\project\common\biz" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="online.aquan.shortlink.admin.remote.dto.req" />
       <recent name="online.aquan.shortlink.admin.controller" />
       <recent name="online.aquan.shortlink.admin.remote.dto.rep" />
       <recent name="online.aquan.shortlink.admin.remote.dto.resp" />
       <recent name="online.aquan.shortlink.project.config" />
-      <recent name="online.aquan.shortlink.project.common.web" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.ShortLinkApplication">
+  <component name="RunManager" selected="Spring Boot.ShortLinkAdminApplication">
     <configuration name="UserShardingTableTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="aquan.online.shortlink.admin.test.UserShardingTableTest" />
       <module name="shortlink-admin" />
@@ -158,8 +156,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.ShortLinkApplication" />
         <item itemvalue="Spring Boot.ShortLinkAdminApplication" />
+        <item itemvalue="Spring Boot.ShortLinkApplication" />
         <item itemvalue="应用程序.UserShardingTableTest" />
         <item itemvalue="HTTP 请求.ShortLinkAdminApplication | #1" />
         <item itemvalue="HTTP 请求.ShortLinkAdminApplication | #2" />
@@ -188,23 +186,7 @@
       <workItem from="1706148859528" duration="22630000" />
       <workItem from="1706250386087" duration="1825000" />
       <workItem from="1706836223266" duration="24089000" />
-      <workItem from="1706925455026" duration="8666000" />
-    </task>
-    <task id="LOCAL-00006" summary="feature: 客户端异常状态码枚举">
-      <option name="closed" value="true" />
-      <created>1705981329834</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1705981329834</updated>
-    </task>
-    <task id="LOCAL-00007" summary="feature: 返回用户脱敏信息接口实现">
-      <option name="closed" value="true" />
-      <created>1705981468063</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1705981468063</updated>
+      <workItem from="1706925455026" duration="14641000" />
     </task>
     <task id="LOCAL-00008" summary="feature: 用户真实信息接口实现以及用户名是否存在接口实现">
       <option name="closed" value="true" />
@@ -582,7 +564,23 @@
       <option name="project" value="LOCAL" />
       <updated>1706932079577</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="feature: 新增将短链接移至回收站的功能">
+      <option name="closed" value="true" />
+      <created>1706940305632</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1706940305632</updated>
+    </task>
+    <task id="LOCAL-00056" summary="refactor: 将LinkController中的获取网站标题移至UrlTitleController">
+      <option name="closed" value="true" />
+      <created>1706947053738</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1706947053739</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -600,8 +598,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="optimize: 添加mybatis-plus分页插件" />
-    <MESSAGE value="feature: 数据库新增favicon字段" />
     <MESSAGE value="feature: 开发短链接分组查询接口" />
     <MESSAGE value="feature: 开发后管调用中台服务" />
     <MESSAGE value="optimize: 优化查询短链接分组返回信息" />
@@ -625,7 +621,9 @@
     <MESSAGE value="feature: 获取url的标题" />
     <MESSAGE value="feature: 中台调用后管获取url标题功能" />
     <MESSAGE value="feature: 获取url的favicon图标" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature: 获取url的favicon图标" />
+    <MESSAGE value="feature: 新增将短链接移至回收站的功能" />
+    <MESSAGE value="refactor: 将LinkController中的获取网站标题移至UrlTitleController" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: 将LinkController中的获取网站标题移至UrlTitleController" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -637,13 +635,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/RecycleBinServiceImpl.java</url>
-          <line>22</line>
+          <line>27</line>
           <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java</url>
-          <line>200</line>
-          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

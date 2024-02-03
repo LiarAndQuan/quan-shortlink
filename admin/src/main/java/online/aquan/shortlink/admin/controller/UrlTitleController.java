@@ -23,4 +23,5 @@ public class UrlTitleController {
     public Result<String> getTitleByUrl(@RequestParam("url") String url) {
         return linkRemoteService.getTitleByUrl(url);
     }
+    
 }

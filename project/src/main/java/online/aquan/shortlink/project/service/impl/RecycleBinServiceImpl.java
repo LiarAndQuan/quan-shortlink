@@ -1,6 +1,8 @@
 package online.aquan.shortlink.project.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +10,8 @@ import online.aquan.shortlink.project.common.constant.RedisKeyConstant;
 import online.aquan.shortlink.project.dao.entity.LinkDo;
 import online.aquan.shortlink.project.dao.mapper.LinkMapper;
 import online.aquan.shortlink.project.dto.rep.RecycleBinCreateReqDto;
+import online.aquan.shortlink.project.dto.rep.RecycleBinPageReqDto;
+import online.aquan.shortlink.project.dto.resp.LinkPageRespDto;
 import online.aquan.shortlink.project.service.RecycleBinService;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -17,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class RecycleBinServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements RecycleBinService {
 
     private final StringRedisTemplate stringRedisTemplate;
+    
 
     @Override
     public void saveRecycleBin(RecycleBinCreateReqDto requestParam) {
@@ -28,5 +33,26 @@ public class RecycleBinServiceImpl extends ServiceImpl<LinkMapper, LinkDo> imple
                 .enableStatus(1).build();
         baseMapper.update(linkDo, wrapper);
         stringRedisTemplate.delete(RedisKeyConstant.GOTO_LINK_KEY + requestParam.getFullShortUrl());
+    }
+
+    /**
+     * 短链接分页查询
+     *
+     * @param requestParam current size ,LinkPageReqDto继承了IPage
+     */
+    @Override
+    public IPage<LinkPageRespDto> pageRecycleBinShortLink(RecycleBinPageReqDto requestParam) {
+        LambdaQueryWrapper<LinkDo> wrapper = Wrappers.lambdaQuery(LinkDo.class)
+                .in(LinkDo::getGid, requestParam.getGidList())
+                .eq(LinkDo::getEnableStatus, 0)
+                .orderByDesc(LinkDo::getUpdateTime);
+        //分页查询即可
+        IPage<LinkDo> linkDoIPage = baseMapper.selectPage(requestParam, wrapper);
+        return linkDoIPage.convert((item) ->
+        {
+            LinkPageRespDto linkPageRespDto = BeanUtil.toBean(item, LinkPageRespDto.class);
+            linkPageRespDto.setDomain("http://" + linkPageRespDto.getDomain());
+            return linkPageRespDto;
+        });
     }
 }
