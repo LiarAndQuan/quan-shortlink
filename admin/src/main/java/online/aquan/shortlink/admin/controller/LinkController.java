@@ -3,7 +3,6 @@ package online.aquan.shortlink.admin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import online.aquan.shortlink.admin.common.convention.result.Result;
-import online.aquan.shortlink.admin.common.convention.result.Results;
 import online.aquan.shortlink.admin.remote.dto.LinkRemoteService;
 import online.aquan.shortlink.admin.remote.dto.rep.LinkCreateReqDto;
 import online.aquan.shortlink.admin.remote.dto.rep.LinkPageReqDto;
@@ -50,6 +49,16 @@ public class LinkController {
     @PostMapping("/api/short-link/admin/v1/update")
     public Result<Void> updateLink(@RequestBody LinkUpdateReqDto requestParam) {
         return linkRemoteService.updateLink(requestParam);
+    }
+    
+    /**
+     * 获取网站的标题
+     * @param url 网站url
+     * @return 网站标题
+     */
+    @GetMapping("/api/short-link/admin/v1/title")
+    public Result<String> getTitleByUrl(@RequestParam("url") String url){
+        return linkRemoteService.getTitleByUrl(url);
     }
 
 }
