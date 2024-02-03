@@ -41,6 +41,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -209,40 +210,41 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     @SneakyThrows
     @Override
     public void restoreLink(String shortUrl, ServletRequest servletRequest, ServletResponse servletResponse) {
-        String fullUrl = servletRequest.getServerName() + "/" + shortUrl;
-        String originUrl = stringRedisTemplate.opsForValue().get(RedisKeyConstant.GOTO_LINK_KEY + fullUrl);
+        String fullShortUrl = servletRequest.getServerName() + "/" + shortUrl;
+        String originUrl = stringRedisTemplate.opsForValue().get(RedisKeyConstant.GOTO_LINK_KEY + fullShortUrl);
         //如果缓存中直接就存在
         if (StrUtil.isNotBlank(originUrl)) {
             ((HttpServletResponse) servletResponse).sendRedirect(originUrl);
             return;
         }
         //缓存中不存在的话,我们就可以查询布隆过滤器看看fullUrl是否存在,不存在直接返回
-        boolean contains = shortLinkCachePenetrationBloomFilter.contains(fullUrl);
+        boolean contains = shortLinkCachePenetrationBloomFilter.contains(fullShortUrl);
         if (!contains) {
             return;
         }
-        //布隆过滤器可能会误判,为了防止恶意误判的请求,使用判断空值来解决穿透问题
-        String isNull = stringRedisTemplate.opsForValue().get(RedisKeyConstant.GOTO_LINK_IS_NULL_KEY + fullUrl);
+        //布隆过滤器可能会误判导致不存在的变成存在,为了防止恶意误判的请求,使用判断空值来解决穿透问题
+        String isNull = stringRedisTemplate.opsForValue().get(RedisKeyConstant.GOTO_LINK_IS_NULL_KEY + fullShortUrl);
         //如果这里不等于null,说明我们在数据库查询为空时已经在redis中标记了不存在
         if (StrUtil.isNotBlank(isNull)) {
             return;
         }
-        RLock lock = redissonClient.getLock(RedisKeyConstant.LOCK_GOTO_LINK_KEY + fullUrl);
+        RLock lock = redissonClient.getLock(RedisKeyConstant.LOCK_GOTO_LINK_KEY + fullShortUrl);
         lock.lock();
         try {
             //进来之后再次判断是否在缓存中,因为添加了分布式锁,在此之前可能已经存入缓存中
-            String originUrl1 = stringRedisTemplate.opsForValue().get(RedisKeyConstant.GOTO_LINK_KEY + fullUrl);
+            String originUrl1 = stringRedisTemplate.opsForValue().get(RedisKeyConstant.GOTO_LINK_KEY + fullShortUrl);
             if (StrUtil.isNotBlank(originUrl1)) {
                 ((HttpServletResponse) servletResponse).sendRedirect(originUrl);
                 return;
             }
+            //根据fullShortUrl找出对应的gid
             LambdaQueryWrapper<LinkGotoDo> wrapper = Wrappers.lambdaQuery(LinkGotoDo.class)
-                    .eq(LinkGotoDo::getFullShortUrl, fullUrl);
+                    .eq(LinkGotoDo::getFullShortUrl, fullShortUrl);
             LinkGotoDo linkGotoDo = linkGotoMapper.selectOne(wrapper);
             //如果数据库中也不存在,为了防止恶意的缓存穿透,设置一个短时间的值在redis中
             //这样的话在短时间内访问同样的导致布隆过滤器误判的短链接会被return
             if (linkGotoDo == null) {
-                stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_IS_NULL_KEY + fullUrl, "-", 30, TimeUnit.SECONDS);
+                stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_IS_NULL_KEY + fullShortUrl, "-", 30, TimeUnit.MINUTES);
                 return;
             }
             //根据shortUrl和gid查询出originUrl
@@ -253,8 +255,15 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                     .eq(LinkDo::getEnableStatus, 0);
             LinkDo linkDo = baseMapper.selectOne(wrapper1);
             if (linkDo != null) {
+                //判断是否在有效期内
+                if(linkDo.getValidDate()!=null&&linkDo.getValidDate().before(new Date())){
+                    stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_IS_NULL_KEY+fullShortUrl,"-",30,TimeUnit.MINUTES);
+                    return;
+                }
+                //设置缓存有效期
+                stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_KEY + fullShortUrl, linkDo.getOriginUrl(),
+                        LinkUtil.getValidCacheTime(linkDo.getValidDate()), TimeUnit.SECONDS);
                 ((HttpServletResponse) servletResponse).sendRedirect(linkDo.getOriginUrl());
-                stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_KEY + fullUrl, linkDo.getOriginUrl());
             }
         } finally {
             lock.unlock();
