@@ -9,6 +9,7 @@ import online.aquan.shortlink.admin.remote.dto.LinkRemoteService;
 import online.aquan.shortlink.admin.remote.dto.req.RecycleBinCreateReqDto;
 import online.aquan.shortlink.admin.remote.dto.req.RecycleBinPageReqDto;
 import online.aquan.shortlink.admin.remote.dto.req.RecycleBinRecoverReqDto;
+import online.aquan.shortlink.admin.remote.dto.req.RecycleBinRemoveReqDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkPageRespDto;
 import online.aquan.shortlink.admin.service.RecycleBinService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +38,12 @@ public class RecycleBinController {
     @PostMapping("/api/short-link/admin/v1/recycle-bin/recover")
     public Result<Void> recoverRecycleBinLink(@RequestBody RecycleBinRecoverReqDto requestParam){
         linkRemoteService.recoverRecycleBinLink(requestParam);
+        return Results.success();
+    }
+
+    @PostMapping("/api/short-link/admin/v1/recycle-bin/remove")
+    public Result<Void> removeRecycleBinLink(@RequestBody RecycleBinRemoveReqDto requestParam){
+        linkRemoteService.removeRecycleBinLink(requestParam);
         return Results.success();
     }
     

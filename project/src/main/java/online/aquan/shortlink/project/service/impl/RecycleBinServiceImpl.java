@@ -13,6 +13,7 @@ import online.aquan.shortlink.project.dao.mapper.LinkMapper;
 import online.aquan.shortlink.project.dto.req.RecycleBinCreateReqDto;
 import online.aquan.shortlink.project.dto.req.RecycleBinPageReqDto;
 import online.aquan.shortlink.project.dto.req.RecycleBinRecoverReqDto;
+import online.aquan.shortlink.project.dto.req.RecycleBinRemoveReqDto;
 import online.aquan.shortlink.project.dto.resp.LinkPageRespDto;
 import online.aquan.shortlink.project.service.RecycleBinService;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -67,6 +68,15 @@ public class RecycleBinServiceImpl extends ServiceImpl<LinkMapper, LinkDo> imple
         LinkDo linkDo = LinkDo.builder().enableStatus(0).build();
         baseMapper.update(linkDo, wrapper);
         stringRedisTemplate.delete(RedisKeyConstant.GOTO_LINK_IS_NULL_KEY + requestParam.getFullShortUrl());
+    }
+
+    @Override
+    public void removeRecycleBinLink(RecycleBinRemoveReqDto requestParam) {
+        LambdaQueryWrapper<LinkDo> wrapper = Wrappers.lambdaQuery(LinkDo.class)
+                .eq(LinkDo::getGid, requestParam.getGid())
+                .eq(LinkDo::getFullShortUrl, requestParam.getFullShortUrl())
+                .eq(LinkDo::getEnableStatus, 1);
+        baseMapper.delete(wrapper);
     }
     
 }

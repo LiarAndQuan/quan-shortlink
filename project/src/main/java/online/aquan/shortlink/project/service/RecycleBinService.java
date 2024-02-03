@@ -6,6 +6,7 @@ import online.aquan.shortlink.project.dao.entity.LinkDo;
 import online.aquan.shortlink.project.dto.req.RecycleBinCreateReqDto;
 import online.aquan.shortlink.project.dto.req.RecycleBinPageReqDto;
 import online.aquan.shortlink.project.dto.req.RecycleBinRecoverReqDto;
+import online.aquan.shortlink.project.dto.req.RecycleBinRemoveReqDto;
 import online.aquan.shortlink.project.dto.resp.LinkPageRespDto;
 
 public interface RecycleBinService extends IService<LinkDo> {
@@ -16,4 +17,6 @@ public interface RecycleBinService extends IService<LinkDo> {
     IPage<LinkPageRespDto> pageRecycleBinShortLink(RecycleBinPageReqDto requestParam);
 
     void recoverRecycleBinLink(RecycleBinRecoverReqDto requestParam);
+
+    void removeRecycleBinLink(RecycleBinRemoveReqDto requestParam);
 }

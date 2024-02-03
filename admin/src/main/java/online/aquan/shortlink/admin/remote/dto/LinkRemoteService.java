@@ -101,4 +101,8 @@ public interface LinkRemoteService {
         HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/recycle-bin/recover", jsonString);
     }
 
+    default void removeRecycleBinLink(RecycleBinRemoveReqDto requestParam) {
+        String jsonString = JSON.toJSONString(requestParam);
+        HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/recycle-bin/remove", jsonString);
+    }
 }
