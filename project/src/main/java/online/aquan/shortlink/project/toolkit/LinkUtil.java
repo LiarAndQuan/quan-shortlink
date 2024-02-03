@@ -19,7 +19,7 @@ public class LinkUtil {
      */
     public static Long getValidCacheTime(Date validDate) {
         return Optional.ofNullable(validDate).map(each ->
-                        DateUtil.between(new Date(), each, DateUnit.SECOND))
+                        DateUtil.between(new Date(), each, DateUnit.SECOND,false))
                 .orElse(DEFAULT_CACHE_VALID_TIME);
     }
 }
