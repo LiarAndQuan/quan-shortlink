@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 获取url的标题">
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/LinkController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/LinkController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/LinkRemoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/LinkRemoteService.java" afterDir="false" />
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 中台调用后管获取url标题功能">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +98,7 @@
       <recent name="online.aquan.shortlink.project.common.database" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.ShortLinkAdminApplication">
+  <component name="RunManager" selected="Spring Boot.ShortLinkApplication">
     <configuration name="UserShardingTableTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="aquan.online.shortlink.admin.test.UserShardingTableTest" />
       <module name="shortlink-admin" />
@@ -146,8 +146,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.ShortLinkAdminApplication" />
         <item itemvalue="Spring Boot.ShortLinkApplication" />
+        <item itemvalue="Spring Boot.ShortLinkAdminApplication" />
         <item itemvalue="应用程序.UserShardingTableTest" />
         <item itemvalue="HTTP 请求.ShortLinkAdminApplication | #1" />
         <item itemvalue="HTTP 请求.ShortLinkAdminApplication | #2" />
@@ -176,15 +176,7 @@
       <workItem from="1706148859528" duration="22630000" />
       <workItem from="1706250386087" duration="1825000" />
       <workItem from="1706836223266" duration="24089000" />
-      <workItem from="1706925455026" duration="4050000" />
-    </task>
-    <task id="LOCAL-00004" summary="feature: 全局异常处理器">
-      <option name="closed" value="true" />
-      <created>1705981230816</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1705981230816</updated>
+      <workItem from="1706925455026" duration="5007000" />
     </task>
     <task id="LOCAL-00005" summary="feature: 用户手机号脱敏">
       <option name="closed" value="true" />
@@ -570,7 +562,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706930814460</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="feature: 中台调用后管获取url标题功能">
+      <option name="closed" value="true" />
+      <created>1706931039747</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1706931039747</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -588,7 +588,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feature: 短链接表使用gid分表" />
     <MESSAGE value="optimize: 优化了用户过滤器的功能" />
     <MESSAGE value="optimize: 添加mybatis-plus分页插件" />
     <MESSAGE value="feature: 数据库新增favicon字段" />
@@ -613,7 +612,8 @@
     <MESSAGE value="feature: 新增短链接缓存设置时间" />
     <MESSAGE value="feature: 访问不存在短链接时跳转notfound页面" />
     <MESSAGE value="feature: 获取url的标题" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature: 获取url的标题" />
+    <MESSAGE value="feature: 中台调用后管获取url标题功能" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: 中台调用后管获取url标题功能" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

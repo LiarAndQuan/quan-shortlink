@@ -32,6 +32,9 @@ import online.aquan.shortlink.project.dto.resp.LinkPageRespDto;
 import online.aquan.shortlink.project.service.LinkService;
 import online.aquan.shortlink.project.toolkit.HashUtil;
 import online.aquan.shortlink.project.toolkit.LinkUtil;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -40,6 +43,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -65,10 +70,12 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     public LinkCreateRespDto createShortLink(LinkCreateReqDto requestParam) {
         String shortUrl = generateShortUrl(requestParam);
         String fullUrl = requestParam.getDomain() + "/" + shortUrl;
+        String favicon = getFavicon(requestParam.getOriginUrl());
         LinkDo linkDo = LinkDo.builder()
                 .domain(requestParam.getDomain())
                 .originUrl(requestParam.getOriginUrl())
                 .gid(requestParam.getGid())
+                .favicon(favicon)
                 .createdType(requestParam.getCreatedType())
                 .validDateType(requestParam.getValidDateType())
                 .validDate(requestParam.getValidDate())
@@ -104,26 +111,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                 .originUrl(requestParam.getOriginUrl())
                 .gid(requestParam.getGid()).build();
     }
-
-    /**
-     * 生成短链接的shortUrl
-     */
-    private String generateShortUrl(LinkCreateReqDto requestParam) {
-        int count = 0;
-        String shortUrl;
-        while (true) {
-            if (count >= 10) {
-                throw new ServiceException("短链接创建过于频繁,请稍后再试");
-            }
-            String str = requestParam.getOriginUrl() + LocalDateTime.now();
-            shortUrl = HashUtil.hashToBase62(str);
-            if (!shortLinkCachePenetrationBloomFilter.contains(requestParam.getDomain() + "/" + shortUrl)) {
-                break;
-            }
-            count++;
-        }
-        return shortUrl;
-    }
+    
 
     /**
      * 短链接分页查询
@@ -272,6 +260,44 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
         } finally {
             lock.unlock();
         }
+    }
+
+
+    /**
+     * 生成短链接的shortUrl
+     */
+    private String generateShortUrl(LinkCreateReqDto requestParam) {
+        int count = 0;
+        String shortUrl;
+        while (true) {
+            if (count >= 10) {
+                throw new ServiceException("短链接创建过于频繁,请稍后再试");
+            }
+            String str = requestParam.getOriginUrl() + LocalDateTime.now();
+            shortUrl = HashUtil.hashToBase62(str);
+            if (!shortLinkCachePenetrationBloomFilter.contains(requestParam.getDomain() + "/" + shortUrl)) {
+                break;
+            }
+            count++;
+        }
+        return shortUrl;
+    }
+    
+    @SneakyThrows
+    private String getFavicon(String originUrl) {
+        URL targetUrl = new URL(originUrl);
+        HttpURLConnection connection = (HttpURLConnection) targetUrl.openConnection();
+        connection.setRequestMethod("GET");
+        connection.connect();
+        int responseCode = connection.getResponseCode();
+        if (HttpURLConnection.HTTP_OK == responseCode) {
+            Document document = Jsoup.connect(originUrl).get();
+            Element faviconLink = document.select("link[rel~=(?i)^(shortcut )?icon]").first();
+            if (faviconLink != null) {
+                return faviconLink.attr("abs:href");
+            }
+        }
+        return null;
     }
 
 }
