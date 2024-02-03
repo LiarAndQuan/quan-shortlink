@@ -111,7 +111,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                 .originUrl(requestParam.getOriginUrl())
                 .gid(requestParam.getGid()).build();
     }
-    
+
 
     /**
      * 短链接分页查询
@@ -245,18 +245,16 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                     .eq(LinkDo::getShortUri, shortUrl)
                     .eq(LinkDo::getEnableStatus, 0);
             LinkDo linkDo = baseMapper.selectOne(wrapper1);
-            if (linkDo != null) {
-                //判断是否在有效期内
-                if(linkDo.getValidDate()!=null&&linkDo.getValidDate().before(new Date())){
-                    stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_IS_NULL_KEY+fullShortUrl,"-",30,TimeUnit.MINUTES);
-                    ((HttpServletResponse) servletResponse).sendRedirect("/page/notfound");
-                    return;
-                }
-                //设置缓存有效期
-                stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_KEY + fullShortUrl, linkDo.getOriginUrl(),
-                        LinkUtil.getValidCacheTime(linkDo.getValidDate()), TimeUnit.SECONDS);
-                ((HttpServletResponse) servletResponse).sendRedirect(linkDo.getOriginUrl());
+            //如果为null或者不为null但是已经过期了
+            if (linkDo == null || (linkDo.getValidDate() != null && linkDo.getValidDate().before(new Date()))) {
+                stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_IS_NULL_KEY + fullShortUrl, "-", 30, TimeUnit.MINUTES);
+                ((HttpServletResponse) servletResponse).sendRedirect("/page/notfound");
+                return;
             }
+            //设置缓存有效期
+            stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_KEY + fullShortUrl, linkDo.getOriginUrl(),
+                    LinkUtil.getValidCacheTime(linkDo.getValidDate()), TimeUnit.SECONDS);
+            ((HttpServletResponse) servletResponse).sendRedirect(linkDo.getOriginUrl());
         } finally {
             lock.unlock();
         }
@@ -282,7 +280,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
         }
         return shortUrl;
     }
-    
+
     @SneakyThrows
     private String getFavicon(String originUrl) {
         URL targetUrl = new URL(originUrl);

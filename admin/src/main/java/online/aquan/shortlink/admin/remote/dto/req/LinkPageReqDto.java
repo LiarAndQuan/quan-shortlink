@@ -1,4 +1,4 @@
-package online.aquan.shortlink.admin.remote.dto.rep;
+package online.aquan.shortlink.admin.remote.dto.req;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;

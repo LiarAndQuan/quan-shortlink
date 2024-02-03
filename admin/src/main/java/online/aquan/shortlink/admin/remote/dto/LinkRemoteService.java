@@ -6,9 +6,10 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import online.aquan.shortlink.admin.common.convention.result.Result;
-import online.aquan.shortlink.admin.remote.dto.rep.LinkCreateReqDto;
-import online.aquan.shortlink.admin.remote.dto.rep.LinkPageReqDto;
-import online.aquan.shortlink.admin.remote.dto.rep.LinkUpdateReqDto;
+import online.aquan.shortlink.admin.remote.dto.req.LinkCreateReqDto;
+import online.aquan.shortlink.admin.remote.dto.req.LinkPageReqDto;
+import online.aquan.shortlink.admin.remote.dto.req.LinkUpdateReqDto;
+import online.aquan.shortlink.admin.remote.dto.req.RecycleBinCreateReqDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkCreateRespDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkGroupCountRespDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkPageRespDto;
@@ -21,6 +22,7 @@ import java.util.List;
 @Component
 public interface LinkRemoteService {
 
+  
     /**
      * 调用中台的接口,得到json字符串,然后解析即可
      * 第二个参数是一个 TypeReference<> 匿名类的实例。
@@ -77,4 +79,12 @@ public interface LinkRemoteService {
         return JSON.parseObject(resp, new TypeReference<>() {
         });
     }
+
+    default  Result<Void> saveRecycleBin(RecycleBinCreateReqDto requestParam) {
+        String jsonString = JSON.toJSONString(requestParam);
+        String resp = HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/recycle-bin/save", jsonString);
+        return JSON.parseObject(resp, new TypeReference<>() {
+        });
+    }
+
 }
