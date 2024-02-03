@@ -5,8 +5,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import online.aquan.shortlink.project.common.convention.result.Result;
 import online.aquan.shortlink.project.common.convention.result.Results;
-import online.aquan.shortlink.project.dto.rep.RecycleBinCreateReqDto;
-import online.aquan.shortlink.project.dto.rep.RecycleBinPageReqDto;
+import online.aquan.shortlink.project.dto.req.RecycleBinCreateReqDto;
+import online.aquan.shortlink.project.dto.req.RecycleBinPageReqDto;
+import online.aquan.shortlink.project.dto.req.RecycleBinRecoverReqDto;
 import online.aquan.shortlink.project.dto.resp.LinkPageRespDto;
 import online.aquan.shortlink.project.service.RecycleBinService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,12 @@ public class RecycleBinController {
     @GetMapping("/api/short-link/v1/recycle-bin/page")
     public Result<IPage<LinkPageRespDto>> pageRecycleBin(RecycleBinPageReqDto requestParam) {
         return Results.success(recycleBinService.pageRecycleBinShortLink(requestParam));
+    }
+    
+    @PostMapping("/api/short-link/v1/recycle-bin/recover")
+    public Result<Void> recoverRecycleBinLink(@RequestBody RecycleBinRecoverReqDto requestParam){
+        recycleBinService.recoverRecycleBinLink(requestParam);
+        return Results.success();
     }
 
 }

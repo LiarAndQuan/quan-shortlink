@@ -20,6 +20,7 @@ import java.util.Map;
 @Component
 public interface LinkRemoteService {
 
+
     /**
      * 调用中台的接口,得到json字符串,然后解析即可
      * 第二个参数是一个 TypeReference<> 匿名类的实例。
@@ -93,6 +94,11 @@ public interface LinkRemoteService {
         String resp = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/recycle-bin/page", map);
         return JSON.parseObject(resp, new TypeReference<>() {
         });
+    }
+
+    default void recoverRecycleBinLink(RecycleBinRecoverReqDto requestParam) {
+        String jsonString = JSON.toJSONString(requestParam);
+        HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/recycle-bin/recover", jsonString);
     }
 
 }

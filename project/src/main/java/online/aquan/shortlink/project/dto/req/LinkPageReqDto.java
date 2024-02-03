@@ -1,4 +1,4 @@
-package online.aquan.shortlink.project.dto.rep;
+package online.aquan.shortlink.project.dto.req;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;

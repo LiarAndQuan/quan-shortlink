@@ -1,10 +1,10 @@
-package online.aquan.shortlink.project.dto.rep;
+package online.aquan.shortlink.admin.remote.dto.req;
 
 
 import lombok.Data;
 
 @Data
-public class RecycleBinCreateReqDto {
+public class RecycleBinRecoverReqDto {
     
     private String gid;
     
