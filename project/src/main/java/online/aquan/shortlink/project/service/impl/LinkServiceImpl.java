@@ -6,6 +6,9 @@ import cn.hutool.core.date.Week;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -28,8 +31,10 @@ import online.aquan.shortlink.project.common.enums.VailDateTypeEnum;
 import online.aquan.shortlink.project.dao.entity.LinkAccessStatsDo;
 import online.aquan.shortlink.project.dao.entity.LinkDo;
 import online.aquan.shortlink.project.dao.entity.LinkGotoDo;
+import online.aquan.shortlink.project.dao.entity.LinkLocaleStatsDo;
 import online.aquan.shortlink.project.dao.mapper.LinkAccessStatsMapper;
 import online.aquan.shortlink.project.dao.mapper.LinkGotoMapper;
+import online.aquan.shortlink.project.dao.mapper.LinkLocaleStatsMapper;
 import online.aquan.shortlink.project.dao.mapper.LinkMapper;
 import online.aquan.shortlink.project.dto.req.LinkCreateReqDto;
 import online.aquan.shortlink.project.dto.req.LinkPageReqDto;
@@ -46,6 +51,7 @@ import org.jsoup.nodes.Element;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -58,6 +64,8 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static online.aquan.shortlink.project.common.constant.LinkConstant.amapApiUrl;
+
 
 @Service
 @Slf4j
@@ -69,6 +77,10 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     private final StringRedisTemplate stringRedisTemplate;
     private final RedissonClient redissonClient;
     private final LinkAccessStatsMapper linkAccessStatsMapper;
+    private final LinkLocaleStatsMapper linkLocaleStatsMapper;
+
+    @Value("${link.locale.stats.amap-key}")
+    private String linkLocaleStatsAmapKey;
 
     /**
      * 创建短链接
@@ -309,11 +321,11 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                 //不能就添加
                 addCookiesAction.run();
             }
+
             //获取请求的ip
             String uip = LinkUtil.getActualIp((HttpServletRequest) servletRequest);
             Long uipAdded = stringRedisTemplate.opsForSet().add("short-link:stats:uip" + fullShortUrl, uip);
             boolean uipIsFirst = uipAdded != null && uipAdded > 0L;
-            
 
             if (StrUtil.isEmpty(gid)) {
                 LambdaQueryWrapper<LinkGotoDo> wrapper = Wrappers.lambdaQuery(LinkGotoDo.class)
@@ -339,9 +351,30 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             linkAccessStatsDo.setCreateTime(date);
             linkAccessStatsDo.setUpdateTime(date);
             linkAccessStatsMapper.insertOrUpdate(linkAccessStatsDo);
-            
+
             //统计地区
+            Map<String, Object> map = new HashMap<>();
+            map.put("key", linkLocaleStatsAmapKey);
+            map.put("ip", uip);
+            String resp = HttpUtil.get(amapApiUrl, map);
+            JSONObject locale = JSON.parseObject(resp);
             
+            String infoCode = locale.getString("infocode");
+            if (StrUtil.isNotBlank(infoCode) && Objects.equals(infoCode, "10000")) {
+                String province = locale.getString("province");
+                boolean isNull = Objects.equals(province, "[]");
+                LinkLocaleStatsDo localeStatsDo = LinkLocaleStatsDo.builder()
+                        .country(isNull ? "未知" : locale.getString("country"))
+                        .gid(gid)
+                        .fullShortUrl(fullShortUrl)
+                        .city(isNull ? "未知" : locale.getString("city"))
+                        .adcode(isNull ? "未知" : locale.getString("adcode"))
+                        .province(isNull ? "未知" : locale.getString("province"))
+                        .date(date)
+                        .build();
+                linkLocaleStatsMapper.insertOrUpdate(localeStatsDo);
+            }
+
         } catch (Exception e) {
             log.error("短链接访问量统计异常", e);
         }
