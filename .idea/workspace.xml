@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="refactor: 短链接pv数的统计">
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="refactor: 短链接uv数的统计">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/toolkit/LinkUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/toolkit/LinkUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -177,15 +179,7 @@
       <workItem from="1706250386087" duration="1825000" />
       <workItem from="1706836223266" duration="24089000" />
       <workItem from="1706925455026" duration="20835000" />
-      <workItem from="1707018742629" duration="8308000" />
-    </task>
-    <task id="LOCAL-00012" summary="feature: 后管实现修改用户信息">
-      <option name="closed" value="true" />
-      <created>1705999718511</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1705999718511</updated>
+      <workItem from="1707018742629" duration="10295000" />
     </task>
     <task id="LOCAL-00013" summary="feature: 利用shardingsphere实现用户表的分表">
       <option name="closed" value="true" />
@@ -571,7 +565,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707030687329</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="refactor: 短链接uv数的统计">
+      <option name="closed" value="true" />
+      <created>1707034755845</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1707034755845</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -589,7 +591,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feature: 中台开发统计组内短链接数量" />
     <MESSAGE value="feature: mybatis-plus配置逻辑删除" />
     <MESSAGE value="feature: 后管调用中台短链接组内数量接口,实现查询短链接分组返回组内具体链接数量" />
     <MESSAGE value="feature: 用户注册时新增默认分组" />
@@ -614,7 +615,8 @@
     <MESSAGE value="refactor: 开发回收站恢复短链接功能" />
     <MESSAGE value="refactor: 开发回收站删除短链接功能" />
     <MESSAGE value="refactor: 短链接pv数的统计" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: 短链接pv数的统计" />
+    <MESSAGE value="refactor: 短链接uv数的统计" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: 短链接uv数的统计" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

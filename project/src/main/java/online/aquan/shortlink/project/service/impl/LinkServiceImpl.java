@@ -271,9 +271,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     }
 
     private void linkStats(String fullShortUrl, String gid, ServletRequest servletRequest, ServletResponse servletResponse) {
-
         AtomicBoolean uvIsFirst = new AtomicBoolean();
-
         //通过cookies判断是否是同一个用户访问
         Cookie[] cookies = ((HttpServletRequest) servletRequest).getCookies();
 
@@ -292,8 +290,8 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                 stringRedisTemplate.opsForSet().add("short-link:stats:uv" + fullShortUrl, uv);
             };
 
-            //如果能在请求中找到cookie
             if (ArrayUtil.isNotEmpty(cookies)) {
+                //如果能在请求中找到cookie
                 Arrays.stream(cookies)
                         .filter(each -> Objects.equals(each.getName(), "uv"))
                         .findFirst()
@@ -301,20 +299,28 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                         .ifPresentOrElse(
                                 //找得到uv的key还要判断是否是合法的key
                                 Each -> {
-                                    Long added = stringRedisTemplate.opsForSet().add("short-link:stats:uv" + fullShortUrl, Each);
-                                    uvIsFirst.set(added != null && added > 0L);
+                                    //add方法返回的是实际添加进入集合中的数量
+                                    Long uvAdded = stringRedisTemplate.opsForSet().add("short-link:stats:uv" + fullShortUrl, Each);
+                                    uvIsFirst.set(uvAdded != null && uvAdded > 0L);
                                 },
                                 //如果请求中的cookie里面找不到uv这个key就执行添加
                                 addCookiesAction);
             } else {
+                //不能就添加
                 addCookiesAction.run();
             }
+            //获取请求的ip
+            String uip = LinkUtil.getActualIp((HttpServletRequest) servletRequest);
+            Long uipAdded = stringRedisTemplate.opsForSet().add("short-link:stats:uip" + fullShortUrl, uip);
+            boolean uipIsFirst = uipAdded != null && uipAdded > 0L;
+
             if (StrUtil.isEmpty(gid)) {
                 LambdaQueryWrapper<LinkGotoDo> wrapper = Wrappers.lambdaQuery(LinkGotoDo.class)
                         .eq(LinkGotoDo::getFullShortUrl, fullShortUrl);
                 LinkGotoDo linkGotoDo = linkGotoMapper.selectOne(wrapper);
                 gid = linkGotoDo.getGid();
             }
+
             Date date = new Date();
             int hour = DateUtil.hour(date, true);
             Week week = DateUtil.dayOfWeekEnum(date);
@@ -322,7 +328,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             LinkAccessStatsDo linkAccessStatsDo = LinkAccessStatsDo.builder()
                     .pv(1)
                     .uv(uvIsFirst.get() ? 1 : 0)
-                    .uip(1)
+                    .uip(uipIsFirst ? 1 : 0)
                     .weekday(weekday)
                     .date(date)
                     .fullShortUrl(fullShortUrl)
