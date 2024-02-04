@@ -313,6 +313,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             String uip = LinkUtil.getActualIp((HttpServletRequest) servletRequest);
             Long uipAdded = stringRedisTemplate.opsForSet().add("short-link:stats:uip" + fullShortUrl, uip);
             boolean uipIsFirst = uipAdded != null && uipAdded > 0L;
+            
 
             if (StrUtil.isEmpty(gid)) {
                 LambdaQueryWrapper<LinkGotoDo> wrapper = Wrappers.lambdaQuery(LinkGotoDo.class)
@@ -335,7 +336,12 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                     .gid(gid)
                     .hour(hour)
                     .build();
+            linkAccessStatsDo.setCreateTime(date);
+            linkAccessStatsDo.setUpdateTime(date);
             linkAccessStatsMapper.insertOrUpdate(linkAccessStatsDo);
+            
+            //统计地区
+            
         } catch (Exception e) {
             log.error("短链接访问量统计异常", e);
         }
