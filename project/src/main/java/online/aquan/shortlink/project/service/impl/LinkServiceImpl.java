@@ -3,6 +3,8 @@ package online.aquan.shortlink.project.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.Week;
+import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -13,6 +15,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.esotericsoftware.minlog.Log;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -50,11 +54,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 @Service
@@ -207,7 +209,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
         String originUrl = stringRedisTemplate.opsForValue().get(RedisKeyConstant.GOTO_LINK_KEY + fullShortUrl);
         //如果缓存中直接就存在
         if (StrUtil.isNotBlank(originUrl)) {
-            linkStats(fullShortUrl,null,servletRequest,servletResponse);
+            linkStats(fullShortUrl, null, servletRequest, servletResponse);
             ((HttpServletResponse) servletResponse).sendRedirect(originUrl);
             return;
         }
@@ -230,7 +232,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             //进来之后再次判断是否在缓存中,因为添加了分布式锁,在此之前可能已经存入缓存中
             String originUrl1 = stringRedisTemplate.opsForValue().get(RedisKeyConstant.GOTO_LINK_KEY + fullShortUrl);
             if (StrUtil.isNotBlank(originUrl1)) {
-                linkStats(fullShortUrl,null,servletRequest,servletResponse);
+                linkStats(fullShortUrl, null, servletRequest, servletResponse);
                 ((HttpServletResponse) servletResponse).sendRedirect(originUrl);
                 return;
             }
@@ -261,7 +263,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             //设置缓存有效期
             stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_KEY + fullShortUrl, linkDo.getOriginUrl(),
                     LinkUtil.getValidCacheTime(linkDo.getValidDate()), TimeUnit.SECONDS);
-            linkStats(fullShortUrl,linkGotoDo.getGid(),servletRequest,servletResponse);
+            linkStats(fullShortUrl, linkGotoDo.getGid(), servletRequest, servletResponse);
             ((HttpServletResponse) servletResponse).sendRedirect(linkDo.getOriginUrl());
         } finally {
             lock.unlock();
@@ -269,21 +271,57 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     }
 
     private void linkStats(String fullShortUrl, String gid, ServletRequest servletRequest, ServletResponse servletResponse) {
+
+        AtomicBoolean uvIsFirst = new AtomicBoolean();
+
+        //通过cookies判断是否是同一个用户访问
+        Cookie[] cookies = ((HttpServletRequest) servletRequest).getCookies();
+
         //如果使用的缓存找到的originUrl,那么就没有gid
         try {
-            if(StrUtil.isEmpty(gid)){
+            Runnable addCookiesAction = () -> {
+                //生成一个cookie并且加入到redis里面
+                String uv = UUID.fastUUID().toString();
+                Cookie uvCookie = new Cookie("uv", uv);
+                uvCookie.setMaxAge(60 * 60 * 24 * 30);
+                //限制cookie的路径
+                uvCookie.setPath(StrUtil.sub(fullShortUrl, fullShortUrl.indexOf("/"), fullShortUrl.length()));
+                ((HttpServletResponse) servletResponse).addCookie(uvCookie);
+                //标记第一次访问并存入redis
+                uvIsFirst.set(Boolean.TRUE);
+                stringRedisTemplate.opsForSet().add("short-link:stats:uv" + fullShortUrl, uv);
+            };
+
+            //如果能在请求中找到cookie
+            if (ArrayUtil.isNotEmpty(cookies)) {
+                Arrays.stream(cookies)
+                        .filter(each -> Objects.equals(each.getName(), "uv"))
+                        .findFirst()
+                        .map(Cookie::getValue)
+                        .ifPresentOrElse(
+                                //找得到uv的key还要判断是否是合法的key
+                                Each -> {
+                                    Long added = stringRedisTemplate.opsForSet().add("short-link:stats:uv" + fullShortUrl, Each);
+                                    uvIsFirst.set(added != null && added > 0L);
+                                },
+                                //如果请求中的cookie里面找不到uv这个key就执行添加
+                                addCookiesAction);
+            } else {
+                addCookiesAction.run();
+            }
+            if (StrUtil.isEmpty(gid)) {
                 LambdaQueryWrapper<LinkGotoDo> wrapper = Wrappers.lambdaQuery(LinkGotoDo.class)
                         .eq(LinkGotoDo::getFullShortUrl, fullShortUrl);
                 LinkGotoDo linkGotoDo = linkGotoMapper.selectOne(wrapper);
                 gid = linkGotoDo.getGid();
             }
             Date date = new Date();
-            int hour = DateUtil.hour(date,true);
+            int hour = DateUtil.hour(date, true);
             Week week = DateUtil.dayOfWeekEnum(date);
             int weekday = week.getIso8601Value();
             LinkAccessStatsDo linkAccessStatsDo = LinkAccessStatsDo.builder()
                     .pv(1)
-                    .uv(1)
+                    .uv(uvIsFirst.get() ? 1 : 0)
                     .uip(1)
                     .weekday(weekday)
                     .date(date)
@@ -293,7 +331,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                     .build();
             linkAccessStatsMapper.insertOrUpdate(linkAccessStatsDo);
         } catch (Exception e) {
-            log.error("短链接访问量统计异常",e);
+            log.error("短链接访问量统计异常", e);
         }
     }
 
