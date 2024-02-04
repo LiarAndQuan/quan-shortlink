@@ -1,6 +1,8 @@
 package online.aquan.shortlink.project.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.Week;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -19,8 +21,10 @@ import online.aquan.shortlink.project.common.constant.RedisKeyConstant;
 import online.aquan.shortlink.project.common.convention.exception.ClientException;
 import online.aquan.shortlink.project.common.convention.exception.ServiceException;
 import online.aquan.shortlink.project.common.enums.VailDateTypeEnum;
+import online.aquan.shortlink.project.dao.entity.LinkAccessStatsDo;
 import online.aquan.shortlink.project.dao.entity.LinkDo;
 import online.aquan.shortlink.project.dao.entity.LinkGotoDo;
+import online.aquan.shortlink.project.dao.mapper.LinkAccessStatsMapper;
 import online.aquan.shortlink.project.dao.mapper.LinkGotoMapper;
 import online.aquan.shortlink.project.dao.mapper.LinkMapper;
 import online.aquan.shortlink.project.dto.req.LinkCreateReqDto;
@@ -62,6 +66,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     private final LinkGotoMapper linkGotoMapper;
     private final StringRedisTemplate stringRedisTemplate;
     private final RedissonClient redissonClient;
+    private final LinkAccessStatsMapper linkAccessStatsMapper;
 
     /**
      * 创建短链接
@@ -202,6 +207,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
         String originUrl = stringRedisTemplate.opsForValue().get(RedisKeyConstant.GOTO_LINK_KEY + fullShortUrl);
         //如果缓存中直接就存在
         if (StrUtil.isNotBlank(originUrl)) {
+            linkStats(fullShortUrl,null,servletRequest,servletResponse);
             ((HttpServletResponse) servletResponse).sendRedirect(originUrl);
             return;
         }
@@ -224,6 +230,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             //进来之后再次判断是否在缓存中,因为添加了分布式锁,在此之前可能已经存入缓存中
             String originUrl1 = stringRedisTemplate.opsForValue().get(RedisKeyConstant.GOTO_LINK_KEY + fullShortUrl);
             if (StrUtil.isNotBlank(originUrl1)) {
+                linkStats(fullShortUrl,null,servletRequest,servletResponse);
                 ((HttpServletResponse) servletResponse).sendRedirect(originUrl);
                 return;
             }
@@ -254,9 +261,39 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             //设置缓存有效期
             stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_KEY + fullShortUrl, linkDo.getOriginUrl(),
                     LinkUtil.getValidCacheTime(linkDo.getValidDate()), TimeUnit.SECONDS);
+            linkStats(fullShortUrl,linkGotoDo.getGid(),servletRequest,servletResponse);
             ((HttpServletResponse) servletResponse).sendRedirect(linkDo.getOriginUrl());
         } finally {
             lock.unlock();
+        }
+    }
+
+    private void linkStats(String fullShortUrl, String gid, ServletRequest servletRequest, ServletResponse servletResponse) {
+        //如果使用的缓存找到的originUrl,那么就没有gid
+        try {
+            if(StrUtil.isEmpty(gid)){
+                LambdaQueryWrapper<LinkGotoDo> wrapper = Wrappers.lambdaQuery(LinkGotoDo.class)
+                        .eq(LinkGotoDo::getFullShortUrl, fullShortUrl);
+                LinkGotoDo linkGotoDo = linkGotoMapper.selectOne(wrapper);
+                gid = linkGotoDo.getGid();
+            }
+            Date date = new Date();
+            int hour = DateUtil.hour(date,true);
+            Week week = DateUtil.dayOfWeekEnum(date);
+            int weekday = week.getIso8601Value();
+            LinkAccessStatsDo linkAccessStatsDo = LinkAccessStatsDo.builder()
+                    .pv(1)
+                    .uv(1)
+                    .uip(1)
+                    .weekday(weekday)
+                    .date(date)
+                    .fullShortUrl(fullShortUrl)
+                    .gid(gid)
+                    .hour(hour)
+                    .build();
+            linkAccessStatsMapper.insertOrUpdate(linkAccessStatsDo);
+        } catch (Exception e) {
+            log.error("短链接访问量统计异常",e);
         }
     }
 
