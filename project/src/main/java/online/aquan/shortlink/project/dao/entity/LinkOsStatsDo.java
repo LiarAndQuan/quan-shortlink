@@ -1,5 +1,6 @@
 package online.aquan.shortlink.project.dao.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@TableName("t_link_os_stats")
 public class LinkOsStatsDo extends BaseDo {
     /**
      * id

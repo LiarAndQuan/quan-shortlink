@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 统计短链接访问地区">
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/entity/LinkOsStatsDo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/mapper/LinkOsStatsMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/toolkit/LinkUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/toolkit/LinkUtil.java" afterDir="false" />
-    </list>
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 统计短链接访问操作系统" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -182,15 +175,7 @@
       <workItem from="1706836223266" duration="24089000" />
       <workItem from="1706925455026" duration="20835000" />
       <workItem from="1707018742629" duration="17746000" />
-      <workItem from="1707109858422" duration="565000" />
-    </task>
-    <task id="LOCAL-00016" summary="feature: 分组功能基础代码的构建">
-      <option name="closed" value="true" />
-      <created>1706015945726</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1706015945726</updated>
+      <workItem from="1707109858422" duration="898000" />
     </task>
     <task id="LOCAL-00017" summary="feature: 开发后管新增分组功能">
       <option name="closed" value="true" />
@@ -576,7 +561,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707052395611</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="feature: 统计短链接访问操作系统">
+      <option name="closed" value="true" />
+      <created>1707110640889</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1707110640890</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -594,7 +587,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feature: 中台开发短链接修改功能" />
     <MESSAGE value="feature: 后管远程调用短链接修改功能" />
     <MESSAGE value="feature: 新增link_goto表及其分表" />
     <MESSAGE value="fix: 修复了布隆过滤器中保存的不是fullUrl的bug" />
@@ -619,7 +611,8 @@
     <MESSAGE value="feature: 短链接uip数的统计" />
     <MESSAGE value="fix: 进行统计时统一一个date对象" />
     <MESSAGE value="fix: 统计短链接访问地区" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: 统计短链接访问地区" />
+    <MESSAGE value="feature: 统计短链接访问操作系统" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: 统计短链接访问操作系统" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
