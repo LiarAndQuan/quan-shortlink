@@ -73,6 +73,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     private final LinkAccessStatsMapper linkAccessStatsMapper;
     private final LinkLocaleStatsMapper linkLocaleStatsMapper;
     private final LinkOsStatsMapper linkOsStatsMapper;
+    private final LinkBrowserStatsMapper linkBrowserStatsMapper;
 
     @Value("${link.locale.stats.amap-key}")
     private String linkLocaleStatsAmapKey;
@@ -370,9 +371,8 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                         .build();
                 linkLocaleStatsMapper.insertOrUpdate(localeStatsDo);
             }
-
+            //统计操作系统
             String os = LinkUtil.getOs((HttpServletRequest) servletRequest);
-
             LinkOsStatsDo linkOsStatsDo = LinkOsStatsDo.builder()
                     .fullShortUrl(fullShortUrl)
                     .gid(gid)
@@ -382,6 +382,17 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             linkOsStatsDo.setCreateTime(date);
             linkOsStatsDo.setUpdateTime(date);
             linkOsStatsMapper.insertOrUpdate(linkOsStatsDo);
+            //统计浏览器
+            String browser = LinkUtil.getBrowser((HttpServletRequest) servletRequest);
+            LinkBrowserStatsDo linkBrowserStatsDo = LinkBrowserStatsDo.builder()
+                    .fullShortUrl(fullShortUrl)
+                    .gid(gid)
+                    .cnt(1)
+                    .browser(browser)
+                    .date(date).build();
+            linkBrowserStatsDo.setCreateTime(date);
+            linkBrowserStatsDo.setUpdateTime(date);
+            linkBrowserStatsMapper.insertOrUpdate(linkBrowserStatsDo);
             
         } catch (Exception e) {
             log.error("短链接访问量统计异常", e);
