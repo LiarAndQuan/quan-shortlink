@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 加上@TableName注解">
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/entity/LinkBrowserStatsDo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/mapper/LinkBrowserStatsMapper.java" afterDir="false" />
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 短链接监控统计浏览器">
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/entity/LinkAccessLogsDo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/mapper/LinkAccessLogsMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/toolkit/LinkUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/toolkit/LinkUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,15 +181,7 @@
       <workItem from="1706836223266" duration="24089000" />
       <workItem from="1706925455026" duration="20835000" />
       <workItem from="1707018742629" duration="17746000" />
-      <workItem from="1707109858422" duration="1954000" />
-    </task>
-    <task id="LOCAL-00018" summary="feature: 开发后管查询分组功能">
-      <option name="closed" value="true" />
-      <created>1706065736316</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1706065736316</updated>
+      <workItem from="1707109858422" duration="4506000" />
     </task>
     <task id="LOCAL-00019" summary="feature: 封装用户上下文">
       <option name="closed" value="true" />
@@ -574,7 +567,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707110891298</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="feature: 短链接监控统计浏览器">
+      <option name="closed" value="true" />
+      <created>1707112637934</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1707112637934</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -592,7 +593,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feature: 新增link_goto表及其分表" />
     <MESSAGE value="fix: 修复了布隆过滤器中保存的不是fullUrl的bug" />
     <MESSAGE value="feature: 中台短链接跳转功能的开发" />
     <MESSAGE value="feature: 修改默认返回的协议为http" />
@@ -617,7 +617,8 @@
     <MESSAGE value="fix: 统计短链接访问地区" />
     <MESSAGE value="feature: 统计短链接访问操作系统" />
     <MESSAGE value="feature: 加上@TableName注解" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature: 加上@TableName注解" />
+    <MESSAGE value="feature: 短链接监控统计浏览器" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: 短链接监控统计浏览器" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

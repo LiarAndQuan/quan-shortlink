@@ -57,6 +57,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static online.aquan.shortlink.project.common.constant.LinkConstant.amapApiUrl;
 
@@ -74,6 +75,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     private final LinkLocaleStatsMapper linkLocaleStatsMapper;
     private final LinkOsStatsMapper linkOsStatsMapper;
     private final LinkBrowserStatsMapper linkBrowserStatsMapper;
+    private final LinkAccessLogsMapper linkAccessLogsMapper;
 
     @Value("${link.locale.stats.amap-key}")
     private String linkLocaleStatsAmapKey;
@@ -285,17 +287,18 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
 
         //如果使用的缓存找到的originUrl,那么就没有gid
         try {
+            AtomicReference<String > uv = new AtomicReference<>();
             Runnable addCookiesAction = () -> {
                 //生成一个cookie并且加入到redis里面
-                String uv = UUID.fastUUID().toString();
-                Cookie uvCookie = new Cookie("uv", uv);
+                uv.set(UUID.fastUUID().toString());
+                Cookie uvCookie = new Cookie("uv", uv.get());
                 uvCookie.setMaxAge(60 * 60 * 24 * 30);
                 //限制cookie的路径
                 uvCookie.setPath(StrUtil.sub(fullShortUrl, fullShortUrl.indexOf("/"), fullShortUrl.length()));
                 ((HttpServletResponse) servletResponse).addCookie(uvCookie);
                 //标记第一次访问并存入redis
                 uvIsFirst.set(Boolean.TRUE);
-                stringRedisTemplate.opsForSet().add("short-link:stats:uv" + fullShortUrl, uv);
+                stringRedisTemplate.opsForSet().add("short-link:stats:uv" + fullShortUrl, uv.get());
             };
 
             if (ArrayUtil.isNotEmpty(cookies)) {
@@ -307,6 +310,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                         .ifPresentOrElse(
                                 //找得到uv的key还要判断是否是合法的key
                                 Each -> {
+                                    uv.set(Each);
                                     //add方法返回的是实际添加进入集合中的数量
                                     Long uvAdded = stringRedisTemplate.opsForSet().add("short-link:stats:uv" + fullShortUrl, Each);
                                     uvIsFirst.set(uvAdded != null && uvAdded > 0L);
@@ -354,7 +358,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             map.put("ip", uip);
             String resp = HttpUtil.get(amapApiUrl, map);
             JSONObject locale = JSON.parseObject(resp);
-            
+
             String infoCode = locale.getString("infocode");
             if (StrUtil.isNotBlank(infoCode) && Objects.equals(infoCode, "10000")) {
                 String province = locale.getString("province");
@@ -393,6 +397,18 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             linkBrowserStatsDo.setCreateTime(date);
             linkBrowserStatsDo.setUpdateTime(date);
             linkBrowserStatsMapper.insertOrUpdate(linkBrowserStatsDo);
+            //统计高频访问ip
+            LinkAccessLogsDo linkAccessLogsDo = LinkAccessLogsDo.builder()
+                    .ip(uip)
+                    .browser(browser)
+                    .os(os)
+                    .fullShortUrl(fullShortUrl)
+                    .gid(gid)
+                    .user(uv.get())
+                    .build();
+            linkAccessLogsDo.setCreateTime(date);
+            linkAccessLogsDo.setUpdateTime(date);
+            linkAccessLogsMapper.insert(linkAccessLogsDo);
             
         } catch (Exception e) {
             log.error("短链接访问量统计异常", e);
