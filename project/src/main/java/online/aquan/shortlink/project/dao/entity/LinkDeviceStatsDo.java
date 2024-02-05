@@ -14,8 +14,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@TableName("t_link_browser_stats")
-public class LinkBrowserStatsDo extends BaseDo {
+@TableName("t_link_device_stats")
+public class LinkDeviceStatsDo extends BaseDo {
     /**
      * id
      */
@@ -42,7 +42,8 @@ public class LinkBrowserStatsDo extends BaseDo {
     private Integer cnt;
 
     /**
-     * 浏览器
+     * 访问设备
      */
-    private String browser;
+    private String device;
+    
 }

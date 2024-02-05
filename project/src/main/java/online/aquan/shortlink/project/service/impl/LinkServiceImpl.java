@@ -71,11 +71,13 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     private final LinkGotoMapper linkGotoMapper;
     private final StringRedisTemplate stringRedisTemplate;
     private final RedissonClient redissonClient;
+
     private final LinkAccessStatsMapper linkAccessStatsMapper;
     private final LinkLocaleStatsMapper linkLocaleStatsMapper;
     private final LinkOsStatsMapper linkOsStatsMapper;
     private final LinkBrowserStatsMapper linkBrowserStatsMapper;
     private final LinkAccessLogsMapper linkAccessLogsMapper;
+    private final LinkDeviceStatsMapper linkDeviceStatsMapper;
 
     @Value("${link.locale.stats.amap-key}")
     private String linkLocaleStatsAmapKey;
@@ -287,7 +289,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
 
         //如果使用的缓存找到的originUrl,那么就没有gid
         try {
-            AtomicReference<String > uv = new AtomicReference<>();
+            AtomicReference<String> uv = new AtomicReference<>();
             Runnable addCookiesAction = () -> {
                 //生成一个cookie并且加入到redis里面
                 uv.set(UUID.fastUUID().toString());
@@ -409,6 +411,18 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             linkAccessLogsDo.setCreateTime(date);
             linkAccessLogsDo.setUpdateTime(date);
             linkAccessLogsMapper.insert(linkAccessLogsDo);
+            //统计设备
+            String device = LinkUtil.getDevice((HttpServletRequest) servletRequest);
+            LinkDeviceStatsDo linkDeviceStatsDo = LinkDeviceStatsDo.builder()
+                    .device(device)
+                    .fullShortUrl(fullShortUrl)
+                    .gid(gid)
+                    .date(date)
+                    .cnt(1)
+                    .build();
+            linkDeviceStatsDo.setCreateTime(date);
+            linkDeviceStatsDo.setUpdateTime(date);
+            linkDeviceStatsMapper.insertOrUpdate(linkDeviceStatsDo);
             
         } catch (Exception e) {
             log.error("短链接访问量统计异常", e);

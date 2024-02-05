@@ -4,12 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 短链接监控统计浏览器">
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/entity/LinkAccessLogsDo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/mapper/LinkAccessLogsMapper.java" afterDir="false" />
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 短链接监控统计高频ip">
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/entity/LinkDeviceStatsDo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/entity/LinkNetworkStats.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/mapper/LinkDeviceStatsMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/entity/LinkBrowserStatsDo.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/entity/LinkBrowserStatsDo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/toolkit/LinkUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/toolkit/LinkUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,15 +184,7 @@
       <workItem from="1706836223266" duration="24089000" />
       <workItem from="1706925455026" duration="20835000" />
       <workItem from="1707018742629" duration="17746000" />
-      <workItem from="1707109858422" duration="4506000" />
-    </task>
-    <task id="LOCAL-00019" summary="feature: 封装用户上下文">
-      <option name="closed" value="true" />
-      <created>1706067345543</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1706067345543</updated>
+      <workItem from="1707109858422" duration="7942000" />
     </task>
     <task id="LOCAL-00020" summary="feature: 设置用户过滤器,将用户信息存入上下文">
       <option name="closed" value="true" />
@@ -575,7 +570,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707112637934</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="feature: 短链接监控统计高频ip">
+      <option name="closed" value="true" />
+      <created>1707115375029</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1707115375029</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -593,7 +596,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix: 修复了布隆过滤器中保存的不是fullUrl的bug" />
     <MESSAGE value="feature: 中台短链接跳转功能的开发" />
     <MESSAGE value="feature: 修改默认返回的协议为http" />
     <MESSAGE value="feature: 短链接跳转预防缓存击穿" />
@@ -618,7 +620,8 @@
     <MESSAGE value="feature: 统计短链接访问操作系统" />
     <MESSAGE value="feature: 加上@TableName注解" />
     <MESSAGE value="feature: 短链接监控统计浏览器" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature: 短链接监控统计浏览器" />
+    <MESSAGE value="feature: 短链接监控统计高频ip" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: 短链接监控统计高频ip" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
