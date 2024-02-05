@@ -4,14 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="fix: 进行统计时统一一个date对象">
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/entity/LinkLocaleStatsDo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/mapper/LinkLocaleStatsMapper.java" afterDir="false" />
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 统计短链接访问地区">
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/entity/LinkOsStatsDo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/mapper/LinkOsStatsMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/common/constant/LinkConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/common/constant/LinkConstant.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/toolkit/LinkUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/toolkit/LinkUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,8 +24,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="HTML File" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -47,43 +46,43 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "HTTP 请求.ShortLinkAdminApplication | #1.executor": "Run",
-    "HTTP 请求.ShortLinkAdminApplication | #2.executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.ShortLinkAdminApplication.executor": "Run",
-    "Spring Boot.ShortLinkApplication.executor": "Debug",
-    "git-widget-placeholder": "master",
-    "jdk.selected.JAVA_MODULE": "17",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "Q:/Code/IdeaCode/quan-shortlink/admin/src/main/java/online/aquan/shortlink/admin/remote/dao",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "模块",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "editor.preferences.tabs",
-    "vue.rearranger.settings.migration": "true",
-    "应用程序.UserShardingTableTest.executor": "Run"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;HTTP 请求.ShortLinkAdminApplication | #1.executor&quot;: &quot;Run&quot;,
+    &quot;HTTP 请求.ShortLinkAdminApplication | #2.executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.ShortLinkAdminApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.ShortLinkApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;Q:/Code/IdeaCode/quan-shortlink/admin/src/main/java/online/aquan/shortlink/admin/remote/dao&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.tabs&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
+    &quot;应用程序.UserShardingTableTest.executor&quot;: &quot;Run&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql",
-      "redis"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;,
+      &quot;redis&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
@@ -182,15 +181,8 @@
       <workItem from="1706250386087" duration="1825000" />
       <workItem from="1706836223266" duration="24089000" />
       <workItem from="1706925455026" duration="20835000" />
-      <workItem from="1707018742629" duration="17324000" />
-    </task>
-    <task id="LOCAL-00015" summary="feature: 后管实现登录,查询是否登录以及退出登录功能">
-      <option name="closed" value="true" />
-      <created>1706010038441</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1706010038441</updated>
+      <workItem from="1707018742629" duration="17746000" />
+      <workItem from="1707109858422" duration="565000" />
     </task>
     <task id="LOCAL-00016" summary="feature: 分组功能基础代码的构建">
       <option name="closed" value="true" />
@@ -576,7 +568,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707045978762</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="fix: 统计短链接访问地区">
+      <option name="closed" value="true" />
+      <created>1707052395611</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1707052395611</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -594,7 +594,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feature: 用户注册时新增默认分组" />
     <MESSAGE value="feature: 中台开发短链接修改功能" />
     <MESSAGE value="feature: 后管远程调用短链接修改功能" />
     <MESSAGE value="feature: 新增link_goto表及其分表" />
@@ -619,7 +618,8 @@
     <MESSAGE value="refactor: 短链接uv数的统计" />
     <MESSAGE value="feature: 短链接uip数的统计" />
     <MESSAGE value="fix: 进行统计时统一一个date对象" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: 进行统计时统一一个date对象" />
+    <MESSAGE value="fix: 统计短链接访问地区" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: 统计短链接访问地区" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -628,11 +628,6 @@
           <url>file://$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/common/serialize/PhoneDesensitizationSerializer.java</url>
           <line>16</line>
           <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java</url>
-          <line>355</line>
-          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

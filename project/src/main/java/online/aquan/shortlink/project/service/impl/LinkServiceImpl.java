@@ -28,14 +28,8 @@ import online.aquan.shortlink.project.common.constant.RedisKeyConstant;
 import online.aquan.shortlink.project.common.convention.exception.ClientException;
 import online.aquan.shortlink.project.common.convention.exception.ServiceException;
 import online.aquan.shortlink.project.common.enums.VailDateTypeEnum;
-import online.aquan.shortlink.project.dao.entity.LinkAccessStatsDo;
-import online.aquan.shortlink.project.dao.entity.LinkDo;
-import online.aquan.shortlink.project.dao.entity.LinkGotoDo;
-import online.aquan.shortlink.project.dao.entity.LinkLocaleStatsDo;
-import online.aquan.shortlink.project.dao.mapper.LinkAccessStatsMapper;
-import online.aquan.shortlink.project.dao.mapper.LinkGotoMapper;
-import online.aquan.shortlink.project.dao.mapper.LinkLocaleStatsMapper;
-import online.aquan.shortlink.project.dao.mapper.LinkMapper;
+import online.aquan.shortlink.project.dao.entity.*;
+import online.aquan.shortlink.project.dao.mapper.*;
 import online.aquan.shortlink.project.dto.req.LinkCreateReqDto;
 import online.aquan.shortlink.project.dto.req.LinkPageReqDto;
 import online.aquan.shortlink.project.dto.req.LinkUpdateReqDto;
@@ -78,6 +72,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     private final RedissonClient redissonClient;
     private final LinkAccessStatsMapper linkAccessStatsMapper;
     private final LinkLocaleStatsMapper linkLocaleStatsMapper;
+    private final LinkOsStatsMapper linkOsStatsMapper;
 
     @Value("${link.locale.stats.amap-key}")
     private String linkLocaleStatsAmapKey;
@@ -366,6 +361,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                 LinkLocaleStatsDo localeStatsDo = LinkLocaleStatsDo.builder()
                         .country(isNull ? "未知" : locale.getString("country"))
                         .gid(gid)
+                        .cnt(1)
                         .fullShortUrl(fullShortUrl)
                         .city(isNull ? "未知" : locale.getString("city"))
                         .adcode(isNull ? "未知" : locale.getString("adcode"))
@@ -375,6 +371,18 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                 linkLocaleStatsMapper.insertOrUpdate(localeStatsDo);
             }
 
+            String os = LinkUtil.getOs((HttpServletRequest) servletRequest);
+
+            LinkOsStatsDo linkOsStatsDo = LinkOsStatsDo.builder()
+                    .fullShortUrl(fullShortUrl)
+                    .gid(gid)
+                    .cnt(1)
+                    .os(os)
+                    .date(date).build();
+            linkOsStatsDo.setCreateTime(date);
+            linkOsStatsDo.setUpdateTime(date);
+            linkOsStatsMapper.insertOrUpdate(linkOsStatsDo);
+            
         } catch (Exception e) {
             log.error("短链接访问量统计异常", e);
         }
