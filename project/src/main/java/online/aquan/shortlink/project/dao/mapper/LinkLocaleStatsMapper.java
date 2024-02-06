@@ -2,7 +2,11 @@ package online.aquan.shortlink.project.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import online.aquan.shortlink.project.dao.entity.LinkLocaleStatsDo;
+import online.aquan.shortlink.project.dto.req.LinkStatsReqDto;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 
 public interface LinkLocaleStatsMapper extends BaseMapper<LinkLocaleStatsDo> {
@@ -16,4 +20,17 @@ public interface LinkLocaleStatsMapper extends BaseMapper<LinkLocaleStatsDo> {
     void insertOrUpdate(LinkLocaleStatsDo localeStatsDo);
 
 
+    /**
+     * 统计时间段内的省的访问数
+     * @return province,cnt
+     */
+    @Select(
+            """
+                    select province,sum(cnt) as cnt from t_link_locale_stats
+                    where gid = #{gid} and full_short_url=#{fullShortUrl} 
+                    and date between #{startDate} and #{endDate}
+                    group by gid,full_short_url, province;
+                    """
+    )
+    List<LinkLocaleStatsDo> getLocaleAndCnt(LinkStatsReqDto requestParam);
 }

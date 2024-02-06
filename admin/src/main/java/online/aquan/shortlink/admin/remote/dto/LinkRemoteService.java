@@ -1,15 +1,18 @@
 package online.aquan.shortlink.admin.remote.dto;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import online.aquan.shortlink.admin.common.convention.result.Result;
+import online.aquan.shortlink.admin.dto.req.LinkStatsReqDto;
 import online.aquan.shortlink.admin.remote.dto.req.*;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkCreateRespDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkGroupCountRespDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkPageRespDto;
+import online.aquan.shortlink.admin.remote.dto.resp.LinkStatsRespDto;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -104,5 +107,11 @@ public interface LinkRemoteService {
     default void removeRecycleBinLink(RecycleBinRemoveReqDto requestParam) {
         String jsonString = JSON.toJSONString(requestParam);
         HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/recycle-bin/remove", jsonString);
+    }
+
+    default Result<LinkStatsRespDto> getLinkStats(LinkStatsReqDto requestParam) {
+        String resp = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats", BeanUtil.beanToMap(requestParam));
+        return JSON.parseObject(resp, new TypeReference<>() {
+        });
     }
 }
