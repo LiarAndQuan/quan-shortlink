@@ -3,10 +3,12 @@ package online.aquan.shortlink.project.dao.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import online.aquan.shortlink.project.dao.entity.LinkAccessLogsDo;
 import online.aquan.shortlink.project.dto.req.LinkStatsReqDto;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDo> {
 
@@ -48,4 +50,30 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDo> {
                     """
     )
     HashMap<String, Object> getUvAndCnt(LinkStatsReqDto requestParam);
+
+
+    /**
+     * 查询用户在这一段时间内是不是首次访问
+     * 传入了userList,这里面的用户都是在这个时间段内访问过的,只要我们判断用户第一次访问链接是不是在这个时间段就可以了
+     */
+    @Select(
+            """
+                        <script>
+                        select user, 
+                               case when min(create_time) between #{startDate} and #{endDate} then '新访客' else '老访客' end as 'uvType'     
+                        from t_link_access_logs
+                        where user in 
+                        <foreach item = 'item' index = 'index' collection='userList' open = '(' separator = ',' close=')'>
+                            #{item}
+                        </foreach>
+                        group by user
+                        </script>
+                    """
+    )
+    List<Map<String, Object>> getUvType(
+            @Param("gid") String gid,
+            @Param("fullShortUrl") String fullShortUrl,
+            @Param("startDate") String startDate,
+            @Param("endDate") String endDate,
+            @Param("userList") List<String> userList);
 }

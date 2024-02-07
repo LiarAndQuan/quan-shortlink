@@ -4,11 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 开发单条短链接监控">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/0658a38a-3b0d-4e02-9543-2b3dd41d792e.xml" afterDir="false" />
+    <list default="true" id="1eb15944-6531-41bb-9151-8dc4a8b72340" name="更改" comment="feature: 完善短链接访问日志字段">
+      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/req/LinkAccessRecordsPageReqDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/resp/LinkAccessRecordsPageRepsDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dto/req/LinkAccessRecordsPageReqDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dto/resp/LinkAccessRecordsPageRepsDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/entity/LinkAccessLogsDo.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/entity/LinkAccessLogsDo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/LinkStatsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/controller/LinkStatsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/LinkRemoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/LinkRemoteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/controller/LinkStatsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/controller/LinkStatsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/mapper/LinkAccessLogsMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/dao/mapper/LinkAccessLogsMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/LinkStatsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/LinkStatsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkStatsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkStatsServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,11 +100,11 @@
       <recent name="Q:\Code\IdeaCode\quan-shortlink\project\src\main\java\online\aquan\shortlink\project\config" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="online.aquan.shortlink.admin.dto.req" />
+      <recent name="online.aquan.shortlink.admin.remote.dto.resp" />
       <recent name="online.aquan.shortlink.admin.remote.dto.req" />
+      <recent name="online.aquan.shortlink.admin.dto.req" />
       <recent name="online.aquan.shortlink.admin.controller" />
       <recent name="online.aquan.shortlink.admin.remote.dto.rep" />
-      <recent name="online.aquan.shortlink.admin.remote.dto.resp" />
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.ShortLinkApplication">
@@ -182,15 +189,7 @@
       <workItem from="1707018742629" duration="17746000" />
       <workItem from="1707109858422" duration="10353000" />
       <workItem from="1707182595959" duration="24534000" />
-      <workItem from="1707285568885" duration="1186000" />
-    </task>
-    <task id="LOCAL-00023" summary="feature: 修改短链接分组功能的实现">
-      <option name="closed" value="true" />
-      <created>1706072786094</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1706072786094</updated>
+      <workItem from="1707285568885" duration="8621000" />
     </task>
     <task id="LOCAL-00024" summary="feature: 排序短链接分组功能的实现">
       <option name="closed" value="true" />
@@ -576,7 +575,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707230487083</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="feature: 完善短链接访问日志字段">
+      <option name="closed" value="true" />
+      <created>1707286810671</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1707286810672</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -606,7 +613,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feature: 短链接跳转预防缓存穿透" />
     <MESSAGE value="feature: 创建短链接时进行缓存预热" />
     <MESSAGE value="fix: 修复了判断短链接有效时间秒数绝对值的bug" />
     <MESSAGE value="feature: 新增短链接缓存设置时间" />
@@ -631,7 +637,8 @@
     <MESSAGE value="feature: 短链接监控统计设备" />
     <MESSAGE value="feature: 短链接监控统计网络" />
     <MESSAGE value="feature: 开发单条短链接监控" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature: 开发单条短链接监控" />
+    <MESSAGE value="feature: 完善短链接访问日志字段" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: 完善短链接访问日志字段" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -643,13 +650,19 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/admin/src/main/java/online/aquan/shortlink/admin/remote/dto/LinkRemoteService.java</url>
-          <line>113</line>
+          <line>110</line>
           <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/project/src/main/java/online/aquan/shortlink/project/service/impl/LinkStatsServiceImpl.java</url>
+          <line>219</line>
+          <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
+        <PinnedItemInfo parentTag="online.aquan.shortlink.project.dto.req.LinkAccessRecordsPageReqDto" memberName="records" />
         <PinnedItemInfo parentTag="online.aquan.shortlink.admin.common.convention.result.Result" memberName="code" />
       </pinned-members>
     </pin-to-top-manager>

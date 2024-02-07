@@ -9,10 +9,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import online.aquan.shortlink.admin.common.convention.result.Result;
 import online.aquan.shortlink.admin.dto.req.LinkStatsReqDto;
 import online.aquan.shortlink.admin.remote.dto.req.*;
-import online.aquan.shortlink.admin.remote.dto.resp.LinkCreateRespDto;
-import online.aquan.shortlink.admin.remote.dto.resp.LinkGroupCountRespDto;
-import online.aquan.shortlink.admin.remote.dto.resp.LinkPageRespDto;
-import online.aquan.shortlink.admin.remote.dto.resp.LinkStatsRespDto;
+import online.aquan.shortlink.admin.remote.dto.resp.*;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -111,6 +108,19 @@ public interface LinkRemoteService {
 
     default Result<LinkStatsRespDto> getLinkStats(LinkStatsReqDto requestParam) {
         String resp = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats", BeanUtil.beanToMap(requestParam));
+        return JSON.parseObject(resp, new TypeReference<>() {
+        });
+    }
+
+    default Result<IPage<LinkAccessRecordsPageRepsDto>> linkPageAccessRecords(LinkAccessRecordsPageReqDto requestParam) {
+        Map<String,Object> map  = new HashMap<>();
+        map.put("current",requestParam.getCurrent());
+        map.put("size",requestParam.getSize())  ;
+        map.put("gid",requestParam.getGid());
+        map.put("startDate",requestParam.getStartDate());
+        map.put("endDate",requestParam.getEndDate());
+        map.put("fullShortUrl",requestParam.getFullShortUrl());
+        String resp = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats/access-record",map);
         return JSON.parseObject(resp, new TypeReference<>() {
         });
     }
