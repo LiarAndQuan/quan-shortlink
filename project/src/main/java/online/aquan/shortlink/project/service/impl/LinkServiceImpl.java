@@ -283,8 +283,12 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
         }
     }
 
+    /**
+     * 监控一个特定的短链接,返回其访问的每一条记录详情
+     */
     private void linkStats(String fullShortUrl, String gid, ServletRequest servletRequest, ServletResponse servletResponse) {
         AtomicBoolean uvIsFirst = new AtomicBoolean();
+
         //通过cookies判断是否是同一个用户访问
         Cookie[] cookies = ((HttpServletRequest) servletRequest).getCookies();
 
@@ -355,30 +359,41 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             linkAccessStatsDo.setUpdateTime(date);
             linkAccessStatsMapper.insertOrUpdate(linkAccessStatsDo);
 
-            //统计地区
+            //记录地区
             Map<String, Object> map = new HashMap<>();
             map.put("key", linkLocaleStatsAmapKey);
             map.put("ip", uip);
             String resp = HttpUtil.get(amapApiUrl, map);
             JSONObject locale = JSON.parseObject(resp);
-
+            String province, city, country;
             String infoCode = locale.getString("infocode");
             if (StrUtil.isNotBlank(infoCode) && Objects.equals(infoCode, "10000")) {
-                String province = locale.getString("province");
+                province = locale.getString("province");
+                city = locale.getString("city");
+                country = locale.getString("country");
                 boolean isNull = Objects.equals(province, "[]");
+                if (isNull) {
+                    province = "未知";
+                    city = "未知";
+                    country = "中国";
+                }
                 LinkLocaleStatsDo localeStatsDo = LinkLocaleStatsDo.builder()
-                        .country(isNull ? "未知" : locale.getString("country"))
+                        .country(country)
                         .gid(gid)
                         .cnt(1)
                         .fullShortUrl(fullShortUrl)
-                        .city(isNull ? "未知" : locale.getString("city"))
+                        .city(city)
                         .adcode(isNull ? "未知" : locale.getString("adcode"))
-                        .province(isNull ? "未知" : locale.getString("province"))
+                        .province(province)
                         .date(date)
                         .build();
                 linkLocaleStatsMapper.insertOrUpdate(localeStatsDo);
+            } else {
+                province = "未知";
+                city = "未知";
+                country = "中国";
             }
-            //统计操作系统
+            //记录操作系统
             String os = LinkUtil.getOs((HttpServletRequest) servletRequest);
             LinkOsStatsDo linkOsStatsDo = LinkOsStatsDo.builder()
                     .fullShortUrl(fullShortUrl)
@@ -389,7 +404,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             linkOsStatsDo.setCreateTime(date);
             linkOsStatsDo.setUpdateTime(date);
             linkOsStatsMapper.insertOrUpdate(linkOsStatsDo);
-            //统计浏览器
+            //记录浏览器
             String browser = LinkUtil.getBrowser((HttpServletRequest) servletRequest);
             LinkBrowserStatsDo linkBrowserStatsDo = LinkBrowserStatsDo.builder()
                     .fullShortUrl(fullShortUrl)
@@ -400,19 +415,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             linkBrowserStatsDo.setCreateTime(date);
             linkBrowserStatsDo.setUpdateTime(date);
             linkBrowserStatsMapper.insertOrUpdate(linkBrowserStatsDo);
-            //统计高频访问ip
-            LinkAccessLogsDo linkAccessLogsDo = LinkAccessLogsDo.builder()
-                    .ip(uip)
-                    .browser(browser)
-                    .os(os)
-                    .fullShortUrl(fullShortUrl)
-                    .gid(gid)
-                    .user(uv.get())
-                    .build();
-            linkAccessLogsDo.setCreateTime(date);
-            linkAccessLogsDo.setUpdateTime(date);
-            linkAccessLogsMapper.insert(linkAccessLogsDo);
-            //统计设备
+            //记录设备
             String device = LinkUtil.getDevice((HttpServletRequest) servletRequest);
             LinkDeviceStatsDo linkDeviceStatsDo = LinkDeviceStatsDo.builder()
                     .device(device)
@@ -424,7 +427,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             linkDeviceStatsDo.setCreateTime(date);
             linkDeviceStatsDo.setUpdateTime(date);
             linkDeviceStatsMapper.insertOrUpdate(linkDeviceStatsDo);
-            //统计网络
+            //记录网络
             String network = LinkUtil.getNetwork((HttpServletRequest) servletRequest);
             LinkNetworkStatsDo linkNetworkStatsDo = LinkNetworkStatsDo.builder()
                     .network(network)
@@ -436,7 +439,21 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             linkNetworkStatsDo.setCreateTime(date);
             linkNetworkStatsDo.setUpdateTime(date);
             linkNetworkStatsMapper.insertOrUpdate(linkNetworkStatsDo);
-            
+            //记录该条短链接的访问日志
+            LinkAccessLogsDo linkAccessLogsDo = LinkAccessLogsDo.builder()
+                    .ip(uip)
+                    .network(network)
+                    .device(device)
+                    .locale(StrUtil.join("-", country, province, city))
+                    .browser(browser)
+                    .os(os)
+                    .fullShortUrl(fullShortUrl)
+                    .gid(gid)
+                    .user(uv.get())
+                    .build();
+            linkAccessLogsDo.setCreateTime(date);
+            linkAccessLogsDo.setUpdateTime(date);
+            linkAccessLogsMapper.insert(linkAccessLogsDo);
         } catch (Exception e) {
             log.error("短链接访问量统计异常", e);
         }
