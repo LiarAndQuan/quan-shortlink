@@ -2,6 +2,7 @@ package online.aquan.shortlink.project.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import online.aquan.shortlink.project.dao.entity.LinkAccessLogsDo;
+import online.aquan.shortlink.project.dao.entity.LinkAccessStatsDo;
 import online.aquan.shortlink.project.dto.req.LinkStatsReqDto;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -43,7 +44,7 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDo> {
                         from 
                         (select
                         IF(count(distinct(date(create_time)))>1, 1, 0) as 'old_user',
-                        IF(count(distinct(date(create_time)))=1 and  max(create_time)>= #{startDate} and max(create_time)<= #{endDate}, 1, 0) as 'new_user'
+                        IF(count(distinct(date(create_time)))=1 and  max(create_time)>= #{startDate} and max(create_time)<= concat(#{endDate},' 23:59:59'), 1, 0) as 'new_user'
                         from t_link_access_logs
                         where gid = #{gid} and full_short_url = #{fullShortUrl}
                         group by user) as user_counts
@@ -76,4 +77,15 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDo> {
             @Param("startDate") String startDate,
             @Param("endDate") String endDate,
             @Param("userList") List<String> userList);
+
+    @Select(
+            """
+                        select 
+                        count(distinct (user)) as uv,count(*) as pv,count(distinct (ip)) as uip 
+                         from t_link_access_logs
+                         where gid = #{gid} and full_short_url = #{fullShortUrl} and create_time between #{startDate} and concat(#{endDate},' 23:59:59')
+                         group by full_short_url,gid;
+                    """
+    )
+    LinkAccessStatsDo getPvUvUip(LinkStatsReqDto requestParam);
 }

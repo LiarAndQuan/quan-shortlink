@@ -39,6 +39,8 @@ public class LinkStatsServiceImpl implements LinkStatsService {
         if (CollUtil.isEmpty(linkAccessStatsDoList)) {
             return null;
         }
+        //获取这段时间内的pv,uv,uip
+        LinkAccessStatsDo linkAccessStatsDo=linkAccessLogsMapper.getPvUvUip(requestParam);
         //获取每天的访问详情
         List<LinkStatsAccessDailyRespDto> allDailyList = new ArrayList<>();
         //首先将这个时间段里面所有的日期都取出来
@@ -105,7 +107,7 @@ public class LinkStatsServiceImpl implements LinkStatsService {
         List<LinkAccessStatsDo> linkAccessStatsDos = linkAccessStatsMapper.getWeekdayCnt(requestParam);
         for (int i = 1; i <= 7; i++) {
             AtomicInteger nowWeekday = new AtomicInteger(i);
-            Integer weekdayCnt = linkAccessStatsDos.stream().filter(each -> Objects.equals(nowWeekday.get(), each.getPv())).findFirst()
+            Integer weekdayCnt = linkAccessStatsDos.stream().filter(each -> Objects.equals(nowWeekday.get(), each.getWeekday())).findFirst()
                     .map(LinkAccessStatsDo::getPv).orElse(0);
             allWeekdayCnt.add(weekdayCnt);
         }
@@ -182,7 +184,7 @@ public class LinkStatsServiceImpl implements LinkStatsService {
         int uvSum = oldUserCount + newUserCount;
         double oldRatio = (double) oldUserCount / uvSum;
         double oldActualRatio = Math.round(oldRatio * 100) / 100.0;
-        double newRatio = (double) oldUserCount / uvSum;
+        double newRatio = (double) newUserCount / uvSum;
         double newActualRatio = Math.round(newRatio * 100) / 100.0;
         LinkStatsUvRespDto oldUvRespDto = LinkStatsUvRespDto.builder()
                 .uvType("老用户")
@@ -194,7 +196,10 @@ public class LinkStatsServiceImpl implements LinkStatsService {
                 .ratio(newActualRatio)
                 .cnt(newUserCount).build();
         allUvAndCnt.add(newUvRespDto);
-        LinkStatsRespDto result = LinkStatsRespDto.builder()
+        return LinkStatsRespDto.builder()
+                .pv(linkAccessStatsDo.getPv())
+                .uv(linkAccessStatsDo.getUv())
+                .uip(linkAccessStatsDo.getUip())
                 .browserStats(allBrowserAndCnt)
                 .deviceStats(allDeviceAndCnt)
                 .localeCnStats(allLocaleCNRespDtos)
@@ -206,7 +211,6 @@ public class LinkStatsServiceImpl implements LinkStatsService {
                 .uvTypeStats(allUvAndCnt)
                 .weekdayStats(allWeekdayCnt)
                 .build();
-        return result;
     }
 
     @Override
