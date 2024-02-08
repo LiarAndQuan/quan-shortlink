@@ -32,14 +32,20 @@ spring:
       suffix: .html
 
 mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
       logic-delete-field: delFlag
       logic-delete-value: 1
       logic-not-delete-value: 0
       id-type: auto            # 主键生成策略，可以根据你的需求配置
-      
+  mapper-locations: classpath:mapper/*.xml
+  
+#高德地图key
 link:
   locale:
     stats:
       amap-key: b8ab4b0ee1f1af9fc7a2c7f1df2ef586
+      
+

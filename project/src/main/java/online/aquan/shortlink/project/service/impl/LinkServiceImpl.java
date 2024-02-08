@@ -144,12 +144,8 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
      */
     @Override
     public IPage<LinkPageRespDto> pageShortLink(LinkPageReqDto requestParam) {
-        LambdaQueryWrapper<LinkDo> wrapper = Wrappers.lambdaQuery(LinkDo.class)
-                .eq(LinkDo::getGid, requestParam.getGid())
-                .eq(LinkDo::getEnableStatus, 0)
-                .orderByDesc(LinkDo::getCreateTime);
         //分页查询即可
-        IPage<LinkDo> linkDoIPage = baseMapper.selectPage(requestParam, wrapper);
+        IPage<LinkDo> linkDoIPage = baseMapper.pageLink(requestParam);
         return linkDoIPage.convert((item) ->
         {
             LinkPageRespDto linkPageRespDto = BeanUtil.toBean(item, LinkPageRespDto.class);

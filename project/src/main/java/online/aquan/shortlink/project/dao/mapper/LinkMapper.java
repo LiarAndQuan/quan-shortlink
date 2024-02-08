@@ -1,7 +1,9 @@
 package online.aquan.shortlink.project.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import online.aquan.shortlink.project.dao.entity.LinkDo;
+import online.aquan.shortlink.project.dto.req.LinkPageReqDto;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 
@@ -18,4 +20,7 @@ public interface LinkMapper extends BaseMapper<LinkDo> {
                        @Param("pv") Integer pv,
                        @Param("uv") Integer uv,
                        @Param("uip") Integer uip);
+
+    
+    IPage<LinkDo> pageLink(LinkPageReqDto requestParam);
 }

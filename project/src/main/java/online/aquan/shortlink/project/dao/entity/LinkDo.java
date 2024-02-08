@@ -83,10 +83,28 @@ public class LinkDo extends BaseDo {
      */
     @TableField("`describe`")
     private String describe;
-    
+
+    /**
+     * 总访问量
+     */
     private Integer totalPv;
-    
+
+    /**
+     * 总访问用户量
+     */
     private Integer totalUv;
-    
+
+    /**
+     * 总访问ip
+     */
     private Integer totalUip;
+    
+    @TableField(exist = false)
+    private Integer todayPv;
+    
+    @TableField(exist = false)
+    private Integer todayUv;
+    
+    @TableField(exist = false)
+    private Integer todayUip;
 }

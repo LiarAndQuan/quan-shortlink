@@ -67,7 +67,13 @@ public class LinkPageRespDto {
 
     private Integer totalPv;
 
+    private Integer todayPv;
+
     private Integer totalUv;
 
+    private Integer todayUv;
+
     private Integer totalUip;
+
+    private Integer todayUip;
 }

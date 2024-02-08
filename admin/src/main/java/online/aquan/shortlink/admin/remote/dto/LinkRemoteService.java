@@ -43,6 +43,7 @@ public interface LinkRemoteService {
     default Result<IPage<LinkPageRespDto>> pageLink(LinkPageReqDto requestParam) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("current", requestParam.getCurrent());
+        map.put("orderTag", requestParam.getOrderTag());
         map.put("size", requestParam.getSize());
         map.put("gid", requestParam.getGid());
         String resp = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/page",
@@ -113,14 +114,14 @@ public interface LinkRemoteService {
     }
 
     default Result<IPage<LinkAccessRecordsPageRepsDto>> linkPageAccessRecords(LinkAccessRecordsPageReqDto requestParam) {
-        Map<String,Object> map  = new HashMap<>();
-        map.put("current",requestParam.getCurrent());
-        map.put("size",requestParam.getSize())  ;
-        map.put("gid",requestParam.getGid());
-        map.put("startDate",requestParam.getStartDate());
-        map.put("endDate",requestParam.getEndDate());
-        map.put("fullShortUrl",requestParam.getFullShortUrl());
-        String resp = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats/access-record",map);
+        Map<String, Object> map = new HashMap<>();
+        map.put("current", requestParam.getCurrent());
+        map.put("size", requestParam.getSize());
+        map.put("gid", requestParam.getGid());
+        map.put("startDate", requestParam.getStartDate());
+        map.put("endDate", requestParam.getEndDate());
+        map.put("fullShortUrl", requestParam.getFullShortUrl());
+        String resp = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats/access-record", map);
         return JSON.parseObject(resp, new TypeReference<>() {
         });
     }

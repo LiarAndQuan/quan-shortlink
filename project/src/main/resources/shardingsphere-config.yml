@@ -65,7 +65,9 @@ rules:
         # 分片数量
         props:
           sharding-count: 16
-
+    # 绑定表
+    bindingTables:
+      - t_link, t_link_stats_today
 # 展现逻辑 SQL & 真实 SQL
 props:
   sql-show: true
