@@ -64,4 +64,10 @@ public class LinkPageRespDto {
      * 网站标识
      */
     private String favicon;
+
+    private Integer totalPv;
+
+    private Integer totalUv;
+
+    private Integer totalUip;
 }

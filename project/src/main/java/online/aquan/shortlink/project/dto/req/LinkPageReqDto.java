@@ -9,4 +9,6 @@ import online.aquan.shortlink.project.dao.entity.LinkDo;
 public class LinkPageReqDto extends Page<LinkDo> {
     
     private String gid;
+    
+    private String orderTag;
 }

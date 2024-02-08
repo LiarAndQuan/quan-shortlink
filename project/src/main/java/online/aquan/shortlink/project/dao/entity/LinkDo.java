@@ -83,4 +83,10 @@ public class LinkDo extends BaseDo {
      */
     @TableField("`describe`")
     private String describe;
+    
+    private Integer totalPv;
+    
+    private Integer totalUv;
+    
+    private Integer totalUip;
 }

@@ -8,4 +8,7 @@ import lombok.Data;
 public class LinkPageReqDto extends Page {
     
     private String gid;
+    
+    
+    private String orderTag;
 }
