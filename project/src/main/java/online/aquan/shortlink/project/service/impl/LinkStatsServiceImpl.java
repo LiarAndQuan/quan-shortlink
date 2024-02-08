@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import online.aquan.shortlink.project.dao.entity.*;
 import online.aquan.shortlink.project.dao.mapper.*;
+import online.aquan.shortlink.project.dto.req.LinkAccessRecordsPageGroupReqDto;
 import online.aquan.shortlink.project.dto.req.LinkAccessRecordsPageReqDto;
 import online.aquan.shortlink.project.dto.req.LinkStatsGroupReqDto;
 import online.aquan.shortlink.project.dto.req.LinkStatsReqDto;
@@ -413,6 +414,39 @@ public class LinkStatsServiceImpl implements LinkStatsService {
 
     }
 
-  
-
+    @Override
+    public IPage<LinkAccessRecordsPageRepsDto> linkGroupPageAccessRecords(LinkAccessRecordsPageGroupReqDto requestParam) {
+        //首先获取原始的数据
+        LambdaQueryWrapper<LinkAccessLogsDo> wrapper = Wrappers.lambdaQuery(LinkAccessLogsDo.class)
+                .eq(LinkAccessLogsDo::getGid, requestParam.getGid())
+                .between(LinkAccessLogsDo::getCreateTime, requestParam.getStartDate(), requestParam.getEndDate()+" 23:59:59")
+                .orderByDesc(LinkAccessLogsDo::getCreateTime);
+        IPage<LinkAccessLogsDo> pageAccessRecords = linkAccessLogsMapper.selectPage(requestParam, wrapper);
+        //转化成resp对象
+        IPage<LinkAccessRecordsPageRepsDto> result = pageAccessRecords.convert(each -> BeanUtil.toBean(each, LinkAccessRecordsPageRepsDto.class));
+        //获取到所有的用户
+        List<String> userList = result.getRecords().stream().map(LinkAccessRecordsPageRepsDto::getUser).toList();
+        if (CollUtil.isEmpty(userList)) {
+            return result;
+        }
+        //判断是新用户还是老用户
+        List<Map<String, Object>> uvTypeMap = linkAccessLogsMapper.getUvTypeGroup(
+                requestParam.getGid(),
+                requestParam.getStartDate(),
+                requestParam.getEndDate(),
+                userList
+        );
+        result.getRecords().forEach(
+                each -> {
+                    String uvType = uvTypeMap.stream().filter(
+                                    item -> Objects.equals(each.getUser(), item.get("user"))
+                            ).findFirst()
+                            .map(item -> item.get("uvType"))
+                            .map(Object::toString)
+                            .orElse("老访客");
+                    each.setUvType(uvType);
+                }
+        );
+        return result;
+    }
 }

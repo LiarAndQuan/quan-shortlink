@@ -131,4 +131,13 @@ public interface LinkRemoteService {
         return JSON.parseObject(resp, new TypeReference<>() {
         });
     }
+
+    default Result<IPage<LinkAccessRecordsPageRepsDto>> linkGroupPageAccessRecords(LinkAccessRecordsPageGroupReqDto requestParam){
+        Map<String, Object> map = BeanUtil.beanToMap(requestParam);
+        map.remove("orders");
+        map.remove("records");
+        String resp = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats/access-record/group",map);
+        return JSON.parseObject(resp, new TypeReference<>() {
+        });
+    }
 }

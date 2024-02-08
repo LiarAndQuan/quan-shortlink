@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import online.aquan.shortlink.project.common.convention.result.Result;
 import online.aquan.shortlink.project.common.convention.result.Results;
+import online.aquan.shortlink.project.dto.req.LinkAccessRecordsPageGroupReqDto;
 import online.aquan.shortlink.project.dto.req.LinkAccessRecordsPageReqDto;
 import online.aquan.shortlink.project.dto.req.LinkStatsGroupReqDto;
 import online.aquan.shortlink.project.dto.req.LinkStatsReqDto;
@@ -25,6 +26,7 @@ public class LinkStatsController {
     public Result<LinkStatsRespDto> getOneLinkStats(LinkStatsReqDto requestParam) {
         return Results.success(linkStatsService.getOneLinkStats(requestParam));
     }
+
     @GetMapping("/api/short-link/v1/stats/group")
     public Result<LinkStatsRespDto> getGroupLinkStats(LinkStatsGroupReqDto requestParam) {
         return Results.success(linkStatsService.getGroupLinkStats(requestParam));
@@ -34,6 +36,10 @@ public class LinkStatsController {
     @GetMapping("/api/short-link/v1/stats/access-record")
     public Result<IPage<LinkAccessRecordsPageRepsDto>> linkPageAccessRecords(LinkAccessRecordsPageReqDto requestParam) {
         return Results.success(linkStatsService.linkPageAccessRecords(requestParam));
+    }
+    @GetMapping("/api/short-link/v1/stats/access-record/group")
+    public Result<IPage<LinkAccessRecordsPageRepsDto>> linkPageAccessRecords(LinkAccessRecordsPageGroupReqDto requestParam) {
+        return Results.success(linkStatsService.linkGroupPageAccessRecords(requestParam));
     }
 
 }

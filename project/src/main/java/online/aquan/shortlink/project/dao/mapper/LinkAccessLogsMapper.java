@@ -64,7 +64,9 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDo> {
                         select user, 
                                case when min(create_time) between #{startDate} and #{endDate} then '新访客' else '老访客' end as 'uvType'     
                         from t_link_access_logs
-                        where user in 
+                        where
+                        full_short_url = #{full_short_url} and gid = #{gid} and 
+                        user in 
                         <foreach item = 'item' index = 'index' collection='userList' open = '(' separator = ',' close=')'>
                             #{item}
                         </foreach>
@@ -114,5 +116,28 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDo> {
                     """
     )
     List<HashMap<String, Object>> getGroupTopIpAndCnt(LinkStatsGroupReqDto requestParam);
-    
+
+
+    @Select(
+            """
+                        <script>
+                        select user, 
+                               case when min(create_time) between #{startDate} and #{endDate} then '新访客' else '老访客' end as 'uvType'     
+                        from t_link_access_logs
+                        where 
+                        gid = #{gid} and 
+                        user in 
+                        <foreach item = 'item' index = 'index' collection='userList' open = '(' separator = ',' close=')'>
+                            #{item}
+                        </foreach>
+                        group by user
+                        </script>
+                    """
+    )
+    List<Map<String, Object>> getUvTypeGroup(
+            @Param("gid") String gid,
+            @Param("startDate") String startDate,
+            @Param("endDate") String endDate,
+            @Param("userList") List<String> userList
+    );
 }

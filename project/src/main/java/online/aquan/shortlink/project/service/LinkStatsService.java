@@ -1,6 +1,7 @@
 package online.aquan.shortlink.project.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import online.aquan.shortlink.project.dto.req.LinkAccessRecordsPageGroupReqDto;
 import online.aquan.shortlink.project.dto.req.LinkAccessRecordsPageReqDto;
 import online.aquan.shortlink.project.dto.req.LinkStatsGroupReqDto;
 import online.aquan.shortlink.project.dto.req.LinkStatsReqDto;
@@ -14,4 +15,6 @@ public interface LinkStatsService {
     LinkStatsRespDto getGroupLinkStats(LinkStatsGroupReqDto requestParam);
 
     IPage<LinkAccessRecordsPageRepsDto> linkPageAccessRecords(LinkAccessRecordsPageReqDto requestParam);
+
+    IPage<LinkAccessRecordsPageRepsDto> linkGroupPageAccessRecords(LinkAccessRecordsPageGroupReqDto requestParam);
 }
