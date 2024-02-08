@@ -101,6 +101,9 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                 .validDate(requestParam.getValidDate())
                 .describe(requestParam.getDescribe())
                 .enableStatus(0)
+                .totalPv(0)
+                .totalUip(0)
+                .totalUv(0)
                 .shortUri(shortUrl)
                 .fullShortUrl(fullUrl).build();
         try {
@@ -276,6 +279,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             //设置缓存有效期
             stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_KEY + fullShortUrl, linkDo.getOriginUrl(),
                     LinkUtil.getValidCacheTime(linkDo.getValidDate()), TimeUnit.SECONDS);
+            //记录短链接访问的相关数据
             linkStats(fullShortUrl, linkGotoDo.getGid(), servletRequest, servletResponse);
             ((HttpServletResponse) servletResponse).sendRedirect(linkDo.getOriginUrl());
         } finally {
@@ -284,7 +288,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     }
 
     /**
-     * 监控一个特定的短链接,返回其访问的每一条记录详情
+     * 记录短链接访问的数据详情
      */
     private void linkStats(String fullShortUrl, String gid, ServletRequest servletRequest, ServletResponse servletResponse) {
         AtomicBoolean uvIsFirst = new AtomicBoolean();
@@ -454,6 +458,8 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             linkAccessLogsDo.setCreateTime(date);
             linkAccessLogsDo.setUpdateTime(date);
             linkAccessLogsMapper.insert(linkAccessLogsDo);
+
+            baseMapper.incrementStat(gid, fullShortUrl, 1, uvIsFirst.get() ? 1 : 0, uipIsFirst ? 1 : 0);
         } catch (Exception e) {
             log.error("短链接访问量统计异常", e);
         }
