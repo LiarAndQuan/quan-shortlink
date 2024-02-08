@@ -48,6 +48,6 @@ public class LinkStatsTodayDo {
     /**
      * 今日ip数
      */
-    private Integer todayIpCount;
+    private Integer todayUip;
     
 }

@@ -79,6 +79,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     private final LinkAccessLogsMapper linkAccessLogsMapper;
     private final LinkDeviceStatsMapper linkDeviceStatsMapper;
     private final LinkNetworkStatsMapper linkNetworkStatsMapper;
+    private final LinkStatsTodayMapper linkStatsTodayMapper;
 
     @Value("${link.locale.stats.amap-key}")
     private String linkLocaleStatsAmapKey;
@@ -460,6 +461,17 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             linkAccessLogsMapper.insert(linkAccessLogsDo);
 
             baseMapper.incrementStat(gid, fullShortUrl, 1, uvIsFirst.get() ? 1 : 0, uipIsFirst ? 1 : 0);
+
+            LinkStatsTodayDo linkStatsTodayDo = LinkStatsTodayDo.builder()
+                    .todayPv(1)
+                    .todayUip(uipIsFirst ? 1 : 0)
+                    .todayUv(uvIsFirst.get() ? 1 : 0)
+                    .date(date)
+                    .fullShortUrl(fullShortUrl)
+                    .gid(gid)
+                    .build();
+            linkStatsTodayMapper.statsToday(linkStatsTodayDo);
+            
         } catch (Exception e) {
             log.error("短链接访问量统计异常", e);
         }
