@@ -2,6 +2,7 @@ package online.aquan.shortlink.project.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import online.aquan.shortlink.project.dao.entity.LinkLocaleStatsDo;
+import online.aquan.shortlink.project.dto.req.LinkStatsGroupReqDto;
 import online.aquan.shortlink.project.dto.req.LinkStatsReqDto;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
@@ -33,4 +34,14 @@ public interface LinkLocaleStatsMapper extends BaseMapper<LinkLocaleStatsDo> {
                     """
     )
     List<LinkLocaleStatsDo> getLocaleAndCnt(LinkStatsReqDto requestParam);
+
+    @Select(
+            """
+                    select province,sum(cnt) as cnt from t_link_locale_stats
+                    where gid = #{gid} 
+                    and date between #{startDate} and #{endDate}
+                    group by gid, province;
+                    """
+    )
+    List<LinkLocaleStatsDo> getGroupLocaleAndCnt(LinkStatsGroupReqDto requestParam);
 }

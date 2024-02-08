@@ -2,6 +2,7 @@ package online.aquan.shortlink.project.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import online.aquan.shortlink.project.dao.entity.LinkAccessStatsDo;
+import online.aquan.shortlink.project.dto.req.LinkStatsGroupReqDto;
 import online.aquan.shortlink.project.dto.req.LinkStatsReqDto;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
@@ -33,6 +34,20 @@ public interface LinkAccessStatsMapper extends BaseMapper<LinkAccessStatsDo> {
     )
     List<LinkAccessStatsDo> getDailyLinkStats(LinkStatsReqDto requestParam);
 
+    /**
+     * 返回每一天的基础数据pv,uv,uip
+     *
+     * @return date, pv, uv, uip
+     */
+    @Select(
+            """
+                             select date, sum(uv) as uv,sum(pv) as pv,sum(uip) as uip from t_link_access_stats
+                             where gid = #{gid}
+                             and date between #{startDate} and #{endDate}
+                             group by gid,date; 
+                    """
+    )
+    List<LinkAccessStatsDo> getGroupDailyLinkStats(LinkStatsGroupReqDto requestParam);
 
     /**
      * 统计这段时间之内的各个小时段访问量之和
@@ -63,4 +78,24 @@ public interface LinkAccessStatsMapper extends BaseMapper<LinkAccessStatsDo> {
                     """
     )
     List<LinkAccessStatsDo> getWeekdayCnt(LinkStatsReqDto requestParam);
+
+    @Select(
+            """
+                                    select hour,sum(pv) as pv from t_link_access_stats
+                                    where gid = #{gid}
+                                                and date between #{startDate} and #{endDate}
+                                    group by gid,hour
+                    """
+    )
+    List<LinkAccessStatsDo> getGroupHoursAndCnt(LinkStatsGroupReqDto requestParam);
+
+    @Select(
+            """
+                                    select weekday,sum(pv) as pv from t_link_access_stats
+                                    where gid = #{gid}
+                                                and date between #{startDate} and #{endDate}
+                                    group by gid,weekday
+                    """
+    )
+    List<LinkAccessStatsDo> getGroupWeekdayCnt(LinkStatsGroupReqDto requestParam);
 }

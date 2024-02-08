@@ -2,6 +2,7 @@ package online.aquan.shortlink.project.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import online.aquan.shortlink.project.dao.entity.LinkBrowserStatsDo;
+import online.aquan.shortlink.project.dto.req.LinkStatsGroupReqDto;
 import online.aquan.shortlink.project.dto.req.LinkStatsReqDto;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
@@ -26,4 +27,15 @@ public interface LinkBrowserStatsMapper extends BaseMapper<LinkBrowserStatsDo> {
                     """
     )
     List<LinkBrowserStatsDo> getBrowserAndCnt(LinkStatsReqDto requestParam);
+
+
+    @Select(
+            """
+                                    select browser,sum(cnt) as cnt from t_link_browser_stats
+                                    where gid = #{gid}
+                                                and date between #{startDate} and #{endDate}
+                                    group by gid,browser
+                    """
+    )
+    List<LinkBrowserStatsDo> getGroupBrowserAndCnt(LinkStatsGroupReqDto requestParam);
 }

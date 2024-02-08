@@ -3,6 +3,7 @@ package online.aquan.shortlink.project.dao.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import online.aquan.shortlink.project.dao.entity.LinkAccessLogsDo;
 import online.aquan.shortlink.project.dao.entity.LinkAccessStatsDo;
+import online.aquan.shortlink.project.dto.req.LinkStatsGroupReqDto;
 import online.aquan.shortlink.project.dto.req.LinkStatsReqDto;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -88,4 +89,30 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDo> {
                     """
     )
     LinkAccessStatsDo getPvUvUip(LinkStatsReqDto requestParam);
+
+
+    @Select(
+            """
+                        select 
+                        count(distinct (user)) as uv,count(*) as pv,count(distinct (ip)) as uip 
+                         from t_link_access_logs
+                         where gid = #{gid}  and create_time between #{startDate} and concat(#{endDate},' 23:59:59')
+                         group by gid;
+                    """
+    )
+    LinkAccessStatsDo getGroupPvUvUip(LinkStatsGroupReqDto requestParam);
+
+    @Select(
+            """
+                                    select ip,count(*) as count from t_link_access_logs
+                                    where gid = #{gid}
+                                                and create_time 
+                                                between concat(#{startDate},' 00:00:00') and concat(#{endDate},' 23:59:59')
+                                    group by gid,ip
+                                    order by count desc
+                                    limit 0,5
+                    """
+    )
+    List<HashMap<String, Object>> getGroupTopIpAndCnt(LinkStatsGroupReqDto requestParam);
+    
 }

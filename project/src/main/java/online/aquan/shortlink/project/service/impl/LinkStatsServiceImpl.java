@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import online.aquan.shortlink.project.dao.entity.*;
 import online.aquan.shortlink.project.dao.mapper.*;
 import online.aquan.shortlink.project.dto.req.LinkAccessRecordsPageReqDto;
+import online.aquan.shortlink.project.dto.req.LinkStatsGroupReqDto;
 import online.aquan.shortlink.project.dto.req.LinkStatsReqDto;
 import online.aquan.shortlink.project.dto.resp.*;
 import online.aquan.shortlink.project.service.LinkStatsService;
@@ -213,6 +214,166 @@ public class LinkStatsServiceImpl implements LinkStatsService {
                 .build();
     }
 
+    /**
+     * 获取一个分组下面的访问详情
+     */
+    @Override
+    public LinkStatsRespDto getGroupLinkStats(LinkStatsGroupReqDto requestParam) {
+        //每日基础访问详情
+        List<LinkAccessStatsDo> linkAccessStatsDoList = linkAccessStatsMapper.getGroupDailyLinkStats(requestParam);
+        if (CollUtil.isEmpty(linkAccessStatsDoList)) {
+            return null;
+        }
+        //获取这段时间内的pv,uv,uip
+        LinkAccessStatsDo linkAccessStatsDo=linkAccessLogsMapper.getGroupPvUvUip(requestParam);
+        //获取每天的访问详情
+        List<LinkStatsAccessDailyRespDto> allDailyList = new ArrayList<>();
+        //首先将这个时间段里面所有的日期都取出来
+        List<DateTime> dateRange = DateUtil.rangeToList(DateUtil.parse(requestParam.getStartDate())
+                , DateUtil.parse(requestParam.getEndDate()),
+                DateField.DAY_OF_MONTH).stream().toList();
+        //然后遍历,如果之前集合内有记录那么就取记录,没有就置为0
+        dateRange.forEach(each -> linkAccessStatsDoList.stream()
+                .filter(item -> Objects.equals(each, item.getDate()))
+                .findFirst()
+                .ifPresentOrElse(
+                        item -> {
+                            LinkStatsAccessDailyRespDto dailyRespDto = LinkStatsAccessDailyRespDto.builder()
+                                    .uv(item.getUv())
+                                    .pv(item.getPv())
+                                    .uip(item.getUip())
+                                    .date(item.getDate()).build();
+                            allDailyList.add(dailyRespDto);
+                        }, () -> {
+                            LinkStatsAccessDailyRespDto dailyRespDto = LinkStatsAccessDailyRespDto.builder()
+                                    .uv(0)
+                                    .pv(0)
+                                    .uip(0)
+                                    .date(each).build();
+                            allDailyList.add(dailyRespDto);
+                        }
+                ));
+        //地区访问详情
+        List<LinkStatsLocaleCNRespDto> allLocaleCNRespDtos = new ArrayList<>();
+        List<LinkLocaleStatsDo> linkLocaleStatsDos = linkLocaleStatsMapper.getGroupLocaleAndCnt(requestParam);
+        //获取所有地区内的访问数之和
+        int localeCntSum = linkLocaleStatsDos.stream().mapToInt(LinkLocaleStatsDo::getCnt).sum();
+        linkLocaleStatsDos.forEach(each -> {
+            double ratio = (double) each.getCnt() / localeCntSum;
+            double actualRatio = Math.round(ratio * 100) / 100.0;
+            LinkStatsLocaleCNRespDto localeCNRespDto = LinkStatsLocaleCNRespDto.builder()
+                    .ratio(actualRatio)
+                    .cnt(each.getCnt())
+                    .locale(each.getProvince()).build();
+            allLocaleCNRespDtos.add(localeCNRespDto);
+        });
+        //获取小时访问详情
+        List<Integer> allHoursResp = new ArrayList<>(24);
+        List<LinkAccessStatsDo> linkHourSAndCnt = linkAccessStatsMapper.getGroupHoursAndCnt(requestParam);
+        for (int i = 0; i < 24; i++) {
+            AtomicInteger nowHour = new AtomicInteger(i);
+            Integer hourCnt = linkHourSAndCnt.stream().filter(each -> Objects.equals(nowHour.get(), each.getHour())).findFirst()
+                    .map(LinkAccessStatsDo::getPv).orElse(0);
+            allHoursResp.add(hourCnt);
+        }
+        //高频ip访问详情
+        List<LinkStatsTopIpRespDto> allHotIpCnt = new ArrayList<>();
+        List<HashMap<String, Object>> linkAccessLogsDosMap = linkAccessLogsMapper.getGroupTopIpAndCnt(requestParam);
+        linkAccessLogsDosMap.forEach(
+                each -> {
+                    LinkStatsTopIpRespDto linkStatsTopIpRespDto = LinkStatsTopIpRespDto.builder()
+                            .ip(each.get("ip").toString())
+                            .cnt(Integer.parseInt(each.get("count").toString())).build();
+                    allHotIpCnt.add(linkStatsTopIpRespDto);
+                }
+        );
+        //一周的访问详情
+        List<Integer> allWeekdayCnt = new ArrayList<>();
+        List<LinkAccessStatsDo> linkAccessStatsDos = linkAccessStatsMapper.getGroupWeekdayCnt(requestParam);
+        for (int i = 1; i <= 7; i++) {
+            AtomicInteger nowWeekday = new AtomicInteger(i);
+            Integer weekdayCnt = linkAccessStatsDos.stream().filter(each -> Objects.equals(nowWeekday.get(), each.getWeekday())).findFirst()
+                    .map(LinkAccessStatsDo::getPv).orElse(0);
+            allWeekdayCnt.add(weekdayCnt);
+        }
+        //浏览器访问详情
+        List<LinkStatsBrowserRespDto> allBrowserAndCnt = new ArrayList<>();
+        List<LinkBrowserStatsDo> linkBrowserStatsDos = linkBrowserStatsMapper.getGroupBrowserAndCnt(requestParam);
+        int browserSum = linkBrowserStatsDos.stream().mapToInt(LinkBrowserStatsDo::getCnt).sum();
+        linkBrowserStatsDos.forEach(
+                each -> {
+                    double ratio = (double) each.getCnt() / browserSum;
+                    double actualRatio = Math.round(ratio * 100) / 100.0;
+                    LinkStatsBrowserRespDto linkStatsBrowserRespDto = LinkStatsBrowserRespDto.builder()
+                            .ratio(actualRatio)
+                            .browser(each.getBrowser())
+                            .cnt(each.getCnt()).build();
+                    allBrowserAndCnt.add(linkStatsBrowserRespDto);
+                }
+        );
+        //操作系统访问详情
+        List<LinkStatsOsRespDto> allOsAndCnt = new ArrayList<>();
+        List<LinkOsStatsDo> linkOsStatsDos = linkOsStatsMapper.getGroupOsAndCnt(requestParam);
+        int OsSum = linkOsStatsDos.stream().mapToInt(LinkOsStatsDo::getCnt).sum();
+        linkOsStatsDos.forEach(
+                each -> {
+                    double ratio = (double) each.getCnt() / OsSum;
+                    double actualRatio = Math.round(ratio * 100) / 100.0;
+                    LinkStatsOsRespDto linkStatsOsRespDto = LinkStatsOsRespDto.builder()
+                            .ratio(actualRatio)
+                            .os(each.getOs())
+                            .cnt(each.getCnt()).build();
+                    allOsAndCnt.add(linkStatsOsRespDto);
+                }
+        );
+        
+        //访问设备统计详情
+        List<LinkStatsDeviceRespDto> allDeviceAndCnt = new ArrayList<>();
+        List<LinkDeviceStatsDo> linkDeviceStatsDos = linkDeviceStatsMapper.getGroupDeviceAndCnt(requestParam);
+        int deviceSum = linkDeviceStatsDos.stream().mapToInt(LinkDeviceStatsDo::getCnt).sum();
+        linkDeviceStatsDos.forEach(
+                each -> {
+                    double ratio = (double) each.getCnt() / deviceSum;
+                    double actualRatio = Math.round(ratio * 100) / 100.0;
+                    LinkStatsDeviceRespDto linkStatsDeviceRespDto = LinkStatsDeviceRespDto.builder()
+                            .ratio(actualRatio)
+                            .device(each.getDevice())
+                            .cnt(each.getCnt()).build();
+                    allDeviceAndCnt.add(linkStatsDeviceRespDto);
+                }
+        );
+
+        //访问网络详情统计
+        List<LinkStatsNetworkRespDto> allNetworkAndCnt = new ArrayList<>();
+        List<LinkNetworkStatsDo> linkNetworkStatsDos = linkNetworkStatsMapper.getGroupNetworkAndCnt(requestParam);
+        int networkSum = linkNetworkStatsDos.stream().mapToInt(LinkNetworkStatsDo::getCnt).sum();
+        linkNetworkStatsDos.forEach(
+                each -> {
+                    double ratio = (double) each.getCnt() / networkSum;
+                    double actualRatio = Math.round(ratio * 100) / 100.0;
+                    LinkStatsNetworkRespDto linkStatsNetworkRespDto = LinkStatsNetworkRespDto.builder()
+                            .ratio(actualRatio)
+                            .network(each.getNetwork())
+                            .cnt(each.getCnt()).build();
+                    allNetworkAndCnt.add(linkStatsNetworkRespDto);
+                }
+        );
+        
+        return LinkStatsRespDto.builder()
+                .pv(linkAccessStatsDo.getPv())
+                .uv(linkAccessStatsDo.getUv())
+                .uip(linkAccessStatsDo.getUip())
+                .browserStats(allBrowserAndCnt)
+                .deviceStats(allDeviceAndCnt)
+                .localeCnStats(allLocaleCNRespDtos)
+                .networkStats(allNetworkAndCnt)
+                .topIpStats(allHotIpCnt)
+                .hourStats(allHoursResp)
+                .daily(allDailyList)
+                .osStats(allOsAndCnt)
+                .weekdayStats(allWeekdayCnt)
+                .build();
+    }
     @Override
     public IPage<LinkAccessRecordsPageRepsDto> linkPageAccessRecords(LinkAccessRecordsPageReqDto requestParam) {
         //首先获取原始的数据
@@ -251,4 +412,7 @@ public class LinkStatsServiceImpl implements LinkStatsService {
         return result;
 
     }
+
+  
+
 }

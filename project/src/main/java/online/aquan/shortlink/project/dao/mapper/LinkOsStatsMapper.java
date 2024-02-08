@@ -2,6 +2,7 @@ package online.aquan.shortlink.project.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import online.aquan.shortlink.project.dao.entity.LinkOsStatsDo;
+import online.aquan.shortlink.project.dto.req.LinkStatsGroupReqDto;
 import online.aquan.shortlink.project.dto.req.LinkStatsReqDto;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
@@ -26,4 +27,14 @@ public interface LinkOsStatsMapper extends BaseMapper<LinkOsStatsDo> {
                     """
     )
     List<LinkOsStatsDo> getOsAndCnt(LinkStatsReqDto requestParam);
+
+    @Select(
+            """
+                                    select os,sum(cnt) as cnt from t_link_os_stats
+                                    where gid = #{gid} 
+                                                and date between #{startDate} and #{endDate}
+                                    group by gid,os
+                    """
+    )
+    List<LinkOsStatsDo> getGroupOsAndCnt(LinkStatsGroupReqDto requestParam);
 }
