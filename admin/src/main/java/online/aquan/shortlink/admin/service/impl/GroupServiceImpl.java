@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Service
@@ -31,7 +32,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDo> implemen
     };
 
     /**
-     * 新增短链接的分组
+     * 用户自己新增短链接的分组
      */
     @Override
     public void saveGroup(GroupSaveDto requestParam) {
@@ -39,22 +40,15 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDo> implemen
     }
 
     /**
-     * 新增短链接的分组
+     * 新增短链接的分组,包含默认分组
      */
     @Override
     public void saveGroup(String username, String groupName) {
         String gid;
         //生成一个数据库中没有的gid
-        while (true) {
+        do {
             gid = RandomGenerator.generateRandom();
-            LambdaQueryWrapper<GroupDo> wrapper = Wrappers.lambdaQuery(GroupDo.class)
-                    .eq(GroupDo::getGid, gid)
-                    .eq(GroupDo::getUsername, UserContext.getUsername());
-            GroupDo groupDo = baseMapper.selectOne(wrapper);
-            if (groupDo == null) {
-                break;
-            }
-        }
+        } while (!hasGid(username, gid));
         //插入数据
         GroupDo groupDo = GroupDo.builder()
                 .gid(gid)
@@ -151,5 +145,14 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDo> implemen
                     baseMapper.update(groupDo, wrapper);
                 }
         );
+    }
+
+    private boolean hasGid(String username, String gid) {
+        LambdaQueryWrapper<GroupDo> queryWrapper = Wrappers.lambdaQuery(GroupDo.class)
+                .eq(GroupDo::getGid, gid)
+//                .eq(GroupDo::getUsername, Optional.ofNullable(username).orElse(UserContext.getUsername()));
+                .eq(GroupDo::getUsername, username);
+        GroupDo hasGroupFlag = baseMapper.selectOne(queryWrapper);
+        return hasGroupFlag == null;
     }
 }

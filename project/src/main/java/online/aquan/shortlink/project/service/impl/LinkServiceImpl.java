@@ -84,16 +84,19 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     @Value("${link.locale.stats.amap-key}")
     private String linkLocaleStatsAmapKey;
 
+    @Value("${link.domain.default}")
+    private String defaultDomain;
+
     /**
      * 创建短链接
      */
     @Override
     public LinkCreateRespDto createShortLink(LinkCreateReqDto requestParam) {
         String shortUrl = generateShortUrl(requestParam);
-        String fullUrl = requestParam.getDomain() + "/" + shortUrl;
+        String fullUrl = defaultDomain + "/" + shortUrl;
         String favicon = getFavicon(requestParam.getOriginUrl());
         LinkDo linkDo = LinkDo.builder()
-                .domain(requestParam.getDomain())
+                .domain(defaultDomain)
                 .originUrl(requestParam.getOriginUrl())
                 .gid(requestParam.getGid())
                 .favicon(favicon)
@@ -218,7 +221,13 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     @SneakyThrows
     @Override
     public void restoreLink(String shortUrl, ServletRequest servletRequest, ServletResponse servletResponse) {
-        String fullShortUrl = servletRequest.getServerName() + "/" + shortUrl;
+        String port = Optional.of(servletRequest.getServerPort())
+                .filter(each -> !Objects.equals(each, 80))
+                .map(String::valueOf)
+                .map(each -> ":" + each)
+                .orElse("");
+        String fullShortUrl = servletRequest.getServerName() + port + "/" + shortUrl;
+
         String originUrl = stringRedisTemplate.opsForValue().get(RedisKeyConstant.GOTO_LINK_KEY + fullShortUrl);
         //如果缓存中直接就存在
         if (StrUtil.isNotBlank(originUrl)) {
@@ -467,7 +476,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                     .gid(gid)
                     .build();
             linkStatsTodayMapper.statsToday(linkStatsTodayDo);
-            
+
         } catch (Exception e) {
             log.error("短链接访问量统计异常", e);
         }

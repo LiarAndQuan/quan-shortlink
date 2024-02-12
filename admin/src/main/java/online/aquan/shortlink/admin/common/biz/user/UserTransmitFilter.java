@@ -51,7 +51,7 @@ public class UserTransmitFilter implements Filter {
         if (!IGNORE_URI.contains(requestURI)) {
             String method = httpServletRequest.getMethod();
             //如果不是新增用户的接口
-            if (!(Objects.equals(requestURI, "/api/short-link/admin/v1/user") && Objects.equals("post", method))) {
+            if (!(Objects.equals(requestURI, "/api/short-link/admin/v1/user") && Objects.equals("POST", method))) {
                 String username = httpServletRequest.getHeader("username");
                 String token = httpServletRequest.getHeader("token");
                 //如果username或者token缺失,返回失败响应

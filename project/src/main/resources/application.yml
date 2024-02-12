@@ -47,5 +47,7 @@ link:
   locale:
     stats:
       amap-key: b8ab4b0ee1f1af9fc7a2c7f1df2ef586
+  domain:
+    default: shortlink.com:8001
       
 
