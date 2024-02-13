@@ -24,6 +24,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import online.aquan.shortlink.project.common.constant.LinkConstant;
 import online.aquan.shortlink.project.common.constant.RedisKeyConstant;
 import online.aquan.shortlink.project.common.convention.exception.ClientException;
 import online.aquan.shortlink.project.common.convention.exception.ServiceException;
@@ -161,7 +162,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                         .build();
                 baseInfoRespDtoArrayList.add(linkBaseInfoRespDto);
             } catch (Exception e) {
-                log.info("批量创建短链接失败,原始参数{}",originUrls.get(i));
+                log.info("批量创建短链接失败,原始参数{}", originUrls.get(i));
             }
         }
         return LinkBatchCreateRespDto.builder()
@@ -246,6 +247,22 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             //todo 这里需要将LinkDo里面的gid改成requestParam里面传入的新gid
             baseMapper.insert(linkDo);
         }
+        //如果日期类型或者日期被修改了,直接将缓存删除
+        //然后再去访问这个链接,就会访问数据库,然后发现为null,就会在redis里面加入一个null的key
+        //但是这样有一个问题:如果此时将短链接修改成有效的日期,再去访问,那么就会因为这个null的key导致404
+        if (!Objects.equals(originLinkDo.getValidDateType(), requestParam.getValidDateType()) ||
+            !Objects.equals(originLinkDo.getValidDate(), requestParam.getValidDate())) {
+            stringRedisTemplate.delete(RedisKeyConstant.GOTO_LINK_KEY + requestParam.getFullShortUrl());
+            //如果原来的短链接是过期的短链接,那么你在修改它之前访问他会产生一个null key
+            if (originLinkDo.getValidDate() != null && originLinkDo.getValidDate().before(new Date())) {
+                //如果修改之后的日期是有效期之内的,将null key删除
+                if (Objects.equals(requestParam.getValidDateType(), VailDateTypeEnum.PERMANENT.getType())
+                    || requestParam.getValidDate().after(new Date())) {
+                    stringRedisTemplate.delete(RedisKeyConstant.GOTO_LINK_IS_NULL_KEY + requestParam.getFullShortUrl());
+                }
+            }
+        }
+
     }
 
     @SneakyThrows
