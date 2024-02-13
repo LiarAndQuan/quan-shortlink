@@ -7,9 +7,11 @@ import jakarta.servlet.ServletResponse;
 import lombok.RequiredArgsConstructor;
 import online.aquan.shortlink.project.common.convention.result.Result;
 import online.aquan.shortlink.project.common.convention.result.Results;
+import online.aquan.shortlink.project.dto.req.LinkBatchCreateReqDto;
 import online.aquan.shortlink.project.dto.req.LinkCreateReqDto;
 import online.aquan.shortlink.project.dto.req.LinkPageReqDto;
 import online.aquan.shortlink.project.dto.req.LinkUpdateReqDto;
+import online.aquan.shortlink.project.dto.resp.LinkBatchCreateRespDto;
 import online.aquan.shortlink.project.dto.resp.LinkCreateRespDto;
 import online.aquan.shortlink.project.dto.resp.LinkGroupCountRespDto;
 import online.aquan.shortlink.project.dto.resp.LinkPageRespDto;
@@ -30,6 +32,14 @@ public class LinkController {
     @PostMapping("/api/short-link/v1/create")
     public Result<LinkCreateRespDto> createShortLink(@RequestBody LinkCreateReqDto requestParam) {
         return Results.success(linkService.createShortLink(requestParam));
+    }
+
+    /**
+     * 批量创建短链接
+     */
+    @PostMapping("/api/short-link/v1/create/batch")
+    public Result<LinkBatchCreateRespDto> batchCreateShortLink(@RequestBody LinkBatchCreateReqDto requestParam) {
+        return Results.success(linkService.batchCreateShortLink(requestParam));
     }
 
     /**

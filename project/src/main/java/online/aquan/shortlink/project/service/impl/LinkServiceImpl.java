@@ -30,12 +30,11 @@ import online.aquan.shortlink.project.common.convention.exception.ServiceExcepti
 import online.aquan.shortlink.project.common.enums.VailDateTypeEnum;
 import online.aquan.shortlink.project.dao.entity.*;
 import online.aquan.shortlink.project.dao.mapper.*;
+import online.aquan.shortlink.project.dto.req.LinkBatchCreateReqDto;
 import online.aquan.shortlink.project.dto.req.LinkCreateReqDto;
 import online.aquan.shortlink.project.dto.req.LinkPageReqDto;
 import online.aquan.shortlink.project.dto.req.LinkUpdateReqDto;
-import online.aquan.shortlink.project.dto.resp.LinkCreateRespDto;
-import online.aquan.shortlink.project.dto.resp.LinkGroupCountRespDto;
-import online.aquan.shortlink.project.dto.resp.LinkPageRespDto;
+import online.aquan.shortlink.project.dto.resp.*;
 import online.aquan.shortlink.project.service.LinkService;
 import online.aquan.shortlink.project.toolkit.HashUtil;
 import online.aquan.shortlink.project.toolkit.LinkUtil;
@@ -139,6 +138,37 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                 .gid(requestParam.getGid()).build();
     }
 
+    @Override
+    public LinkBatchCreateRespDto batchCreateShortLink(LinkBatchCreateReqDto requestParam) {
+        List<String> originUrls = requestParam.getOriginUrls();
+        List<String> describes = requestParam.getDescribes();
+        List<LinkBaseInfoRespDto> baseInfoRespDtoArrayList = new ArrayList<>();
+        for (int i = 0; i < originUrls.size(); i++) {
+            LinkCreateReqDto linkCreateReqDto = LinkCreateReqDto.builder()
+                    .originUrl(originUrls.get(i))
+                    .describe(describes.get(i))
+                    .gid(requestParam.getGid())
+                    .validDate(requestParam.getValidDate())
+                    .validDateType(requestParam.getValidDateType())
+                    .createdType(requestParam.getCreatedType())
+                    .build();
+            try {
+                LinkCreateRespDto shortLink = createShortLink(linkCreateReqDto);
+                LinkBaseInfoRespDto linkBaseInfoRespDto = LinkBaseInfoRespDto.builder()
+                        .fullShortUrl(shortLink.getFullShortUrl())
+                        .originUrl(shortLink.getOriginUrl())
+                        .describe(describes.get(i))
+                        .build();
+                baseInfoRespDtoArrayList.add(linkBaseInfoRespDto);
+            } catch (Exception e) {
+                log.info("批量创建短链接失败,原始参数{}",originUrls.get(i));
+            }
+        }
+        return LinkBatchCreateRespDto.builder()
+                .baseLinkInfos(baseInfoRespDtoArrayList)
+                .total(baseInfoRespDtoArrayList.size())
+                .build();
+    }
 
     /**
      * 短链接分页查询

@@ -65,7 +65,7 @@ public interface LinkAccessLogsMapper extends BaseMapper<LinkAccessLogsDo> {
                                case when min(create_time) between #{startDate} and #{endDate} then '新访客' else '老访客' end as 'uvType'     
                         from t_link_access_logs
                         where
-                        full_short_url = #{full_short_url} and gid = #{gid} and 
+                        full_short_url = #{fullShortUrl} and gid = #{gid} and 
                         user in 
                         <foreach item = 'item' index = 'index' collection='userList' open = '(' separator = ',' close=')'>
                             #{item}

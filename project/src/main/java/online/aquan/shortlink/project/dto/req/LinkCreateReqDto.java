@@ -3,27 +3,33 @@ package online.aquan.shortlink.project.dto.req;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class LinkCreateReqDto {
     /**
      * 域名
      */
     private String domain;
-    
+
     /**
      * 原始链接
      */
     private String originUrl;
-    
+
     /**
      * 分组标识
      */
     private String gid;
-    
+
     /**
      * 创建类型 0：接口创建 1：控制台创建
      */

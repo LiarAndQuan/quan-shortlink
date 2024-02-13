@@ -1,7 +1,6 @@
-package online.aquan.shortlink.admin.remote.dto.req;
+package online.aquan.shortlink.project.dto.req;
 
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,21 +8,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
+
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class LinkCreateReqDto {
-    /**
-     * 域名
-     */
-    private String domain;
+public class LinkBatchCreateReqDto {
 
     /**
-     * 原始链接
+     * 原始链接集合
      */
-    private String originUrl;
+    private List<String> originUrls;
+
+    /**
+     * 描述集合
+     */
+    private List<String> describes;
 
     /**
      * 分组标识
@@ -45,10 +47,4 @@ public class LinkCreateReqDto {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date validDate;
-
-    /**
-     * 描述
-     */
-    @TableField("`describe`")
-    private String describe;
 }

@@ -37,6 +37,13 @@ public interface LinkRemoteService {
         });
     }
 
+    default Result<LinkBatchCreateRespDto> batchCreateShortLink(LinkBatchCreateReqDto requestParam) {
+        String jsonString = JSON.toJSONString(requestParam);
+        String resp =  HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/create/batch", jsonString);
+        return JSON.parseObject(resp, new TypeReference<>() {
+        });
+    }
+
     /**
      * 调用中台的分页接口解析即可
      */
@@ -132,12 +139,14 @@ public interface LinkRemoteService {
         });
     }
 
-    default Result<IPage<LinkAccessRecordsPageRepsDto>> linkGroupPageAccessRecords(LinkAccessRecordsPageGroupReqDto requestParam){
+    default Result<IPage<LinkAccessRecordsPageRepsDto>> linkGroupPageAccessRecords(LinkAccessRecordsPageGroupReqDto requestParam) {
         Map<String, Object> map = BeanUtil.beanToMap(requestParam);
         map.remove("orders");
         map.remove("records");
-        String resp = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats/access-record/group",map);
+        String resp = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats/access-record/group", map);
         return JSON.parseObject(resp, new TypeReference<>() {
         });
     }
+
+  
 }
