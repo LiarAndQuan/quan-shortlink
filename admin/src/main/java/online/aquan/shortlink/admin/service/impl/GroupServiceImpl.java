@@ -79,7 +79,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDo> implemen
         } finally {
             lock.unlock();
         }
-       
+
     }
 
     /**
@@ -141,13 +141,10 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDo> implemen
      */
     @Override
     public void deleteGroup(String gid) {
-        LambdaUpdateWrapper<GroupDo> wrapper = Wrappers.lambdaUpdate(GroupDo.class)
-                .eq(GroupDo::getDelFlag, 0)
+        LambdaQueryWrapper<GroupDo> wrapper = Wrappers.lambdaQuery(GroupDo.class)
                 .eq(GroupDo::getGid, gid)
                 .eq(GroupDo::getUsername, UserContext.getUsername());
-        GroupDo groupDo = new GroupDo();
-        groupDo.setDelFlag(1);
-        baseMapper.update(groupDo, wrapper);
+        baseMapper.delete(wrapper);
     }
 
     /**
