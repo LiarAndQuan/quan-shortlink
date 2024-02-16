@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import online.aquan.shortlink.project.dao.entity.LinkDo;
+import online.aquan.shortlink.project.dto.biz.LinkStatsRecordDto;
 import online.aquan.shortlink.project.dto.req.LinkBatchCreateReqDto;
 import online.aquan.shortlink.project.dto.req.LinkCreateReqDto;
 import online.aquan.shortlink.project.dto.req.LinkPageReqDto;
@@ -28,4 +29,6 @@ public interface LinkService extends IService<LinkDo> {
     void restoreLink(String shortUrl, ServletRequest servletRequest, ServletResponse servletResponse);
 
     LinkBatchCreateRespDto batchCreateShortLink(LinkBatchCreateReqDto requestParam);
+
+    void linkStats(String fullShortUrl, String gid, LinkStatsRecordDto linkStatsRecordDto);
 }

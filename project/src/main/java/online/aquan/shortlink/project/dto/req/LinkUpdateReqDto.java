@@ -19,8 +19,14 @@ public class LinkUpdateReqDto {
      */
     private String fullShortUrl;
 
+
     /**
-     * 分组标识
+     * 原始gid
+     */
+    private String originGid;
+
+    /**
+     * 修改之后的gid
      */
     private String gid;
 
@@ -28,8 +34,7 @@ public class LinkUpdateReqDto {
      * 有效期类型 0：永久有效 1：自定义
      */
     private Integer validDateType;
-    
-    private String favicon;
+
     /**
      * 有效期
      */

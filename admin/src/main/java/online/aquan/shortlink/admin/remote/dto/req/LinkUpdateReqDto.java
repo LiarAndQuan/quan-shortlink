@@ -23,6 +23,8 @@ public class LinkUpdateReqDto {
      * 分组标识
      */
     private String gid;
+    
+    private String originGid;
 
     /**
      * 有效期类型 0：永久有效 1：自定义
