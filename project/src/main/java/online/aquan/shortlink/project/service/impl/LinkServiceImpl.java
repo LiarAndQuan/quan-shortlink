@@ -29,6 +29,7 @@ import online.aquan.shortlink.project.common.constant.RedisKeyConstant;
 import online.aquan.shortlink.project.common.convention.exception.ClientException;
 import online.aquan.shortlink.project.common.convention.exception.ServiceException;
 import online.aquan.shortlink.project.common.enums.VailDateTypeEnum;
+import online.aquan.shortlink.project.config.GotoDomainWhiteListConfiguration;
 import online.aquan.shortlink.project.dao.entity.*;
 import online.aquan.shortlink.project.dao.mapper.*;
 import online.aquan.shortlink.project.dto.biz.LinkStatsRecordDto;
@@ -83,6 +84,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     private final LinkStatsTodayMapper linkStatsTodayMapper;
     private final LinkStatsTodayService linkStatsTodayService;
     private final DelayLinkStatsProducer delayLinkStatsProducer;
+    private final GotoDomainWhiteListConfiguration gotoDomainWhiteListConfiguration;
 
     @Value("${link.locale.stats.amap-key}")
     private String linkLocaleStatsAmapKey;
@@ -95,6 +97,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
      */
     @Override
     public LinkCreateRespDto createShortLink(LinkCreateReqDto requestParam) {
+        verificationWhitelist(requestParam.getOriginUrl());
         String shortUrl = generateShortUrl(requestParam);
         String fullUrl = defaultDomain + "/" + shortUrl;
         String favicon = getFavicon(requestParam.getOriginUrl());
@@ -393,7 +396,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                 .map(each -> ":" + each)
                 .orElse("");
         String fullShortUrl = servletRequest.getServerName() + port + "/" + shortUrl;
-        
+
         String originUrl = stringRedisTemplate.opsForValue().get(RedisKeyConstant.GOTO_LINK_KEY + fullShortUrl);
         //如果缓存中直接就存在
         if (StrUtil.isNotBlank(originUrl)) {
@@ -673,7 +676,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
         } catch (
                 Exception e) {
             log.error("短链接访问量统计异常", e);
-        }finally {
+        } finally {
             rLock.unlock();
         }
     }
@@ -714,6 +717,21 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             }
         }
         return null;
+    }
+
+    private void verificationWhitelist(String url) {
+        Boolean enable = gotoDomainWhiteListConfiguration.getEnable();
+        if (enable == null || !enable) {
+            return;
+        }
+        String domain = LinkUtil.extractDomain(url);
+        if (StrUtil.isBlank(domain)) {
+            throw new ClientException("短链接填写错误");
+        }
+        List<String> details = gotoDomainWhiteListConfiguration.getDetails();
+        if (!details.contains(domain)) {
+            throw new ClientException("请生成以下网站链接: " + gotoDomainWhiteListConfiguration.getNames());
+        }
     }
 
 }

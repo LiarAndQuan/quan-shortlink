@@ -2,8 +2,11 @@ package online.aquan.shortlink.project.toolkit;
 
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.SneakyThrows;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.Optional;
 
@@ -43,8 +46,8 @@ public class LinkUtil {
         }
         return ipAddress;
     }
-    
-    public static String getOs(HttpServletRequest request){
+
+    public static String getOs(HttpServletRequest request) {
         String userAgent = request.getHeader("User-Agent");
         if (userAgent.toLowerCase().contains("windows")) {
             return "Windows";
@@ -60,7 +63,8 @@ public class LinkUtil {
             return "Unknown";
         }
     }
-    public static String getBrowser(HttpServletRequest request){
+
+    public static String getBrowser(HttpServletRequest request) {
         String userAgent = request.getHeader("User-Agent");
         if (userAgent.toLowerCase().contains("edg")) {
             return "Microsoft Edge";
@@ -78,19 +82,33 @@ public class LinkUtil {
             return "Unknown";
         }
     }
-    
-    public static String getDevice(HttpServletRequest request){
+
+    public static String getDevice(HttpServletRequest request) {
         String userAgent = request.getHeader("User-Agent");
         if (userAgent.toLowerCase().contains("mobile")) {
             return "Mobile";
         }
         return "PC";
     }
-    
-    public static String getNetwork(HttpServletRequest request){
+
+    public static String getNetwork(HttpServletRequest request) {
         String actualIp = getActualIp(request);
         // 这里简单判断IP地址范围，您可能需要更复杂的逻辑
         // 例如，通过调用IP地址库或调用第三方服务来判断网络类型
         return actualIp.startsWith("192.168.") || actualIp.startsWith("10.") ? "WIFI" : "Mobile";
+    }
+
+    @SneakyThrows
+    public static String extractDomain(String url) {
+        String domain = null;
+        URI uri = new URI(url);
+        String host = uri.getHost();
+        if (StrUtil.isNotBlank(host)) {
+            domain = host;
+            if (domain.startsWith("www.")) {
+                domain = host.substring(4);
+            }
+        }
+        return domain;
     }
 }
