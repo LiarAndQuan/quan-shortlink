@@ -1,6 +1,7 @@
 package online.aquan.shortlink.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.UUID;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -28,6 +29,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static online.aquan.shortlink.admin.common.constant.RedisCacheConstant.LOCK_USER_REGISTER_KEY;
@@ -89,7 +91,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo> implements 
                     throw new ClientException(USER_EXIST);
                 }
                 userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
-                groupService.saveGroup(requestParam.getUsername(),"默认分组");
+                groupService.saveGroup(requestParam.getUsername(), "默认分组");
                 return;
             }
         } finally {
@@ -128,12 +130,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo> implements 
         if (userDo == null) {
             throw new ClientException(USER_NULL);
         }
-        //判断用户是否已经登录
-        Boolean hasLogin = stringRedisTemplate.hasKey("login_" + requestParam.getUsername());
-        if (hasLogin != null && hasLogin) {
-            throw new ClientException(USER_HAS_LOGIN);
+        //用户已经登录返回对应的token
+        Map<Object, Object> loginMap = stringRedisTemplate.opsForHash().entries("login_" + requestParam.getUsername());
+        if(CollUtil.isNotEmpty(loginMap)){
+            String token = loginMap.keySet().stream().findFirst().map(Object::toString).orElseThrow(() -> new ClientException("用户登录错误"));
+            return new UserLoginResDto(token);
         }
-
+        
         /*
          * 接下来存入redis的结构如下:
          * Key: login_用户名
