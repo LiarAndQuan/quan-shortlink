@@ -694,7 +694,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             }
             String str = requestParam.getOriginUrl() + LocalDateTime.now();
             shortUrl = HashUtil.hashToBase62(str);
-            if (!shortLinkCachePenetrationBloomFilter.contains(requestParam.getDomain() + "/" + shortUrl)) {
+            if (!shortLinkCachePenetrationBloomFilter.contains(defaultDomain + "/" + shortUrl)) {
                 break;
             }
             count++;
