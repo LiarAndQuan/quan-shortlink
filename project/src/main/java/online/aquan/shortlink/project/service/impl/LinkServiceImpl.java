@@ -38,7 +38,7 @@ import online.aquan.shortlink.project.dto.req.LinkCreateReqDto;
 import online.aquan.shortlink.project.dto.req.LinkPageReqDto;
 import online.aquan.shortlink.project.dto.req.LinkUpdateReqDto;
 import online.aquan.shortlink.project.dto.resp.*;
-import online.aquan.shortlink.project.mq.producer.DelayLinkStatsProducer;
+import online.aquan.shortlink.project.mq.producer.LinkStatsSaveProducer;
 import online.aquan.shortlink.project.service.LinkService;
 import online.aquan.shortlink.project.service.LinkStatsTodayService;
 import online.aquan.shortlink.project.toolkit.HashUtil;
@@ -83,11 +83,8 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
     private final LinkNetworkStatsMapper linkNetworkStatsMapper;
     private final LinkStatsTodayMapper linkStatsTodayMapper;
     private final LinkStatsTodayService linkStatsTodayService;
-    private final DelayLinkStatsProducer delayLinkStatsProducer;
+    private final LinkStatsSaveProducer linkStatsSaveProducer;
     private final GotoDomainWhiteListConfiguration gotoDomainWhiteListConfiguration;
-
-    @Value("${link.locale.stats.amap-key}")
-    private String linkLocaleStatsAmapKey;
 
     @Value("${link.domain.default}")
     private String defaultDomain;
@@ -532,153 +529,11 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
      */
 
     public void linkStats(String fullShortUrl, String gid, LinkStatsRecordDto linkStatsRecordDto) {
-        fullShortUrl = Optional.ofNullable(fullShortUrl).orElse(linkStatsRecordDto.getFullShortUrl());
-        //获取读锁
-        RReadWriteLock readWriteLock = redissonClient.getReadWriteLock(RedisKeyConstant.LOCK_GID_UPDATE_KEY + fullShortUrl);
-        RLock rLock = readWriteLock.readLock();
-        if (!rLock.tryLock()) {
-            delayLinkStatsProducer.send(linkStatsRecordDto);
-            return;
-        }
-        Date date = new Date();
-        try {
-            //如果是根据缓存跳转的,那么会缺少gid
-            if (StrUtil.isBlank(gid)) {
-                LambdaQueryWrapper<LinkGotoDo> wrapper = Wrappers.lambdaQuery(LinkGotoDo.class)
-                        .eq(LinkGotoDo::getFullShortUrl, fullShortUrl);
-                LinkGotoDo linkGotoDo = linkGotoMapper.selectOne(wrapper);
-                gid = linkGotoDo.getGid();
-            }
-            //记录access表
-            int hour = DateUtil.hour(date, true);
-            Week week = DateUtil.dayOfWeekEnum(date);
-            int weekday = week.getIso8601Value();
-            LinkAccessStatsDo linkAccessStatsDo = LinkAccessStatsDo.builder()
-                    .pv(1)
-                    .uv(linkStatsRecordDto.getUvFirstFlag() ? 1 : 0)
-                    .uip(linkStatsRecordDto.getUipFirstFlag() ? 1 : 0)
-                    .weekday(weekday)
-                    .date(date)
-                    .fullShortUrl(fullShortUrl)
-                    .gid(gid)
-                    .hour(hour)
-                    .build();
-            linkAccessStatsDo.setCreateTime(date);
-            linkAccessStatsDo.setUpdateTime(date);
-            linkAccessStatsMapper.insertOrUpdate(linkAccessStatsDo);
-            //记录地区
-            Map<String, Object> map = new HashMap<>();
-            map.put("key", linkLocaleStatsAmapKey);
-            map.put("ip", linkStatsRecordDto.getIp());
-            String resp = HttpUtil.get(amapApiUrl, map);
-            JSONObject locale = JSON.parseObject(resp);
-            String province, city, country;
-            String infoCode = locale.getString("infocode");
-            if (StrUtil.isNotBlank(infoCode) && Objects.equals(infoCode, "10000")) {
-                province = locale.getString("province");
-                city = locale.getString("city");
-                country = locale.getString("country");
-                boolean isNull = Objects.equals(province, "[]");
-                if (isNull) {
-                    province = "未知";
-                    city = "未知";
-                    country = "中国";
-                }
-                LinkLocaleStatsDo localeStatsDo = LinkLocaleStatsDo.builder()
-                        .country(country)
-                        .gid(gid)
-                        .cnt(1)
-                        .fullShortUrl(fullShortUrl)
-                        .city(city)
-                        .adcode(isNull ? "未知" : locale.getString("adcode"))
-                        .province(province)
-                        .date(date)
-                        .build();
-                linkLocaleStatsMapper.insertOrUpdate(localeStatsDo);
-            } else {
-                province = "未知";
-                city = "未知";
-                country = "中国";
-            }
-            //记录操作系统
-            String os = linkStatsRecordDto.getOs();
-            LinkOsStatsDo linkOsStatsDo = LinkOsStatsDo.builder()
-                    .fullShortUrl(fullShortUrl)
-                    .gid(gid)
-                    .cnt(1)
-                    .os(os)
-                    .date(date).build();
-            linkOsStatsDo.setCreateTime(date);
-            linkOsStatsDo.setUpdateTime(date);
-            linkOsStatsMapper.insertOrUpdate(linkOsStatsDo);
-            //记录浏览器
-            String browser = linkStatsRecordDto.getBrowser();
-            LinkBrowserStatsDo linkBrowserStatsDo = LinkBrowserStatsDo.builder()
-                    .fullShortUrl(fullShortUrl)
-                    .gid(gid)
-                    .cnt(1)
-                    .browser(browser)
-                    .date(date).build();
-            linkBrowserStatsDo.setCreateTime(date);
-            linkBrowserStatsDo.setUpdateTime(date);
-            linkBrowserStatsMapper.insertOrUpdate(linkBrowserStatsDo);
-            //记录设备
-            String device = linkStatsRecordDto.getDevice();
-            LinkDeviceStatsDo linkDeviceStatsDo = LinkDeviceStatsDo.builder()
-                    .device(device)
-                    .fullShortUrl(fullShortUrl)
-                    .gid(gid)
-                    .date(date)
-                    .cnt(1)
-                    .build();
-            linkDeviceStatsDo.setCreateTime(date);
-            linkDeviceStatsDo.setUpdateTime(date);
-            linkDeviceStatsMapper.insertOrUpdate(linkDeviceStatsDo);
-            //记录网络
-            String network = linkStatsRecordDto.getNetwork();
-            LinkNetworkStatsDo linkNetworkStatsDo = LinkNetworkStatsDo.builder()
-                    .network(network)
-                    .fullShortUrl(fullShortUrl)
-                    .gid(gid)
-                    .date(date)
-                    .cnt(1)
-                    .build();
-            linkNetworkStatsDo.setCreateTime(date);
-            linkNetworkStatsDo.setUpdateTime(date);
-            linkNetworkStatsMapper.insertOrUpdate(linkNetworkStatsDo);
-            //记录该条短链接的访问日志
-            LinkAccessLogsDo linkAccessLogsDo = LinkAccessLogsDo.builder()
-                    .ip(linkStatsRecordDto.getIp())
-                    .network(network)
-                    .device(device)
-                    .locale(StrUtil.join("-", country, province, city))
-                    .browser(browser)
-                    .os(os)
-                    .fullShortUrl(fullShortUrl)
-                    .gid(gid)
-                    .user(linkStatsRecordDto.getUv())
-                    .build();
-            linkAccessLogsDo.setCreateTime(date);
-            linkAccessLogsDo.setUpdateTime(date);
-            linkAccessLogsMapper.insert(linkAccessLogsDo);
-
-            baseMapper.incrementStat(gid, fullShortUrl, 1, linkStatsRecordDto.getUvFirstFlag() ? 1 : 0, linkStatsRecordDto.getUipFirstFlag() ? 1 : 0);
-
-            LinkStatsTodayDo linkStatsTodayDo = LinkStatsTodayDo.builder()
-                    .todayPv(1)
-                    .todayUip(linkStatsRecordDto.getUipFirstFlag() ? 1 : 0)
-                    .todayUv(linkStatsRecordDto.getUvFirstFlag() ? 1 : 0)
-                    .date(date)
-                    .fullShortUrl(fullShortUrl)
-                    .gid(gid)
-                    .build();
-            linkStatsTodayMapper.statsToday(linkStatsTodayDo);
-        } catch (
-                Exception e) {
-            log.error("短链接访问量统计异常", e);
-        } finally {
-            rLock.unlock();
-        }
+        Map<String, String> producerMap = new HashMap<>();
+        producerMap.put("fullShortUrl", fullShortUrl);
+        producerMap.put("gid", gid);
+        producerMap.put("statsRecord", JSON.toJSONString(linkStatsRecordDto));
+        linkStatsSaveProducer.send(producerMap);
     }
 
 
