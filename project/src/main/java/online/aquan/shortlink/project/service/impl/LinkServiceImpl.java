@@ -2,14 +2,10 @@ package online.aquan.shortlink.project.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.Week;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -46,7 +42,10 @@ import online.aquan.shortlink.project.toolkit.LinkUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.redisson.api.*;
+import org.redisson.api.RBloomFilter;
+import org.redisson.api.RLock;
+import org.redisson.api.RReadWriteLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -55,13 +54,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static online.aquan.shortlink.project.common.constant.LinkConstant.amapApiUrl;
 import static online.aquan.shortlink.project.common.constant.RedisKeyConstant.SHORT_LINK_STATS_UIP_KEY;
 import static online.aquan.shortlink.project.common.constant.RedisKeyConstant.SHORT_LINK_STATS_UV_KEY;
 
@@ -95,10 +92,11 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
      * 创建短链接
      */
     @Override
+    @Transactional
     public LinkCreateRespDto createShortLink(LinkCreateReqDto requestParam) {
         verificationWhitelist(requestParam.getOriginUrl());
         String shortUrl = generateShortUrl(requestParam);
-        String fullUrl = defaultDomain + "/" + shortUrl;
+        String fullShortUrl = defaultDomain + "/" + shortUrl;
         String favicon = getFavicon(requestParam.getOriginUrl());
         LinkDo linkDo = LinkDo.builder()
                 .domain(defaultDomain)
@@ -115,32 +113,26 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                 .totalUv(0)
                 .delTime(0L)
                 .shortUri(shortUrl)
-                .fullShortUrl(fullUrl).build();
+                .fullShortUrl(fullShortUrl).build();
         try {
             baseMapper.insert(linkDo);
         } catch (DuplicateKeyException e) {
             /*如果加入布隆过滤器之后还是出现了插入重复key的情况
             那么就是同时有很多个相同的请求一起发送过来导致的并发问题
-            此时查询数据库*/
-            LambdaQueryWrapper<LinkDo> wrapper = Wrappers.lambdaQuery(LinkDo.class)
-                    .eq(LinkDo::getFullShortUrl, fullUrl);
-            LinkDo linkDo1 = baseMapper.selectOne(wrapper);
-            if (linkDo1 != null) {
-                Log.warn("短链接:{} 重复生成", fullUrl);
-                throw new ServiceException("短链接重复生成");
-            }
+            */
+            throw new ServiceException(String.format("短链接：%s 生成重复", fullShortUrl));
         }
-        shortLinkCachePenetrationBloomFilter.add(fullUrl);
+        shortLinkCachePenetrationBloomFilter.add(fullShortUrl);
         //插入之后还需要新增一条linkGoto记录
         LinkGotoDo linkGotoDo = new LinkGotoDo();
         linkGotoDo.setGid(requestParam.getGid());
-        linkGotoDo.setFullShortUrl(fullUrl);
+        linkGotoDo.setFullShortUrl(fullShortUrl);
         linkGotoMapper.insert(linkGotoDo);
         //缓存预热
-        stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_KEY + fullUrl, requestParam.getOriginUrl(),
+        stringRedisTemplate.opsForValue().set(RedisKeyConstant.GOTO_LINK_KEY + fullShortUrl, requestParam.getOriginUrl(),
                 LinkUtil.getValidCacheTime(requestParam.getValidDate()), TimeUnit.SECONDS);
         return LinkCreateRespDto.builder()
-                .fullShortUrl("http://" + fullUrl)
+                .fullShortUrl("http://" + fullShortUrl)
                 .originUrl(requestParam.getOriginUrl())
                 .gid(requestParam.getGid()).build();
     }
@@ -549,7 +541,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             if (count >= 10) {
                 throw new ServiceException("短链接创建过于频繁,请稍后再试");
             }
-            String str = requestParam.getOriginUrl() + LocalDateTime.now();
+            String str = requestParam.getOriginUrl() + UUID.randomUUID().toString();
             shortUrl = HashUtil.hashToBase62(str);
             if (!shortLinkCachePenetrationBloomFilter.contains(defaultDomain + "/" + shortUrl)) {
                 break;
