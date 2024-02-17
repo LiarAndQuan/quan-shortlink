@@ -11,10 +11,12 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import online.aquan.shortlink.project.common.constant.RedisKeyConstant;
+import online.aquan.shortlink.project.common.convention.exception.ServiceException;
 import online.aquan.shortlink.project.config.GotoDomainWhiteListConfiguration;
 import online.aquan.shortlink.project.dao.entity.*;
 import online.aquan.shortlink.project.dao.mapper.*;
 import online.aquan.shortlink.project.dto.biz.LinkStatsRecordDto;
+import online.aquan.shortlink.project.mq.idempotent.MessageQueueIdempotentHandler;
 import online.aquan.shortlink.project.mq.producer.DelayLinkStatsProducer;
 import online.aquan.shortlink.project.service.LinkStatsTodayService;
 import org.redisson.api.RBloomFilter;
@@ -50,6 +52,7 @@ public class LinkStatsSaveConsumer implements StreamListener<String, MapRecord<S
     private final DelayLinkStatsProducer delayLinkStatsProducer;
     private final StringRedisTemplate stringRedisTemplate;
     private final LinkMapper linkMapper;
+    private final MessageQueueIdempotentHandler messageQueueIdempotentHandler;
 
     @Value("${link.locale.stats.amap-key}")
     private String linkLocaleStatsAmapKey;
@@ -58,14 +61,29 @@ public class LinkStatsSaveConsumer implements StreamListener<String, MapRecord<S
     public void onMessage(MapRecord<String, String, String> message) {
         String stream = message.getStream();
         RecordId id = message.getId();
-        Map<String, String> producerMap = message.getValue();
-        String fullShortUrl = producerMap.get("fullShortUrl");
-        if (StrUtil.isNotBlank(fullShortUrl)) {
-            String gid = producerMap.get("gid");
-            LinkStatsRecordDto statsRecord = JSON.parseObject(producerMap.get("statsRecord"), LinkStatsRecordDto.class);
-            linkStats(fullShortUrl, gid, statsRecord);
+        //插入失败返回false,代表消费过
+        if (!messageQueueIdempotentHandler.isMessageProcessed(id.toString())) {
+            //如果完成
+            if (messageQueueIdempotentHandler.isAccomplish(id.toString())) {
+                return;
+            }
+            throw new ServiceException("消息未消费完,等待消息队列重新消费");
         }
-        stringRedisTemplate.opsForStream().delete(Objects.requireNonNull(stream), id.getValue());
+        try {
+            Map<String, String> producerMap = message.getValue();
+            String fullShortUrl = producerMap.get("fullShortUrl");
+            if (StrUtil.isNotBlank(fullShortUrl)) {
+                String gid = producerMap.get("gid");
+                LinkStatsRecordDto statsRecord = JSON.parseObject(producerMap.get("statsRecord"), LinkStatsRecordDto.class);
+                linkStats(fullShortUrl, gid, statsRecord);
+            }
+            stringRedisTemplate.opsForStream().delete(Objects.requireNonNull(stream), id.getValue());
+        } catch (Throwable throwable) {
+            //如果消费失败,需要重新消费,那就要删除这个key
+            messageQueueIdempotentHandler.delMessageProcessed(id.toString());
+            log.error("记录短链接监控消费异常", throwable);
+        }
+        messageQueueIdempotentHandler.setAccomplish(id.toString());
     }
 
     public void linkStats(String fullShortUrl, String gid, LinkStatsRecordDto linkStatsRecordDto) {
