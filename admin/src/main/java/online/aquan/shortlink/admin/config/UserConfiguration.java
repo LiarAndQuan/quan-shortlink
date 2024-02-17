@@ -1,5 +1,6 @@
 package online.aquan.shortlink.admin.config;
 
+import online.aquan.shortlink.admin.common.biz.user.UserFlowRiskControlFilter;
 import online.aquan.shortlink.admin.common.biz.user.UserTransmitFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +10,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 @Configuration
 public class UserConfiguration {
-    
+
     @Bean
     public FilterRegistrationBean<UserTransmitFilter> globalUserTransmitFilter(StringRedisTemplate stringRedisTemplate) {
         FilterRegistrationBean<UserTransmitFilter> registration = new FilterRegistrationBean<>();
@@ -18,4 +19,15 @@ public class UserConfiguration {
         registration.setOrder(0);
         return registration;
     }
+
+    @Bean
+    public FilterRegistrationBean<UserFlowRiskControlFilter> globalUserFlowRistControlFilter
+            (StringRedisTemplate stringRedisTemplate, UserFlowRiskControlConfiguration userFlowRiskControlConfiguration) {
+        FilterRegistrationBean<UserFlowRiskControlFilter> registration = new FilterRegistrationBean<>();
+        registration.setFilter(new UserFlowRiskControlFilter(stringRedisTemplate, userFlowRiskControlConfiguration));
+        registration.addUrlPatterns("/*");
+        registration.setOrder(10);
+        return registration;
+    }
+
 }
