@@ -2,6 +2,7 @@ package online.aquan.shortlink.project.config;
 
 
 import lombok.RequiredArgsConstructor;
+import online.aquan.shortlink.project.common.constant.RedisKeyConstant;
 import online.aquan.shortlink.project.mq.consumer.LinkStatsSaveConsumer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -26,11 +27,7 @@ public class RedisStreamConfiguration {
 
     private final RedisConnectionFactory redisConnectionFactory;
     private final LinkStatsSaveConsumer linkStatsSaveConsumer;
-
-    @Value("${spring.data.redis.channel-topic.short-link-stats}")
-    private String topic;
-    @Value("${spring.data.redis.channel-topic.short-link-stats-group}")
-    private String group;
+    
 
     @Bean
     public ExecutorService asyncStreamConsumer() {
@@ -64,8 +61,8 @@ public class RedisStreamConfiguration {
                         .build();
         StreamMessageListenerContainer<String, MapRecord<String, String, String>> streamMessageListenerContainer =
                 StreamMessageListenerContainer.create(redisConnectionFactory, options);
-        streamMessageListenerContainer.receiveAutoAck(Consumer.from(group, "stats-consumer"),
-                StreamOffset.create(topic, ReadOffset.lastConsumed()), linkStatsSaveConsumer);
+        streamMessageListenerContainer.receiveAutoAck(Consumer.from(RedisKeyConstant.SHORT_LINK_STATS_STREAM_GROUP_KEY, "stats-consumer"),
+                StreamOffset.create(RedisKeyConstant.SHORT_LINK_STATS_STREAM_TOPIC_KEY, ReadOffset.lastConsumed()), linkStatsSaveConsumer);
         return streamMessageListenerContainer;
     }
 }

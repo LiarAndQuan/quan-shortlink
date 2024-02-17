@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static online.aquan.shortlink.admin.common.constant.RedisCacheConstant.LOCK_USER_REGISTER_KEY;
+import static online.aquan.shortlink.admin.common.constant.RedisCacheConstant.USER_LOGIN_KEY;
 import static online.aquan.shortlink.admin.common.enums.UserErrorCodeEnums.*;
 
 @Service
@@ -132,11 +133,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo> implements 
         }
         //用户已经登录返回对应的token
         Map<Object, Object> loginMap = stringRedisTemplate.opsForHash().entries("login_" + requestParam.getUsername());
-        if(CollUtil.isNotEmpty(loginMap)){
+        if (CollUtil.isNotEmpty(loginMap)) {
             String token = loginMap.keySet().stream().findFirst().map(Object::toString).orElseThrow(() -> new ClientException("用户登录错误"));
             return new UserLoginResDto(token);
         }
-        
+
         /*
          * 接下来存入redis的结构如下:
          * Key: login_用户名
@@ -147,8 +148,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo> implements 
 
         //首先生成uuid作为token
         String uuid = UUID.randomUUID().toString();
-        stringRedisTemplate.opsForHash().put("login_" + requestParam.getUsername(), uuid, JSON.toJSONString(userDo));
-        stringRedisTemplate.expire("login" + requestParam.getUsername(), 30, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForHash().put(USER_LOGIN_KEY + requestParam.getUsername(), uuid, JSON.toJSONString(userDo));
+        stringRedisTemplate.expire(USER_LOGIN_KEY + requestParam.getUsername(), 30, TimeUnit.MINUTES);
         return new UserLoginResDto(uuid);
     }
 
@@ -157,7 +158,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo> implements 
      */
     @Override
     public Boolean hasLogin(String username, String token) {
-        return stringRedisTemplate.opsForHash().get("login_" + username, token) != null;
+        return stringRedisTemplate.opsForHash().get(USER_LOGIN_KEY + username, token) != null;
     }
 
 
@@ -169,6 +170,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo> implements 
         if (!hasLogin(username, token)) {
             throw new ClientException(USER_NOT_LOGIN);
         }
-        stringRedisTemplate.delete("login_" + username);
+        stringRedisTemplate.delete(USER_LOGIN_KEY + username);
     }
 }

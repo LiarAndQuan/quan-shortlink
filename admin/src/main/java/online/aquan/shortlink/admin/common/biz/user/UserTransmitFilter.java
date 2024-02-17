@@ -18,6 +18,8 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Objects;
 
+import static online.aquan.shortlink.admin.common.constant.RedisCacheConstant.USER_LOGIN_KEY;
+
 /**
  * 通过继承Filter并且实现doFilter方法,可以添加一个过滤器
  * 每当用户请求到来时可以取出用户名和token,然后从redis中查询出用户的信息,然后存入threadLocal中
@@ -63,7 +65,7 @@ public class UserTransmitFilter implements Filter {
                 }
                 Object userInfoJsonStr = null;
                 try {
-                    userInfoJsonStr = stringRedisTemplate.opsForHash().get("login_" + username, token);
+                    userInfoJsonStr = stringRedisTemplate.opsForHash().get(USER_LOGIN_KEY + username, token);
                     if (userInfoJsonStr == null) {
                         throw new ClientException(UserErrorCodeEnums.USER_TOKEN_FAIL);
                     }

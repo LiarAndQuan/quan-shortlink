@@ -62,6 +62,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static online.aquan.shortlink.project.common.constant.LinkConstant.amapApiUrl;
+import static online.aquan.shortlink.project.common.constant.RedisKeyConstant.SHORT_LINK_STATS_UIP_KEY;
+import static online.aquan.shortlink.project.common.constant.RedisKeyConstant.SHORT_LINK_STATS_UV_KEY;
 
 
 @Service
@@ -480,7 +482,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
             ((HttpServletResponse) servletResponse).addCookie(uvCookie);
             //标记第一次访问并存入redis
             uvIsFirst.set(Boolean.TRUE);
-            stringRedisTemplate.opsForSet().add("short-link:stats:uv" + fullShortUrl, uv.get());
+            stringRedisTemplate.opsForSet().add(SHORT_LINK_STATS_UV_KEY + fullShortUrl, uv.get());
         };
 
         if (ArrayUtil.isNotEmpty(cookies)) {
@@ -494,7 +496,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
                             Each -> {
                                 uv.set(Each);
                                 //add方法返回的是实际添加进入集合中的数量
-                                Long uvAdded = stringRedisTemplate.opsForSet().add("short-link:stats:uv" + fullShortUrl, Each);
+                                Long uvAdded = stringRedisTemplate.opsForSet().add(SHORT_LINK_STATS_UV_KEY + fullShortUrl, Each);
                                 uvIsFirst.set(uvAdded != null && uvAdded > 0L);
                             },
                             //如果请求中的cookie里面找不到uv这个key就执行添加
@@ -508,7 +510,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, LinkDo> implements 
         String browser = LinkUtil.getBrowser(((HttpServletRequest) servletRequest));
         String device = LinkUtil.getDevice(((HttpServletRequest) servletRequest));
         String network = LinkUtil.getNetwork(((HttpServletRequest) servletRequest));
-        Long uipAdded = stringRedisTemplate.opsForSet().add("short-link:stats:uip:" + fullShortUrl, ip);
+        Long uipAdded = stringRedisTemplate.opsForSet().add(SHORT_LINK_STATS_UIP_KEY + fullShortUrl, ip);
         boolean uipFirstFlag = uipAdded != null && uipAdded > 0L;
         return LinkStatsRecordDto.builder()
                 .fullShortUrl(fullShortUrl)

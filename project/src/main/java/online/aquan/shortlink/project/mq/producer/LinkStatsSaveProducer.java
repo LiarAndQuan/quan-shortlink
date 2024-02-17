@@ -2,6 +2,7 @@ package online.aquan.shortlink.project.mq.producer;
 
 
 import lombok.RequiredArgsConstructor;
+import online.aquan.shortlink.project.common.constant.RedisKeyConstant;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -14,11 +15,9 @@ public class LinkStatsSaveProducer {
 
     private final StringRedisTemplate stringRedisTemplate;
 
-    @Value("${spring.data.redis.channel-topic.short-link-stats}")
-    private String topic;
 
     public void send(Map<String, String> produceMap) {
-        stringRedisTemplate.opsForStream().add(topic, produceMap);
+        stringRedisTemplate.opsForStream().add(RedisKeyConstant.SHORT_LINK_STATS_STREAM_TOPIC_KEY, produceMap);
     }
 
 }
