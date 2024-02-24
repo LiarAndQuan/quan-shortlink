@@ -2,12 +2,16 @@ package online.aquan.shortlink.admin.common.biz.user;
 
 
 import com.alibaba.fastjson2.annotation.JSONField;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 用户信息实体
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserInfoDto {
 
     /**

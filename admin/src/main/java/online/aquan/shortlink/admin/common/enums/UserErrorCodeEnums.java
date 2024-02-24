@@ -4,7 +4,7 @@ import online.aquan.shortlink.admin.common.convention.errorcode.IErrorCode;
 
 public enum UserErrorCodeEnums implements IErrorCode {
 
-    USER_TOKEN_FAIL("A00200", "用户Token验证失败"),
+ 
     USER_NULL("B00200", "用户记录不存在"),
 
     USER_EXIST("B00201", "用户名已经存在"),
