@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import online.aquan.shortlink.admin.common.constant.RedisCacheConstant;
 import online.aquan.shortlink.admin.common.convention.exception.ClientException;
 import online.aquan.shortlink.admin.common.convention.exception.ServiceException;
 import online.aquan.shortlink.admin.common.enums.UserErrorCodeEnums;
@@ -132,8 +133,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo> implements 
             throw new ClientException(USER_NULL);
         }
         //用户已经登录返回对应的token
-        Map<Object, Object> loginMap = stringRedisTemplate.opsForHash().entries("login_" + requestParam.getUsername());
+        Map<Object, Object> loginMap = stringRedisTemplate.opsForHash().entries(USER_LOGIN_KEY + requestParam.getUsername());
         if (CollUtil.isNotEmpty(loginMap)) {
+            //用户已经登录,刷新持续时间
+            stringRedisTemplate.expire(USER_LOGIN_KEY + requestParam.getUsername(), 30L, TimeUnit.MINUTES);
             String token = loginMap.keySet().stream().findFirst().map(Object::toString).orElseThrow(() -> new ClientException("用户登录错误"));
             return new UserLoginResDto(token);
         }
