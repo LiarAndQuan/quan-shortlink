@@ -17,7 +17,8 @@ import online.aquan.shortlink.admin.dto.req.GroupSaveDto;
 import online.aquan.shortlink.admin.dto.req.GroupSortDto;
 import online.aquan.shortlink.admin.dto.req.GroupUpdateDto;
 import online.aquan.shortlink.admin.dto.resp.GroupRepsDto;
-import online.aquan.shortlink.admin.remote.dto.LinkRemoteService;
+import online.aquan.shortlink.admin.remote.LinkActualRemoteService;
+import online.aquan.shortlink.admin.remote.LinkRemoteService;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkGroupCountRespDto;
 import online.aquan.shortlink.admin.service.GroupService;
 import online.aquan.shortlink.admin.toolkit.RandomGenerator;
@@ -29,15 +30,15 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 
 @Service
 @RequiredArgsConstructor
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDo> implements GroupService {
 
-    private final LinkRemoteService linkRemoteService = new LinkRemoteService() {
-    };
+
+    private final LinkActualRemoteService linkActualRemoteService;
+
     private final RedissonClient redissonClient;
     @Value("${link.group.max-num}")
     private Integer maxGroupNum;
@@ -98,7 +99,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDo> implemen
         //获取所有的分组
         List<GroupDo> groupDos = baseMapper.selectList(wrapper);
         //调用中台获取所有的gid的linkCount
-        Result<List<LinkGroupCountRespDto>> groupLinkCount = linkRemoteService
+        Result<List<LinkGroupCountRespDto>> groupLinkCount = linkActualRemoteService
                 .getGroupLinkCount(groupDos.stream().map(GroupDo::getGid).toList());
         List<GroupRepsDto> groupRepsDtos = BeanUtil.copyToList(groupDos, GroupRepsDto.class);
         //将所有的数量赋值给对应的gid即可

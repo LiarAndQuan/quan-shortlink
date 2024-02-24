@@ -47,7 +47,7 @@ public class RecycleBinServiceImpl extends ServiceImpl<LinkMapper, LinkDo> imple
     public IPage<LinkPageRespDto> pageRecycleBinShortLink(RecycleBinPageReqDto requestParam) {
         LambdaQueryWrapper<LinkDo> wrapper = Wrappers.lambdaQuery(LinkDo.class)
                 .in(LinkDo::getGid, requestParam.getGidList())
-                .eq(LinkDo::getEnableStatus, 0)
+                .eq(LinkDo::getEnableStatus, 1)
                 .orderByDesc(LinkDo::getUpdateTime);
         //分页查询即可
         IPage<LinkDo> linkDoIPage = baseMapper.selectPage(requestParam, wrapper);

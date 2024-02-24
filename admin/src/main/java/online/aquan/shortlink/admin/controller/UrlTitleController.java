@@ -1,17 +1,19 @@
 package online.aquan.shortlink.admin.controller;
 
 
+import lombok.RequiredArgsConstructor;
 import online.aquan.shortlink.admin.common.convention.result.Result;
-import online.aquan.shortlink.admin.remote.dto.LinkRemoteService;
+import online.aquan.shortlink.admin.remote.LinkActualRemoteService;
+import online.aquan.shortlink.admin.remote.LinkRemoteService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class UrlTitleController {
 
-    private final LinkRemoteService linkRemoteService = new LinkRemoteService() {
-    };
+    private final LinkActualRemoteService linkActualRemoteService;
 
     /**
      * 获取网站的标题
@@ -21,7 +23,7 @@ public class UrlTitleController {
      */
     @GetMapping("/api/short-link/admin/v1/title")
     public Result<String> getTitleByUrl(@RequestParam("url") String url) {
-        return linkRemoteService.getTitleByUrl(url);
+        return linkActualRemoteService.getTitleByUrl(url);
     }
-    
+
 }
