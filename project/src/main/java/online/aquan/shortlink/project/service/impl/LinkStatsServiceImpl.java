@@ -189,12 +189,12 @@ public class LinkStatsServiceImpl implements LinkStatsService {
         double newRatio = (double) newUserCount / uvSum;
         double newActualRatio = Math.round(newRatio * 100) / 100.0;
         LinkStatsUvRespDto oldUvRespDto = LinkStatsUvRespDto.builder()
-                .uvType("老用户")
+                .uvType("newUser")
                 .ratio(oldActualRatio)
                 .cnt(oldUserCount).build();
         allUvAndCnt.add(oldUvRespDto);
         LinkStatsUvRespDto newUvRespDto = LinkStatsUvRespDto.builder()
-                .uvType("新用户")
+                .uvType("oldUser")
                 .ratio(newActualRatio)
                 .cnt(newUserCount).build();
         allUvAndCnt.add(newUvRespDto);
