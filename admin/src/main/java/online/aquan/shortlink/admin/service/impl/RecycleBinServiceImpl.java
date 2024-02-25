@@ -2,7 +2,6 @@ package online.aquan.shortlink.admin.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,6 @@ import online.aquan.shortlink.admin.common.convention.result.Result;
 import online.aquan.shortlink.admin.dao.entity.GroupDo;
 import online.aquan.shortlink.admin.dao.mapper.GroupMapper;
 import online.aquan.shortlink.admin.remote.LinkActualRemoteService;
-import online.aquan.shortlink.admin.remote.LinkRemoteService;
 import online.aquan.shortlink.admin.remote.dto.req.RecycleBinPageReqDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkPageRespDto;
 import online.aquan.shortlink.admin.service.RecycleBinService;
@@ -20,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+@Service(value = "recycleBinServiceImplByAdmin")
 @RequiredArgsConstructor
 public class RecycleBinServiceImpl implements RecycleBinService {
 

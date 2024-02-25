@@ -1,12 +1,10 @@
 package online.aquan.shortlink.admin.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import online.aquan.shortlink.admin.common.convention.result.Result;
 import online.aquan.shortlink.admin.remote.LinkActualRemoteService;
-import online.aquan.shortlink.admin.remote.LinkRemoteService;
 import online.aquan.shortlink.admin.remote.dto.req.LinkBatchCreateReqDto;
 import online.aquan.shortlink.admin.remote.dto.req.LinkCreateReqDto;
 import online.aquan.shortlink.admin.remote.dto.req.LinkPageReqDto;
@@ -22,7 +20,7 @@ import java.util.List;
  * 后管调用中台的服务
  * todo 暂时使用http调用,将来重构成为SpringCloud调用
  */
-@RestController
+@RestController(value="linkControllerByAdmin")
 @RequiredArgsConstructor
 public class LinkController {
     

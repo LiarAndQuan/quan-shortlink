@@ -1,13 +1,11 @@
 package online.aquan.shortlink.admin.controller;
 
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import online.aquan.shortlink.admin.common.convention.result.Result;
 import online.aquan.shortlink.admin.common.convention.result.Results;
 import online.aquan.shortlink.admin.remote.LinkActualRemoteService;
-import online.aquan.shortlink.admin.remote.LinkRemoteService;
 import online.aquan.shortlink.admin.remote.dto.req.RecycleBinCreateReqDto;
 import online.aquan.shortlink.admin.remote.dto.req.RecycleBinPageReqDto;
 import online.aquan.shortlink.admin.remote.dto.req.RecycleBinRecoverReqDto;
@@ -20,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@RestController(value="recycleBinControllerByAdmin")
 @RequiredArgsConstructor
 public class RecycleBinController {
 

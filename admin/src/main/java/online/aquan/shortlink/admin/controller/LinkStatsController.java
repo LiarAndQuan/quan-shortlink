@@ -1,23 +1,20 @@
 package online.aquan.shortlink.admin.controller;
 
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import online.aquan.shortlink.admin.common.convention.result.Result;
 import online.aquan.shortlink.admin.dto.req.LinkStatsReqDto;
 import online.aquan.shortlink.admin.remote.LinkActualRemoteService;
-import online.aquan.shortlink.admin.remote.LinkRemoteService;
 import online.aquan.shortlink.admin.remote.dto.req.LinkAccessRecordsPageGroupReqDto;
 import online.aquan.shortlink.admin.remote.dto.req.LinkAccessRecordsPageReqDto;
 import online.aquan.shortlink.admin.remote.dto.req.LinkStatsGroupReqDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkAccessRecordsPageRepsDto;
 import online.aquan.shortlink.admin.remote.dto.resp.LinkStatsRespDto;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@RestController(value="linkStatsControllerByAdmin")
 @RequiredArgsConstructor
 public class LinkStatsController {
 

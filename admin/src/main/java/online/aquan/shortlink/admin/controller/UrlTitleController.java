@@ -4,12 +4,11 @@ package online.aquan.shortlink.admin.controller;
 import lombok.RequiredArgsConstructor;
 import online.aquan.shortlink.admin.common.convention.result.Result;
 import online.aquan.shortlink.admin.remote.LinkActualRemoteService;
-import online.aquan.shortlink.admin.remote.LinkRemoteService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@RestController(value="urlTitleControllerByAdmin")
 @RequiredArgsConstructor
 public class UrlTitleController {
 
